@@ -1,0 +1,82 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "旅游首页",
+        "navigationBarBackgroundColor": "#0099ff"
+      }
+    },
+    {
+      "path": "pages/trip/trip",
+      "style": {
+        "navigationBarTitleText": "行程管理",
+        "navigationBarBackgroundColor": "#0099ff",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/luggage/luggage",
+      "style": {
+        "navigationBarTitleText": "行李清单",
+        "navigationBarBackgroundColor": "#0099ff",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/bill/bill",
+      "style": {
+        "navigationBarTitleText": "旅行账单",
+        "navigationBarBackgroundColor": "#0099ff",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/profile/profile",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationBarBackgroundColor": "#0099ff",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/strategy/strategy",
+      "style": {
+        "navigationBarTitleText": "旅游攻略",
+        "navigationBarBackgroundColor": "#0099ff",
+        "navigationBarTextStyle": "white"
+      }
+    }
+  ],
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#ffff00",
+    "backgroundColor": "#0099ff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "/static/icon-home.png",
+        "selectedIconPath": "/static/icon-home-active.png"
+      },
+      {
+        "pagePath": "pages/trip/trip",
+        "text": "行程",
+        "iconPath": "/static/icon-trip.png",
+        "selectedIconPath": "/static/icon-trip-active.png"
+      },
+      {
+        "pagePath": "pages/message/message",
+        "text": "消息",
+        "iconPath": "/static/icon-message.png",
+        "selectedIconPath": "/static/icon-message-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "/static/icon-profile.png",
+        "selectedIconPath": "/static/icon-profile-active.png"
+      }
+    ]
+  }
+}
