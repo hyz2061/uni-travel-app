@@ -49,34 +49,43 @@
     }
   ],
   "tabBar": {
-    "color": "#999",
-    "selectedColor": "#ffff00",
-    "backgroundColor": "#0099ff",
+    "color": "#cfcfcf",
+    "selectedColor": "#ffffff",
+    "backgroundColor": "#ef2300",
+	"fontSize": "12px",
+	"height": "80px",
     "list": [
-      {
-        "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "/static/icon-home.png",
-        "selectedIconPath": "/static/icon-home-active.png"
-      },
-      {
-        "pagePath": "pages/trip/trip",
-        "text": "行程",
-        "iconPath": "/static/icon-trip.png",
-        "selectedIconPath": "/static/icon-trip-active.png"
-      },
-      {
-        "pagePath": "pages/message/message",
-        "text": "消息",
-        "iconPath": "/static/icon-message.png",
-        "selectedIconPath": "/static/icon-message-active.png"
-      },
-      {
-        "pagePath": "pages/profile/profile",
-        "text": "我的",
-        "iconPath": "/static/icon-profile.png",
-        "selectedIconPath": "/static/icon-profile-active.png"
-      }
-    ]
+         {
+           "pagePath": "pages/index/index",
+           "text": "主页",
+           "iconPath": "/static/icon-home-bird.png",
+           "selectedIconPath": "/static/icon-home-bird-active.png"
+         },
+         {
+           "pagePath": "pages/trip/trip",
+           "text": "旅程",
+           "iconPath": "/static/icon-trip-bird.png",
+           "selectedIconPath": "/static/icon-trip-bird-active.png"
+         },
+         // 占位项，用于中间按钮位置
+         {
+           "pagePath": "pages/index/index",
+           "text": "",
+           "iconPath": "/static/empty.png",
+           "selectedIconPath": "/static/empty.png"
+         },
+         {
+           "pagePath": "pages/message/message",
+           "text": "消息",
+           "iconPath": "/static/icon-message-bird.png",
+           "selectedIconPath": "/static/icon-message-bird-active.png"
+         },
+         {
+           "pagePath": "pages/profile/profile",
+           "text": "我的",
+           "iconPath": "/static/icon-profile-bird.png",
+           "selectedIconPath": "/static/icon-profile-bird-active.png"
+         }
+       ]
   }
 }

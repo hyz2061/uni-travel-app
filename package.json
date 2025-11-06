@@ -1,0 +1,31 @@
+{
+  "name": "uni-travel-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vue-cli-service uni-serve",
+    "build": "vue-cli-service uni-build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyz2061/uni-travel-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hyz2061/uni-travel-app/issues"
+  },
+  "homepage": "https://github.com/hyz2061/uni-travel-app#readme",
+  "devDependencies": {
+    "@dcloudio/uni-cli-i18n": "^2.0.2-4080420251103001",
+    "@dcloudio/uni-cli-shared": "^2.0.2-4080420251103001",
+    "@dcloudio/uni-mp-compiler": "^3.0.0-alpha-3021020211012001",
+    "@dcloudio/vue-cli-plugin-uni": "^2.0.2-4080420251103001",
+    "@vue/cli-service": "^5.0.9"
+  },
+  "dependencies": {
+    "@dcloudio/uni-app-plus": "^2.0.2-4080420251103001"
+  }
+}

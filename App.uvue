@@ -1,46 +1,30 @@
-<script lang="uts">
-	let firstBackTime = 0
-	export default {
-		onLaunch: function () {
-			console.log('App Launch')
-		},
-		onShow: function () {
-			console.log('App Show')
-		},
-		onHide: function () {
-			console.log('App Hide')
-		},
-		// #ifdef APP-ANDROID
-		onLastPageBackPress: function () {
-			console.log('App LastPageBackPress')
-			if (firstBackTime == 0) {
-				uni.showToast({
-					title: '再按一次退出应用',
-					position: 'bottom',
-				})
-				firstBackTime = Date.now()
-				setTimeout(() => {
-					firstBackTime = 0
-				}, 2000)
-			} else if (Date.now() - firstBackTime < 2000) {
-				firstBackTime = Date.now()
-				uni.exit()
-			}
-		},
-		// #endif
-		onExit: function () {
-			console.log('App Exit')
-		},
-	}
+<!-- App.vue -->
+<template>
+  <view class="app-container">
+    <router-view />
+  </view>
+</template>
+
+<script setup>
+// 全局配置
 </script>
 
 <style>
-	/*每个页面公共css */
-	.uni-row {
-		flex-direction: row;
-	}
+/* 全局样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-	.uni-column {
-		flex-direction: column;
-	}
+page {
+  background-color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 </style>
