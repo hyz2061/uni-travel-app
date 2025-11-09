@@ -5,7 +5,7 @@
     <header class="top-bar">
       <!-- 用户头像 -->
       <view class="user-avatar">
-        <img src="https://picsum.photos/id/64/100/100" alt="用户头像" class="avatar-img">
+        <img src="/static/头像.png" alt="用户头像" class="avatar-img">
       </view>
 	
       
@@ -41,24 +41,29 @@
       
       <!-- 右侧吉祥物图片 -->
       <view class="mascot-img">
-        <img src="https://p3-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/81bb753f270f43dd8cd94344465b7e0c.jpg~tplv-a9rns2rl98-24:720:720.image?rcl=202511062230186B921B7C5A101142E08F&rk3s=8e244e95&rrcfp=8a172a1a&x-expires=1763044219&x-signature=BJUF2DUZcMRuOfWBfv4V6ZISDGs%3D" 
+        <img src="/static/logo1.png" 
              alt="旅游吉祥物">
       </view>
     </view>
     
     <!-- 黄色背景功能区 -->
      <view class="function-area">
+		 <view class="ellipse-wrap">
+			 <view class="hollow-circle"></view>
+		 </view>
         <view class="function-grid">
           <!-- 同城推荐 -->
           <view class="function-card city-recommend">
             <h3 class="card-title">同城推荐</h3>
             <p class="card-desc">向着世界发出城市的呐喊</p>
+			<view class="water-img">
+				<img src="/static/冲浪.png">
+			</view>
             <view class="location-tag">
-              <i class="fa fa-map-marker"></i>
+               <i class="location-icon"></i>
               <span>定位：</span>
             </view>
           </view>
-          
           <!-- AI助手 -->
           <view class="function-card ai-assistant">
             <h3 class="card-title">AI助手</h3>
@@ -283,7 +288,7 @@ export default {
   position: relative;
   z-index: 10;
   top: -20px;
-  left: -20px;
+  left: -10px;
 }
 
 .date-text {
@@ -312,8 +317,10 @@ export default {
 }
 
 .mascot-img img {
-  width: 80px;
-  height: 80px;
+  width: 140px;
+  height: 140px;
+  position: relative;
+  left: 30px;
   object-fit: contain;
 }
 
@@ -333,21 +340,82 @@ export default {
 
 .function-card {
   background-color: #2196F3;
-  border-radius: 16px 16px 16px 0; /* 左下角直角，其他圆角 */
-  padding: 16px;
+   border-radius: 20px 80px 20px 20px / 20px 80px 20px 20px;
+  padding: 10px;
   color: white;
   position: relative;
+   z-index: 1;
 }
-
+.water-img {
+  transform: scaleX(-1); /* 水平镜像（左右翻转） */
+  /* 其他样式（如宽度、圆角等）保持不变 */
+  width: 130px;
+  height: auto;
+  border-radius: 8px;
+  left: 70px;
+  top:-50px;
+   z-index: 999;
+}
 .city-recommend {
   grid-row: span 2; /* 跨两行 */
   display: flex;
+  height: 140px;
+  width: 190px;
   flex-direction: column;
   justify-content: space-between;
 }
+.location-icon {
+  /* 用伪元素绘制图标（也可使用字体图标或图片） */
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  position: relative;
+  right: 20px;
+  top: 2px;
+}
+.location-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #000;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+}
+.location-icon::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 8px;
+  height: 8px;
+  background-color: #000;
+  border-radius: 50%;
+}
+/* 椭圆容器 */
+.ellipse-wrap {
+  width: 70px; /* 椭圆宽度 */
+  height: 30px; /* 椭圆高度（宽度的一半左右，实现椭圆） */
+  border-radius: 60%; /* 50% 圆角实现椭圆（宽高比不为1时就是椭圆） */
+  background-color: #ff6347; /* 椭圆背景色，如红色 */
+  display: flex;
+  top: -20px;
+  left: 35%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* 裁剪超出椭圆的内容 */
+}
+.hollow-circle {
+  width: 60px;        /* 圆形宽度 */
+  height: 20px;       /* 圆形高度（与宽度一致，确保是正圆） */
+  background-color: #73bcff; /* 边框颜色（如红色）和宽度 */
+  border-radius: 60%; /* 50% 圆角实现圆形 */
+}
 
 .ai-assistant, .points-card {
-  border-radius: 16px 16px 0 16px; /* 右下角直角，其他圆角 */
+     border-radius: 20px 80px 20px 20px / 20px 80px 20px 20px; /* 右下角直角，其他圆角 */
   background: linear-gradient(to bottom, #2196F3, #FFEB3B);
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -355,6 +423,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
+	 z-index: 1;
 }
 
 
@@ -366,7 +435,7 @@ export default {
  }
 
 .card-desc {
-  font-size: 14px;
+  font-size: 10px;
   opacity: 0.9;
   margin: 0 0 12px 0;
 }
@@ -377,9 +446,10 @@ export default {
   background-color:  #FFE05A;
   color: #333;
   width: fit-content;
-  padding: 4px 8px;
+  padding: 0px 15px;
   border-radius: 20px;
   font-size: 12px;
+  top: -100px;
 }
 
 .location-tag i {
@@ -404,6 +474,13 @@ export default {
   width: 160px;
   height: auto;
   object-fit: contain;
+}
+.location-tag span {
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+  left: 15px;
+  top: -10px;
 }
 
 /* 标签切换区域 */
@@ -438,6 +515,7 @@ export default {
   border-bottom: 2px solid #2196F3;
   border: none;
 }
+
 
 .tab-content {
   padding: 12px;
@@ -522,7 +600,6 @@ export default {
   transform-origin: center;
   top: 5px;
   right: 20px;
- 
 }
 .tag-item2 {
   background-color: #000;
@@ -535,6 +612,7 @@ export default {
   transform-origin: center;
   right: 80px;
   top: -35px;
+  border-radius: 12px; 
  
 }
 
@@ -550,5 +628,6 @@ export default {
   width: 120px;
   height: auto;
 }
+
 
 </style>

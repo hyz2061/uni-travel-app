@@ -1,0 +1,435 @@
+<template>
+  <view class="login-page">
+    <!-- 顶部Logo区域 -->
+    <view class="logo-container">
+      <image src="/static/头像.png" mode="aspectFit" class="logo-img"></image>
+    </view>
+
+    <!-- 表单区域-根据状态切换 -->
+    <view class="form-container">
+      <!-- 账号密码登录 -->
+      <view v-if="currentView === 'account'">
+        <view class="input-group">
+          <input type="text" placeholder="用户名/电话号码" class="input-field" v-model="username" style="background-color:#ffd700;
+  color: #000;;"/>
+          <input type="password" placeholder="密码" class="input-field" v-model="password" style="sybackground-color:#ffd700;
+  color: #000;;"/>
+        </view>
+        <view class="link-row">
+          <!-- 替换 button 为 a 标签 -->
+          <text @click="switchToFindPwd" class="link-btn">忘记密码</text>
+          <text @click="switchToCodeLogin" class="link-btn">验证码登录</text>
+        </view>
+
+        <button class="main-btn"  @click="handleAccountLogin">登录</button>
+        <view class="agreement">
+          <checkbox checked />
+          <text>已阅读并同意《隐私协议》和《用户协议》</text>
+        </view>
+      </view>
+
+      <!-- 验证码登录（修改后） -->
+      <view v-else-if="currentView === 'code'">
+        <view class="input-group">
+          <input type="text" placeholder="电话号码" class="input-field" style="background-color:#ffd700; color: #000;"/>
+         <!-- 页面的 WXML 文件 -->
+        <view class="verify-container">
+               <input 
+                 class="input-item verify-input" 
+                 placeholder="验证码" 
+                 v-model="code"
+               />
+               <button class="get-code-btn" @click="getVerificationCode">获取验证码</button>
+             </view>
+        </view>
+        <button class="main-btn red-btn">确认</button>
+      </view>
+
+      <!-- 找回密码 -->
+      <view v-else-if="currentView === 'findPwd'">
+        <view class="input-group">
+          <input type="text" placeholder="电话号码" class="input-field" />
+          <!-- 页面的 WXML 文件 -->
+          <view class="verify-container">
+                 <input 
+                   class="input-item verify-input" 
+                   placeholder="验证码" 
+                   v-model="code"
+                 />
+                 <button class="get-code-btn" @click="getVerificationCode">获取验证码</button>
+               </view>
+          <input type="password" placeholder="新密码" class="input-field" />
+          <input type="password" placeholder="重新输入密码" class="input-field" />
+        </view>
+        <button class="main-btn red-btn">确认</button>
+      </view>
+    </view>
+
+    <!-- 其他登录方式 -->
+    <view class="other-login">
+      <view class="divider">
+        <view class="line"></view>
+        <text>它登陆方式</text>
+        <view class="line"></view>
+      </view>
+      <view class="icon-group">
+        <image src="/static/wechat.png" mode="aspectFit" class="login-icon" @click="loginByWechat"></image>
+        <image src="/static/qq.png" mode="aspectFit" class="login-icon" @click="loginByQQ"></image>
+        <image src="/static/alipay.png" mode="aspectFit" class="login-icon" @click="loginByAlipay"></image>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      currentView: 'account', // 初始显示账号密码登录：account/code/findPwd
+      // 账号密码登录
+      username: '',
+      password: '',
+      // 验证码登录/找回密码共用
+      phone: '',
+      code: '',
+      newPassword: '' // 新密码（找回密码用）
+    };
+  },
+  methods: {
+    // 切换视图
+    switchView(viewType) {
+      this.currentView = viewType;
+    },
+    // 切换到验证码登录（快捷方法）
+    switchToCodeLogin() {
+      this.currentView = 'code';
+    },
+    // 切换到找回密码
+    switchToFindPwd() {
+      this.currentView = 'findPwd';
+    },
+
+    // 账号密码登录逻辑
+    handleAccountLogin() {
+      if (!this.username) {
+        return uni.showToast({ title: '请输入用户名', icon: 'none' });
+      }
+      if (!this.password) {
+        return uni.showToast({ title: '请输入密码', icon: 'none' });
+      }
+      // 实际项目中这里会调用登录接口
+      uni.switchTab({
+               url: '/pages/index/index', // 路径需在 pages.json 中配置为 tabBar
+               success: () => console.log("跳转成功"),
+               fail: (err) => console.log("跳转失败：", err) // 关键：打印错误信息
+             });
+	},
+
+    // 验证码登录逻辑
+    handleCodeLogin() {
+      if (!this.phone) {
+        return uni.showToast({ title: '请输入手机号', icon: 'none' });
+      }
+      if (!this.code) {
+        return uni.showToast({ title: '请输入验证码', icon: 'none' });
+      }
+      uni.showToast({ title: '验证码登录成功', icon: 'success' });
+      setTimeout(() => {
+        uni.navigateTo({ url: '/pages/index/index' });
+      }, 1000);
+    },
+
+    // 获取验证码
+    getVerificationCode() {
+      if (!this.phone) {
+        return uni.showToast({ title: '请输入手机号', icon: 'none' });
+      }
+      // 模拟验证码发送
+      uni.showToast({ title: '验证码已发送', icon: 'none' });
+    },
+
+    // 重置密码
+    resetPassword() {
+      if (!this.phone) return uni.showToast({ title: '请输入手机号', icon: 'none' });
+      if (!this.code) return uni.showToast({ title: '请输入验证码', icon: 'none' });
+      if (!this.newPassword) return uni.showToast({ title: '请输入新密码', icon: 'none' });
+      uni.showToast({ title: '密码重置成功', icon: 'success' });
+      setTimeout(() => {
+        this.switchView('account'); // 重置成功后切回账号登录
+      }, 1000);
+    },
+
+    // 微信登录
+    loginByWechat() {
+      uni.showToast({ title: '微信登录功能开发中', icon: 'none' });
+    },
+    // QQ登录
+    loginByQQ() {
+      uni.showToast({ title: 'QQ登录功能开发中', icon: 'none' });
+    },
+    // 支付宝登录
+    loginByAlipay() {
+      uni.showToast({ title: '支付宝登录功能开发中', icon: 'none' });
+    }
+  }
+};
+</script>
+
+<style scoped>
+.login-page {
+  width: 100%;
+  height: 100vh;
+  background-color: #40a9ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 80rpx;
+  box-sizing: border-box;
+}
+
+.logo-container {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 60rpx;
+}
+
+.logo-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.form-container {
+  width: 80%;
+  max-width: 600rpx;
+}
+
+.input-group {
+  margin-bottom: 30rpx;
+}
+
+.input-field {
+  width: 100%;
+  height: 80rpx;
+  border: 2rpx solid #000;
+  border-radius: 40rpx;
+  padding: 0 30rpx;
+  margin-bottom: 20rpx;
+  box-sizing: border-box;
+  background-color: #fff;
+  font-size: 28rpx;
+}
+
+.code-row {
+  display: flex;
+  gap: 20rpx;
+}
+
+.code-input {
+  flex: 1;
+}
+
+.code-btn {
+  width: 200rpx;
+  height: 80rpx;
+  border: 1rpx solid #000;
+  border-radius: 40rpx;
+  background-color: #ffd700;
+  color: #000;
+  font-size: 24rpx;
+}
+
+.link-row {
+  background-color: #4da6ff; /* 蓝色背景 */
+  display: flex;
+  justify-content: space-between; /* 两端对齐 */
+  padding: 4px 15px; /* 内边距 */
+  align-items: center;
+  flex-direction: row;
+}
+
+.link-btn {
+  /* 清除链接默认样式 */
+  text-decoration: none; /* 去除下划线 */
+  color: white; /* 白色文字 */
+  font-size: 14px;
+  padding: 5px 0; /* 增加点击区域 */
+  
+  /* 可选：添加 hover 效果 */
+  transition: opacity 0.2s;
+}
+
+.link-btn:hover {
+  opacity: 0.9; /* hover 时略微透明 */
+}
+
+.main-btn {
+  width: 100%;
+  height: 80rpx;
+  border: none;
+  border-radius: 40rpx;
+  background-color: #ffd700;
+  color: #000;
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+}
+.code-item {
+  display: flex;
+  align-items: center;
+}
+.code-btn {
+  width: 200rpx;
+  height: 80rpx;
+  background-color: #ffd700;
+  color: #000;
+  border-radius: 40rpx;
+  font-size: 24rpx;
+  border: 2rpx solid #000;
+}
+
+.red-btn {
+  background-color: #ff4d4f;
+  color: #fff;
+}
+
+.agreement {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #fff;
+  flex-direction: row;
+}
+/* 输入框通用样式（黄色背景、黑色文字） */
+.input-field {
+ width: 100%; /* 与电话号码输入框宽度一致 */
+   /* 其他原有样式保持不变 */
+   display: flex;
+   align-items: center;
+   background-color: #ffd700;
+   border-radius: 40rpx; /* 与输入框圆角统一 */
+   overflow: hidden;
+}
+
+/* 验证码行布局 */
+.code-row {
+  display: flex;
+  align-items: center;
+  width: 280px; /* 宽度可按需调整 */
+  background-color: #ffd700; /* 黄色背景 */
+  border-radius: 20px; /* 圆角 */
+  overflow: hidden; /* 隐藏内部元素超出的圆角 */
+}
+
+/* 验证码输入框 */
+.code-input {
+  padding: 15rpx 20rpx; /* 与 .input-field 的 padding 一致 */
+  font-size: 28rpx; /* 与 .input-field 的 font-size 一致 */
+  height: auto; /* 由 padding 撑开高度，与 .input-field 统一 */
+  line-height: 1.5; /* 文字行高，与 .input-field 统一 */
+}
+
+/* 验证码按钮 */
+.code-btn {
+  padding: 15rpx 20rpx; /* 与 .input-field 的 padding 一致 */
+  font-size: 28rpx; /* 与 .input-field 的 font-size 一致 */
+
+  line-height: 1.5;
+}
+.code-btn:hover {
+  opacity: 0.8;
+}
+/* 红色确认按钮 */
+.main-btn.red-btn {
+  background-color: #ff5555; /* 红色背景 */
+  color: black; /* 白色文字 */
+}
+
+.agreement checkbox {
+  transform: scale(0.8);
+  margin-right: 10rpx;
+}
+
+.other-login {
+  margin-top: 250px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.other-title {
+  font-size: 24rpx;
+  color: #fff;
+  margin-bottom: 30rpx;
+}
+.icon-group {
+  display: flex;  /* 开启 Flex 布局，子元素默认水平排列 */
+  flex-direction: row;  /* 明确设置为水平方向（可省略，默认就是 row） */
+  justify-content: space-around; /* 子元素之间均匀分布，也可根据需求用 space-between、center 等 */
+  align-items: center; /* 垂直居中对齐 */
+}
+.login-icon {
+  width: 80rpx;
+  height: 80rpx;
+}
+
+
+.divider {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  margin-bottom: 30rpx;
+  color: #fff;
+  font-size: 24rpx;
+}
+
+.divider .line {
+  flex: 1;
+  height: 1rpx;
+  background-color: #fff;
+  opacity: 0.5;
+}
+
+.divider text {
+  padding: 0 20rpx;
+}
+
+.icon-group {
+  display: flex;
+  gap: 40rpx;
+}
+/* 页面的 WXSS 文件 */
+.verify-container {
+   background-color: #ffd700; /* 黄色背景 */
+   border: 1px solid #000; /* 黑色边框 */
+   border-radius: 50rpx;   /* 圆角优化 */
+   padding: 0 30rpx;
+   height: 80rpx;
+   margin: 4px;
+  
+}
+
+.verify-input {
+  flex: 1;
+  border: none; /* 去除输入框自身边框 */
+  outline: none; /* 去除焦点高亮 */
+  height: 100%;
+  position: relative;
+  top: 10px;
+}
+
+
+.get-code-btn {
+	width: 190rpx;
+	  height: 40rpx;
+	  line-height: 40rpx;
+	  left: 180px;
+	  top: -10px;
+	  background-color: transparent;
+	  color: black;
+	  border-radius: 10rpx;
+	  font-size: 26rpx;
+	  border: none;
+	  
+  }
+</style>
