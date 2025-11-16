@@ -1,3 +1,5 @@
+<!--首页基本完善-,无从图片跳转-->
+
 <template>
   <view class="app-container">
 	 
@@ -7,8 +9,6 @@
       <view class="user-avatar">
         <img src="/static/头像.png" alt="用户头像" class="avatar-img">
       </view>
-	
-      
       <!-- 搜索框 -->
       <view class="search-container">
         <input type="text" v-model="searchQuery" placeholder="旅游推荐" class="search-input">
@@ -102,7 +102,7 @@
       <view class="tab-content" v-if="activeTab === 'recommend'">
         <view class="travel-cards">
           <view v-for="(item, index) in recommendItems" :key="index" class="travel-card">
-            <img :src="item.imgUrl" :alt="item.title" class="card-img">
+            <img :src="item.imgUrl" :alt="item.title" class="card-img"  @click="handleImageClick" >
             <view class="card-text">
               <h4 class="card-title">{{ item.title }}</h4>
               <view class="card-meta">

@@ -1,4 +1,6 @@
-、<template>
+<!--旅程+点待出发的蓝色框可以跳转到详情Detail，行李页点添加进入独自/同行旅程-->
+
+<template>
   <div class="journey-page">
     <!-- 顶部区域 -->
     <div class="top-area">

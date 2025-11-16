@@ -1,3 +1,5 @@
+<!--添加-独自旅程/同行旅程-->
+
 <template>
   <div class="travel-page">
     <div class="header">
@@ -278,8 +280,8 @@ export default {
 }
 
 .icon-img {
-  width: 60px;
-  height: 60px;
+  height:20%;
+  width: 20%;
   border-radius: 50%; /* 圆形图标 */
   background-color: #ff0000;
   margin: 0 auto 5px;

@@ -1,3 +1,5 @@
+<!--详情-->
+
 <template>
   <div class="journey-detail-page">
     <!-- 头部区域 -->
@@ -61,21 +63,22 @@
     <!-- 行李标签页 -->
     <div v-if="currentTab === '行李'" class="tab-content">
       <div class="frame yellow">
-        <div class="luggage-header">
-          <p>已整理0/1件行李</p>
-		  <navigator url="/pages/luggage/luggage" class="card blue">
-         <span class="add">增加</span>
-	     </navigator>
-        </div>
-        <div class="luggage-group">
-          <div class="luggage-item red">
-            <span>证件 (0)</span>
-            
-          </div>
-        </div>
+        <span>已整理0/1件行李</span>
+        <span class="sort-btn">排序</span>
+       
+           <!-- 行李分类 -->
+           <div class="category-card" @click="goToluggage">
+                 <div class="card-header">
+                   <span>证件 (0)</span>
+                   <button class="add-btn" >+</button>
+                 </div>
+                 <div class="card-content">
+                   <i class="arrow-up"></i>
+                 </div>
+               </div>
       </div>
     </div>
-
+	
     <!-- 经费标签页 -->
     <div v-if="currentTab === '经费'" class="tab-content">
       <div class="frame yellow">
@@ -110,7 +113,14 @@ export default {
     return {
       currentTab: '行程'
     };
-  }
+  },
+   name: 'LuggagePage',
+    methods: {
+      goToluggage() {
+         this.$router.push('/pages/luggage/luggage');
+    
+      }
+    }
 };
 </script>
 
@@ -415,6 +425,128 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   border: 0em;
+}
+.trip-detail-page {
+  background-color: #ffcc5c;
+  min-height: 100vh;
+  font-family: "微软雅黑", sans-serif;
+}
+
+/* 顶部导航栏 */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #00a8ff;
+  color: #fff;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.right-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.icon-user, .icon-share, .icon-edit {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* 旅程基本信息 */
+.trip-info {
+  padding: 15px;
+  background-color: #00a8ff;
+  color: #fff;
+}
+
+.city {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.date {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.duration {
+  background-color: #ffcc5c;
+  color: #000;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+/* 标签栏 */
+.tab-bar {
+  display: flex;
+  background-color: #ffcc5c;
+  padding: 10px 0;
+  border-bottom: 1px solid #fff;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: #ff5c5c;
+  font-weight: bold;
+}
+
+/* 行李统计 */
+.luggage-stat {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* 行李分类 */
+.luggage-category {
+  margin: 0 15px;
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ff5c5c;
+  color: #fff;
+  padding: 10px;
+  border-radius: 8px 8px 0 0;
+}
+
+.category-name {
+  font-size: 16px;
+}
+
+.add-btn {
+  background: none;
+  border: 2px solid #fff;
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.category-content {
+  background-color: #00a8ff;
+  color: #fff;
+  padding: 10px;
+  border-radius: 0 0 8px 8px;
 }
 
 </style>

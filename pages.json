@@ -69,6 +69,14 @@
 	    "navigationBarBackgroundColor": "#0099ff",
 	    "navigationBarTextStyle": "white"
 	  }
+	},
+	{
+	  "path": "pages/add-name/add-name",
+	  "style": {
+	    "navigationBarTitleText": "添加-名字",
+	    "navigationBarBackgroundColor": "#0099ff",
+	    "navigationBarTextStyle": "white"
+	  }
 	}
   ],
   "tabBar": {
@@ -93,8 +101,8 @@
       {
         "pagePath": "pages/index/index",
         "text": "",
-        "iconPath": "/static/empty.png",
-        "selectedIconPath": "/static/empty.png"
+        "iconPath": "/static/add-name.png",
+        "selectedIconPath": "/static/add-name.png"
       },
       {
         "pagePath": "pages/message/message",
