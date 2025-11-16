@@ -1,12 +1,12 @@
 {
   "pages": [
-	  {
-	    "path": "pages/login/login",
-	    "style": {
-	      "navigationBarTitleText": "登录页",
-	      "navigationBarBackgroundColor": "#0099ff"
-	    }
-	  },
+    {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录页",
+        "navigationBarBackgroundColor": "#0099ff"
+      }
+    },
     {
       "path": "pages/index/index",
       "style": {
@@ -53,46 +53,61 @@
         "navigationBarBackgroundColor": "#0099ff",
         "navigationBarTextStyle": "white"
       }
-    }
+    },
+    {
+      "path": "pages/message/message",
+      "style": {
+        "navigationBarTitleText": "消息",
+        "navigationBarBackgroundColor": "#0099ff",
+        "navigationBarTextStyle": "white"
+      }
+    },
+	{
+	  "path": "pages/Detail/Detail",
+	  "style": {
+	    "navigationBarTitleText": "细节",
+	    "navigationBarBackgroundColor": "#0099ff",
+	    "navigationBarTextStyle": "white"
+	  }
+	}
   ],
   "tabBar": {
     "color": "#cfcfcf",
     "selectedColor": "#ffffff",
     "backgroundColor": "#ef2300",
-	"fontSize": "12px",
-	"height": "80px",
+    "fontSize": "12px",
+    "height": "80px",
     "list": [
-         {
-           "pagePath": "pages/index/index",
-           "text": "主页",
-           "iconPath": "/static/icon-home-bird.png",
-           "selectedIconPath": "/static/icon-home-bird-active.png"
-         },
-         {
-           "pagePath": "pages/trip/trip",
-           "text": "旅程",
-           "iconPath": "/static/icon-trip-bird.png",
-           "selectedIconPath": "/static/icon-trip-bird-active.png"
-         },
-         // 占位项，用于中间按钮位置
-         {
-           "pagePath": "pages/index/index",
-           "text": "",
-           "iconPath": "/static/empty.png",
-           "selectedIconPath": "/static/empty.png"
-         },
-         {
-           "pagePath": "pages/message/message",
-           "text": "消息",
-           "iconPath": "/static/icon-message-bird.png",
-           "selectedIconPath": "/static/icon-message-bird-active.png"
-         },
-         {
-           "pagePath": "pages/profile/profile",
-           "text": "我的",
-           "iconPath": "/static/icon-profile-bird.png",
-           "selectedIconPath": "/static/icon-profile-bird-active.png"
-         }
-       ]
+      {
+        "pagePath": "pages/index/index",
+        "text": "主页",
+        "iconPath": "/static/icon-home-bird.png",
+        "selectedIconPath": "/static/icon-home-bird-active.png"
+      },
+      {
+        "pagePath": "pages/trip/trip",
+        "text": "旅程",
+        "iconPath": "/static/icon-trip-bird.png",
+        "selectedIconPath": "/static/icon-trip-bird-active.png"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "",
+        "iconPath": "/static/empty.png",
+        "selectedIconPath": "/static/empty.png"
+      },
+      {
+        "pagePath": "pages/message/message",
+        "text": "消息",
+        "iconPath": "/static/icon-message-bird.png",
+        "selectedIconPath": "/static/icon-message-bird-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "/static/icon-profile-bird.png",
+        "selectedIconPath": "/static/icon-profile-bird-active.png"
+      }
+    ]
   }
 }
