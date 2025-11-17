@@ -332,7 +332,7 @@ export default {
 
 /* 黄色背景功能区 */
 .function-area {
-  background-color:  #fff152;
+  background-color:  #ffffff;
   padding: 20px 12px;
   position: relative;
   border-radius: 20px 20px 0px 0px;
@@ -422,7 +422,7 @@ export default {
 
 .ai-assistant, .points-card {
      border-radius: 20px 80px 20px 20px / 20px 80px 20px 20px; /* 右下角直角，其他圆角 */
-  background: linear-gradient(to bottom, #2196F3, #FFEB3B);
+  background: linear-gradient(to bottom, #2196F3, #ffffff);
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     padding: 6px 20px;
@@ -491,7 +491,7 @@ export default {
 
 /* 标签切换区域 */
 .tab-container {
-  background-color:   #fff152;
+  background-color:   #ffffff;
   gap: 0;
   border: none;
 }
@@ -535,7 +535,7 @@ export default {
 }
 
 .travel-card {
-  background-color: #fff152 ;
+  background-color: #f6cd4b;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
