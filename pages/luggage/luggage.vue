@@ -59,36 +59,63 @@
 					</div>
 				</div>
 			</div>
-			<div class="payment-section">
-				<p class="payment-method">支付宝</p>
-				<p class="payment-amount">0.00</p>
+			<!-- Keyboard -->
+			<div class="keyboard-wrapper">
+				<div class="keyboard-header">
+					<div class="payment-method-wrapper">
+						<span class="payment-method-text">支付宝</span>
+						<svg class="payment-method-narrow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M18 9L12 15L6 9" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</div>
+					<span class="bill-total-number">{{ total.toFixed(2) }}</span>
+				</div>
+				<div class="keyboard-main-container">
+					<div class="keyboard-row">
+						<div class="keyboard-key">1</div>
+						<div class="keyboard-key">2</div>
+						<div class="keyboard-key">3</div>
+						<div class="keyboard-key" style="background-color: #FE4A49;">
+							<svg class="key-icon-date" width="24" height="24" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M2.60416 9.89575H22.3958V20.8333C22.3958 21.4086 21.9295 21.8749 21.3542 21.8749H3.64582C3.07053 21.8749 2.60416 21.4086 2.60416 20.8333V9.89575Z" stroke="black" stroke-width="1.41667" stroke-linejoin="round"/>
+								<path d="M2.60416 4.68742C2.60416 4.11212 3.07053 3.64575 3.64582 3.64575H21.3542C21.9295 3.64575 22.3958 4.11212 22.3958 4.68742V9.89575H2.60416V4.68742Z" stroke="black" stroke-width="1.41667" stroke-linejoin="round"/>
+								<path d="M8.33334 2.08325V6.24992" stroke="black" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M16.6667 2.08325V6.24992" stroke="black" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M14.5833 17.7083H17.7083" stroke="black" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M7.29166 17.7083H10.4167" stroke="black" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M14.5833 13.5417H17.7083" stroke="black" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M7.29166 13.5417H10.4167" stroke="black" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+							<span style="font-weight: 700; font-size: 40rpx">日期</span>
+						</div>
+					</div>
+					<div class="keyboard-row">
+						<div class="keyboard-key">4</div>
+						<div class="keyboard-key">5</div>
+						<div class="keyboard-key">6</div>
+						<div class="keyboard-key">+</div>
+					</div>
+					<div class="keyboard-row">
+						<div class="keyboard-key">7</div>
+						<div class="keyboard-key">8</div>
+						<div class="keyboard-key">9</div>
+						<div class="keyboard-key">-</div>
+					</div>
+					<div class="keyboard-row">
+						<div class="keyboard-key">.</div>
+						<div class="keyboard-key">0</div>
+						<div class="keyboard-key" style="background-color: #FE4A49;">
+							<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M11.6666 9.16675L3.33325 20.0001L11.6666 30.8334H36.6666V9.16675H11.6666Z" fill="black" stroke="black" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round"/>
+							<path d="M17.5 15.8333L25.8333 24.1666" stroke="white" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round"/>
+							<path d="M25.8333 15.8333L17.5 24.1666" stroke="white" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</div>
+						<div class="keyboard-key" style="background-color: #FE4A49;font-size: 48rpx; font-weight: bold;">完成</div>
+					</div>
+				</div>
 			</div>
-			<div class="numeric-keyboard">
-				<div class="key-row">
-					<button class="key-btn">1</button>
-					<button class="key-btn">2</button>
-					<button class="key-btn">3</button>
-					<button class="key-btn">日期</button>
-				</div>
-				<div class="key-row">
-					<button class="key-btn">4</button>
-					<button class="key-btn">5</button>
-					<button class="key-btn">6</button>
-					<button class="key-btn">+</button>
-				</div>
-				<div class="key-row">
-					<button class="key-btn">7</button>
-					<button class="key-btn">8</button>
-					<button class="key-btn">9</button>
-					<button class="key-btn">-</button>
-				</div>
-				<div class="key-row">
-					<button class="key-btn">.</button>
-					<button class="key-btn">0</button>
-					<button class="key-btn">删除</button>
-					<button class="key-btn confirm-btn">完成</button>
-				</div>
-			</div>
+			
 		</div>
 
 		<!-- 行李内容区 -->
@@ -125,6 +152,7 @@
 				<button class="dialog-confirm" @click="addNewJourney">确认添加</button>
 			</div>
 		</div>
+
 	</div>
 </template>
 
@@ -135,7 +163,7 @@
 				// 标签状态管理
 				currentPrimaryTab: 'solo', // 'solo' 独自旅程, 'group' 同行旅程
 				currentSecondaryTab: 'schedule', // 'schedule' 行程, 'bill' 账单, 'luggage' 行李
-
+				total: 0.0,
 				// 弹窗状态
 				showTipDialog: true,
 				showAddJourney: false,
@@ -356,30 +384,94 @@
 
 	.--my-icon {
 		background-color: $icon-bgcolor;
-		width: 60px;
-		height: 60px;
+		width: 114rpx;
+		height: 114rpx;
 		border-radius: 50%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		border: 2px solid;
+		border: 4rpx solid;
 		margin: 0 auto;
 	}
 
 	.--icon-text {
-		font-size: 20px;
+		font-size: 38rpx;
 		letter-spacing: 0;
 		font-weight: bold;
 		text-align: center;
 	}
-
 	
+	.payment-method-text {
+		position: relative;
+		top: 10rpx;
+		left: 50rpx;
+		font-size: 38rpx;
+		font-weight: bold;
+	}
+	
+	.payment-method-narrow {
+		position: relative;
+		left: 60rpx;
+		top: 20rpx;
+		width: 46rpx;
+		height: 46rpx;
+	}
+	
+	.bill-total-number {
+		font-size: 64rpx;
+		margin-top: 20rpx;
+		margin-right: 50rpx;
+		font-weight: bold;
+	}
+	
+	.keyboard-wrapper {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+	}
+	
+	.keyboard-header {
+		height: 114rpx;
+		display: flex;
+		flex-shrink: 0;
+		
+		background: #F6CD4B;
+		border-bottom: 8rpx solid rgba(0, 0, 0, 0.25);
+		border-radius: 48rpx 48rpx 0px 0px;
+		margin: 0;
+		justify-content: space-between;
+		
+	}
+	
+	.keyboard-main-container {
+		width: 100vw;
+		height: 510rpx;
+		background-color: #F6CD4B;
+		padding-top: 15rpx;
+	}
+	
+	.keyboard-row {
+		display: flex;
+		justify-content: space-between;
+		margin: 0px 15rpx 15rpx 15rpx;
+	}
+
+	.keyboard-key {
+		width: 171rpx;
+		height: 95rpx;
+		border-radius: 48rpx;
+		background-color: #25B0F0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 95rpx;
+	}
 
 	
 	.journey-page {
 		min-height: 100vh;
 		background-color: $bgcolor;
-		padding: 15px;
+		padding: 29px;
 		color: #000;
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 		box-sizing: border-box;
@@ -390,45 +482,45 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 20px;
+		margin-bottom: 38rpx;
 		color: #fff;
 	}
 
 	.page-title {
 		margin: 0;
-		font-size: 18px;
+		font-size: 34rpx;
 	}
 
 	.add-btn {
 		background-color: transparent;
 		border: none;
 		color: #fff;
-		font-size: 16px;
+		font-size: 30rpx;
 		cursor: pointer;
-		padding: 5px 10px;
+		padding: 10rpx 19px;
 	}
 
 	/* 一级标签栏样式 */
 	.primary-tabs {
 		display: flex;
 		justify-content: center;
-		gap: 20px;
-		margin-bottom: 15px;
-		padding-bottom: 5px;
+		gap: 38rpx;
+		margin-bottom: 27rpx;
+		padding-bottom: 10rpx;
 	}
 
 	/* 二级标签栏样式 */
 	.secondary-tabs {
 		display: flex;
-		gap: 10px;
-		margin-bottom: 15px;
+		gap: 19rpx;
+		margin-bottom: 38rpx;
 		justify-content: center;
 	}
 
 	/* 通用标签样式 */
 	.tab-item {
-		padding: 6px 12px;
-		font-size: 16px;
+		padding: 11rpx 23rpx;
+		font-size: 30rpx;
 		cursor: pointer;
 		color: #333;
 		position: relative;

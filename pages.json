@@ -1,8 +1,8 @@
 {
 	"globalStyle": {
 		"navigationStyle": "custom",
-	    "backgroundColor": "#25B0F0"
-	  },
+		"backgroundColor": "#25B0F0"
+	},
 	"pages": [{
 			"path": "pages/login/login",
 			"style": {
