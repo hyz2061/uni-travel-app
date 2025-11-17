@@ -47,11 +47,16 @@
 
 		<!-- 账单内容区 -->
 		<div v-if="currentSecondaryTab === 'bill'" class="content-panel">
+	
 			<div class="icon-grid">
-				<div class="grid-item" v-for="(item, index) in billCategoryList" :key="index"
-					@click="handleBillCategoryClick(item)">
-					<img :src="item.icon" alt="item.name" class="grid-icon" />
-					<p class="grid-name">{{ item.name }}</p>
+				<div v-for="(item, index) in billCategoryList" :key="index"
+					@click="handleBillCategoryClick((item))">
+					<div class="luggage-item-wrapper">
+						<div class="--my-icon">
+							<img :src="`/static/pages/luggage/${item.name}.png`" alt="item.name" class="icon-image" />
+						</div>
+						<p class="--icon-text">{{ item.name }}</p>
+					</div>
 				</div>
 			</div>
 			<div class="payment-section">
@@ -89,13 +94,13 @@
 		<!-- 行李内容区 -->
 		<div v-if="currentSecondaryTab === 'luggage'" class="content-panel">
 			<div class="icon-grid">
-				<div class="grid-item" v-for="(item, index) in luggageCategoryList" :key="index"
+				<div v-for="(item, index) in luggageCategoryList" :key="index"
 					@click="handleLuggageCategoryClick(item)">
 					<div class="luggage-item-wrapper">
 						<div class="--my-icon">
 							<img :src="`/static/pages/luggage/${item.name}.png`" alt="item.name" class="icon-image" />
 						</div>
-						<p class="grid-name" style="font-size: 20px; letter-spacing: 0; font-weight: bold;">{{ item.name }}</p>
+						<p class="--icon-text">{{ item.name }}</p>
 					</div>
 				</div>
 			</div>
@@ -350,7 +355,7 @@
 <style scoped lang="scss">
 
 	.--my-icon {
-		background-color: #FE4A49;
+		background-color: $icon-bgcolor;
 		width: 60px;
 		height: 60px;
 		border-radius: 50%;
@@ -358,16 +363,22 @@
 		justify-content: center;
 		align-items: center;
 		border: 2px solid;
+		margin: 0 auto;
 	}
 
-
+	.--icon-text {
+		font-size: 20px;
+		letter-spacing: 0;
+		font-weight: bold;
+		text-align: center;
+	}
 
 	
 
 	
 	.journey-page {
 		min-height: 100vh;
-		background-color: #00a8ff;
+		background-color: $bgcolor;
 		padding: 15px;
 		color: #000;
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -438,7 +449,7 @@
 	.secondary-tabs .tab-item {
 		padding: 4px 8px;
 		background-color: #fff;
-		color: #00a8ff;
+		color: $bgcolor;
 		font-size: 12px;
 		border-radius: 20px;
 		border: 1px solid #000;
@@ -455,8 +466,7 @@
 
 	/* 内容面板样式 */
 	.content-panel {
-		background-color: #00a8ff;
-		padding: 15px;
+		background-color: $bgcolor;
 		min-height: 300px;
 	}
 
@@ -514,7 +524,7 @@
 		display: grid;
 		grid-template-rows: 1fr 1fr 1fr 1fr;
 		grid-template-columns: 1fr 1fr 1fr 1fr;
-		gap: 30px;
+		gap: 10px;
 	}
 
 	.grid-item {
