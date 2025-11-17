@@ -1,131 +1,132 @@
 {
-  "pages": [
-    {
-      "path": "pages/login/login",
-      "style": {
-        "navigationBarTitleText": "登录页",
-        "navigationBarBackgroundColor": "#0099ff"
-      }
-    },
-    {
-      "path": "pages/index/index",
-      "style": {
-        "navigationBarTitleText": "旅游首页",
-        "navigationBarBackgroundColor": "#0099ff"
-      }
-    },
-    {
-      "path": "pages/trip/trip",
-      "style": {
-        "navigationBarTitleText": "行程管理",
-        "navigationBarBackgroundColor": "#0099ff",
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/luggage/luggage",
-      "style": {
-        "navigationBarTitleText": "行李清单",
-        "navigationBarBackgroundColor": "#0099ff",
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/bill/bill",
-      "style": {
-        "navigationBarTitleText": "旅行账单",
-        "navigationBarBackgroundColor": "#0099ff",
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/profile/profile",
-      "style": {
-        "navigationBarTitleText": "我的",
-        "navigationBarBackgroundColor": "#0099ff",
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/strategy/strategy",
-      "style": {
-        "navigationBarTitleText": "旅游攻略",
-        "navigationBarBackgroundColor": "#0099ff",
-        "navigationBarTextStyle": "white"
-      }
-    },
-    {
-      "path": "pages/message/message",
-      "style": {
-        "navigationBarTitleText": "消息",
-        "navigationBarBackgroundColor": "#0099ff",
-        "navigationBarTextStyle": "white"
-      }
-    },
-	{
-	  "path": "pages/Detail/Detail",
-	  "style": {
-	    "navigationBarTitleText": "细节",
-	    "navigationBarBackgroundColor": "#0099ff",
-	    "navigationBarTextStyle": "white"
-	  }
-	},
-	{
-	  "path": "pages/add-name/add-name",
-	  "style": {
-	    "navigationBarTitleText": "添加-名字",
-	    "navigationBarBackgroundColor": "#0099ff",
-	    "navigationBarTextStyle": "white"
-	  }
-	},
-	{
-	  "path": "pages/detail-index/detail-index",
-	  "style": {
-	    "navigationBarTitleText": "详情",
-	    "navigationBarBackgroundColor": "#0099ff",
-	    "navigationBarTextStyle": "white"
-	  }
+	"globalStyle": {
+		"navigationStyle": "custom",
+	    "backgroundColor": "#25B0F0"
+	  },
+	"pages": [{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录页",
+				"navigationBarBackgroundColor": "#0099ff"
+			}
+		},
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "旅游首页",
+				"navigationBarBackgroundColor": "#0099ff"
+			}
+		},
+		{
+			"path": "pages/trip/trip",
+			"style": {
+				"navigationBarTitleText": "行程管理",
+				"navigationBarBackgroundColor": "#0099ff",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/luggage/luggage",
+			"style": {
+				"navigationBarTitleText": "行李清单",
+				"navigationBarBackgroundColor": "#0099ff",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/bill/bill",
+			"style": {
+				"navigationBarTitleText": "旅行账单",
+				"navigationBarBackgroundColor": "#0099ff",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/profile/profile",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"navigationBarBackgroundColor": "#0099ff",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/strategy/strategy",
+			"style": {
+				"navigationBarTitleText": "旅游攻略",
+				"navigationBarBackgroundColor": "#0099ff",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "消息",
+				"navigationBarBackgroundColor": "#0099ff",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/Detail/Detail",
+			"style": {
+				"navigationBarTitleText": "细节",
+				"navigationBarBackgroundColor": "#0099ff",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/add-name/add-name",
+			"style": {
+				"navigationBarTitleText": "添加-名字",
+				"navigationBarBackgroundColor": "#0099ff",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/detail-index/detail-index",
+			"style": {
+				"navigationBarTitleText": "详情",
+				"navigationBarBackgroundColor": "#0099ff",
+				"navigationBarTextStyle": "white"
+			}
+		}
+	],
+
+	"tabBar": {
+		"color": "#cfcfcf",
+		"selectedColor": "#ffffff",
+		"backgroundColor": "#ef2300",
+		"fontSize": "12px",
+		"height": "80px",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"text": "主页",
+				"iconPath": "/static/icon-home-bird.png",
+				"selectedIconPath": "/static/icon-home-bird-active.png"
+			},
+			{
+				"pagePath": "pages/trip/trip",
+				"text": "旅程",
+				"iconPath": "/static/icon-trip-bird.png",
+				"selectedIconPath": "/static/icon-trip-bird-active.png"
+			},
+			{
+				"pagePath": "pages/index/index",
+				"text": "",
+				"iconPath": "/static/add-name.png",
+				"selectedIconPath": "/static/add-name.png"
+			},
+			{
+				"pagePath": "pages/message/message",
+				"text": "消息",
+				"iconPath": "/static/icon-message-bird.png",
+				"selectedIconPath": "/static/icon-message-bird-active.png"
+			},
+			{
+				"pagePath": "pages/profile/profile",
+				"text": "我的",
+				"iconPath": "/static/icon-profile-bird.png",
+				"selectedIconPath": "/static/icon-profile-bird-active.png"
+			}
+		]
 	}
-	
-	
-  ],
-  "tabBar": {
-    "color": "#cfcfcf",
-    "selectedColor": "#ffffff",
-    "backgroundColor": "#ef2300",
-    "fontSize": "12px",
-    "height": "80px",
-    "list": [
-      {
-        "pagePath": "pages/index/index",
-        "text": "主页",
-        "iconPath": "/static/icon-home-bird.png",
-        "selectedIconPath": "/static/icon-home-bird-active.png"
-      },
-      {
-        "pagePath": "pages/trip/trip",
-        "text": "旅程",
-        "iconPath": "/static/icon-trip-bird.png",
-        "selectedIconPath": "/static/icon-trip-bird-active.png"
-      },
-      {
-        "pagePath": "pages/index/index",
-        "text": "",
-        "iconPath": "/static/add-name.png",
-        "selectedIconPath": "/static/add-name.png"
-      },
-      {
-        "pagePath": "pages/message/message",
-        "text": "消息",
-        "iconPath": "/static/icon-message-bird.png",
-        "selectedIconPath": "/static/icon-message-bird-active.png"
-      },
-      {
-        "pagePath": "pages/profile/profile",
-        "text": "我的",
-        "iconPath": "/static/icon-profile-bird.png",
-        "selectedIconPath": "/static/icon-profile-bird-active.png"
-      }
-    ]
-  }
 }
