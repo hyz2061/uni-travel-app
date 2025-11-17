@@ -127,7 +127,7 @@ export default {
 <style scoped>
 .journey-detail-page {
   min-height: 100vh;
-  background-color: #00a8ff;
+  background-color: #25B0F0;
   padding: 15px;
   color: #fff;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
