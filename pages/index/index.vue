@@ -174,7 +174,13 @@ export default {
       // 导航逻辑可以在这里实现
       console.log('导航到:', page);
       // 实际项目中可以使用vue-router进行路由跳转
-    }
+    },
+	 handleImageClick(item) {
+	    this.$router.push({
+	      path: '/pages/detail-index/detail-index',
+	      query: { id: item.id }  // 传递参数
+	    })
+	  }
   }
 };
 </script>
