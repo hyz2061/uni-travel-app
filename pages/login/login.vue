@@ -34,6 +34,9 @@
       <!-- 验证码登录（修改后） -->
       <view v-else-if="currentView === 'code'">
         <view class="input-group">
+		<button @click="goBack" class="back-button" aria-label="返回消息列表">
+			<i class="arrow-left"></i>
+		</button>
           <input type="text" placeholder="电话号码" class="input-field" style="background-color:#ffd700; color: #000;"/>
          <!-- 页面的 WXML 文件 -->
         <view class="verify-container">
@@ -49,7 +52,11 @@
       </view>
 
       <!-- 找回密码 -->
+	  
       <view v-else-if="currentView === 'findPwd'">
+		  <button @click="goBack" class="back-button" aria-label="返回消息列表">
+		    <i class="arrow-left"></i>
+		  </button>
         <view class="input-group">
           <input type="text" placeholder="电话号码" class="input-field" />
           <!-- 页面的 WXML 文件 -->
@@ -70,6 +77,9 @@
 
     <!-- 其他登录方式 -->
     <view class="other-login">
+		<button @click="goBack" class="back-button" aria-label="返回消息列表">
+		  <i class="arrow-left"></i>
+		</button>
       <view class="divider">
         <view class="line"></view>
         <text>它登陆方式</text>
@@ -111,6 +121,9 @@ export default {
     switchToFindPwd() {
       this.currentView = 'findPwd';
     },
+	goBack() {
+	  this.currentPage = 'account';
+	},
 
     // 账号密码登录逻辑
     handleAccountLogin() {
@@ -434,5 +447,20 @@ export default {
 	  font-size: 26rpx;
 	  border: none;
 	  
+  }
+  .back-button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10px;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+  }
+  
+  .back-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
   }
 </style>

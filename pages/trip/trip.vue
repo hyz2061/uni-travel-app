@@ -8,14 +8,14 @@
       <img src="/static/go.png" alt="旅行鹦鹉" class="parrot-img" />
     </div>
 
-    <!-- 待出发区域 -->
+   <!-- 外层容器统一背景 -->
+   <div class="container">
+     <!-- 待出发区域 -->
      <div class="section">
        <h2 class="section-title">待出发</h2>
        <div class="card-group">
-		<navigator url="/pages/Detail/Detail" class="card blue">
-         <div class="card blue"></div>
-		</navigator>
-         <div class="card red"></div>
+         <navigator url="/pages/Detail/Detail" class="card blue large"></navigator>
+         <div class="card red small"></div>
        </div>
      </div>
    
@@ -26,18 +26,20 @@
          <p class="ended-stats">3次旅程 3.6KM 总消费¥32000.00</p>
        </div>
        <div class="card-group">
-         <div class="card blue"></div>
-         <div class="card red"></div>
-         <div class="card blue"></div>
+         <div class="card blue full"></div>
+         <div class="card red full"></div>
+         <div class="card blue full"></div>
        </div>
      </div>
+   </div>
+
   </div>
 </template>
 
 <style scoped>
 .journey-page {
   min-height: 100vh;
-  background-color: #00a8ff;
+  background-color:#00a8ff;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -47,6 +49,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px;
+  background-color: #00a8ff;
 }
 .add-btn {
   width: 60px;
@@ -70,7 +73,7 @@
 .section {
   background-color: #ffd700;
   margin: 10px;
-  border-radius: 8px;
+  border-radius: 10px 10px 0px 0px;
   padding: 15px;
 }
 .section-title {
@@ -83,20 +86,22 @@
 /* 待出发卡片组 */
 .card-group {
   display: flex;
+  border-radius: 10px 10px 0px 0px;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 10px;
 }
+
 .card {
-  width: calc(50% - 5px);
+  width: 50%; /* 改为 50% */
   height: 90px;
   border-radius: 8px;
 }
+
 .blue {
-  background-color: #00a8ff;
+  background-color: #25bdfd;
 }
 .red {
-  background-color: #e63946;
+  background-color: #FE4A49;
 }
 
 /* 已结束区域头部 */
@@ -125,7 +130,7 @@
   border-radius: 8px;
 }
 .blue {
-  background-color: #00a8ff;
+  background-color:#25bdfd;
   flex: 1;
   min-width: calc(50% - 5px);
 }
@@ -143,7 +148,7 @@
 }
 .ended-stats {
   font-size: 12px;
-  color: #666;
+  color: #ffffff;
   margin: 0;
 }
 
@@ -154,5 +159,28 @@
 }
 .ended-header + .card-group .card:last-child {
   margin-bottom: 0;
+}
+.container {
+  background-color: #ffd700; 
+  height: 100%;
+  padding: 10px;
+  border-radius: 20px 20px 0px 0px;
+  margin: 0;
+}
+
+
+.card.blue.full {
+  background-color:#25bdfd;
+}
+.card.red.full {
+  background-color: #FE4A49;
+}
+
+/* 已结束区域的统计信息 */
+.ended-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 </style>

@@ -68,14 +68,14 @@
 							<path d="M18 9L12 15L6 9" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 						</svg>
 					</div>
-					<span class="bill-total-number">{{ total.toFixed(2) }}</span>
+					<span class="bill-total-number">{{ currentInput }}</span>
 				</div>
 				<div class="keyboard-main-container">
 					<div class="keyboard-row">
-						<div class="keyboard-key">1</div>
-						<div class="keyboard-key">2</div>
-						<div class="keyboard-key">3</div>
-						<div class="keyboard-key" style="background-color: #FE4A49;">
+						<div class="keyboard-key" @click="handleNumber('1')">1</div>
+						<div class="keyboard-key" @click="handleNumber('2')">2</div>
+						<div class="keyboard-key" @click="handleNumber('3')">3</div>
+						<div class="keyboard-key" style="background-color: #FE4A49;" @click="openDatePicker">
 							<svg class="key-icon-date" width="24" height="24" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
 								<path d="M2.60416 9.89575H22.3958V20.8333C22.3958 21.4086 21.9295 21.8749 21.3542 21.8749H3.64582C3.07053 21.8749 2.60416 21.4086 2.60416 20.8333V9.89575Z" stroke="black" stroke-width="1.41667" stroke-linejoin="round"/>
 								<path d="M2.60416 4.68742C2.60416 4.11212 3.07053 3.64575 3.64582 3.64575H21.3542C21.9295 3.64575 22.3958 4.11212 22.3958 4.68742V9.89575H2.60416V4.68742Z" stroke="black" stroke-width="1.41667" stroke-linejoin="round"/>
@@ -90,28 +90,28 @@
 						</div>
 					</div>
 					<div class="keyboard-row">
-						<div class="keyboard-key">4</div>
-						<div class="keyboard-key">5</div>
-						<div class="keyboard-key">6</div>
-						<div class="keyboard-key">+</div>
+						<div class="keyboard-key" @click="handleNumber('4')">4</div>
+						<div class="keyboard-key" @click="handleNumber('5')">5</div>
+						<div class="keyboard-key" @click="handleNumber('6')">6</div>
+						<div class="keyboard-key" @click="handleOperator('+')">+</div>
 					</div>
 					<div class="keyboard-row">
-						<div class="keyboard-key">7</div>
-						<div class="keyboard-key">8</div>
-						<div class="keyboard-key">9</div>
-						<div class="keyboard-key">-</div>
+						<div class="keyboard-key" @click="handleNumber('7')">7</div>
+						<div class="keyboard-key" @click="handleNumber('8')">8</div>
+						<div class="keyboard-key" @click="handleNumber('9')">9</div>
+						<div class="keyboard-key" @click="handleOperator('-')">-</div>
 					</div>
 					<div class="keyboard-row">
-						<div class="keyboard-key">.</div>
-						<div class="keyboard-key">0</div>
-						<div class="keyboard-key" style="background-color: #FE4A49;">
+						<div class="keyboard-key" @click="handleDecimal"> . </div>
+						<div class="keyboard-key" @click="handleNumber('0')">0</div>
+						<div class="keyboard-key" style="background-color: #FE4A49;" @click="handleDelete">
 							<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M11.6666 9.16675L3.33325 20.0001L11.6666 30.8334H36.6666V9.16675H11.6666Z" fill="black" stroke="black" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round"/>
 							<path d="M17.5 15.8333L25.8333 24.1666" stroke="white" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round"/>
 							<path d="M25.8333 15.8333L17.5 24.1666" stroke="white" stroke-width="1.41667" stroke-linecap="round" stroke-linejoin="round"/>
 							</svg>
 						</div>
-						<div class="keyboard-key" style="background-color: #FE4A49;font-size: 48rpx; font-weight: bold;">完成</div>
+						<div class="keyboard-key" style="background-color: #FE4A49;font-size: 48rpx; font-weight: bold;" @click="confirmInput">完成</div>
 					</div>
 				</div>
 			</div>
@@ -161,9 +161,16 @@
 		data() {
 			return {
 				// 标签状态管理
-				currentPrimaryTab: 'solo', // 'solo' 独自旅程, 'group' 同行旅程
-				currentSecondaryTab: 'schedule', // 'schedule' 行程, 'bill' 账单, 'luggage' 行李
-				total: 0.0,
+				currentPrimaryTab: 'solo',
+				currentSecondaryTab: 'schedule',
+				total: 0.00,
+				
+				// 键盘逻辑变量
+				currentInput: '0.00',
+				isDecimalAdded: true,  // 是否已添加小数点
+				pendingOperator: null,  // 待执行的运算符
+				storedValue: null,  // 存储运算前的值
+				
 				// 弹窗状态
 				showTipDialog: true,
 				showAddJourney: false,
@@ -314,15 +321,13 @@
 			}, 3000);
 		},
 		methods: {
-			// 添加新旅程
+			// 原有方法保持不变
 			addNewJourney() {
 				if (!this.newJourneyName.trim()) return;
 				this.journeyList.push(this.newJourneyName);
 				this.showAddJourney = false;
 				this.newJourneyName = '';
 			},
-
-			// 行程项点击处理
 			handleScheduleClick(index) {
 				const currentItem = this.scheduleList[index];
 				if (currentItem.desc === '时间') {
@@ -333,8 +338,6 @@
 					this.handleRouteSelection(index);
 				}
 			},
-
-			// 时间选择处理
 			handleTimeSelection(index) {
 				uni.datePicker({
 					success: (res) => {
@@ -342,8 +345,6 @@
 					}
 				});
 			},
-
-			// 地点选择处理
 			handleLocationSelection(index) {
 				uni.chooseLocation({
 					success: (res) => {
@@ -351,29 +352,168 @@
 					}
 				});
 			},
-
-			// 路线选择处理
 			handleRouteSelection(index) {
-				// 路线选择逻辑
 				uni.showToast({
 					title: '路线选择功能待实现',
 					icon: 'none'
 				});
 			},
-
-			// 账单分类点击处理
 			handleBillCategoryClick(item) {
 				uni.showToast({
 					title: `选择了${item.name}`,
 					icon: 'none'
 				});
 			},
-
-			// 行李分类点击处理
 			handleLuggageCategoryClick(item) {
 				uni.showToast({
 					title: `选择了${item.name}`,
 					icon: 'none'
+				});
+			},
+
+			// 键盘逻辑方法（仅修改这部分）
+			/**
+			 * 处理数字输入
+			 * @param {String} num - 数字字符
+			 */
+			handleNumber(num) {
+				// 初始状态处理
+				if (this.currentInput === '0.00') {
+					this.currentInput = num + '.00';
+					return;
+				}
+
+				// 分割整数和小数部分
+				const [integerPart, decimalPart] = this.currentInput.split('.');
+				
+				if (this.isDecimalAdded) {
+					// 小数部分处理（限制2位）
+					if (decimalPart.length < 2) {
+						this.currentInput = `${integerPart}.${decimalPart}${num}`;
+					}
+				} else {
+					// 整数部分处理（避免前置零）
+					if (integerPart === '0') {
+						this.currentInput = num;
+					} else {
+						this.currentInput += num;
+					}
+				}
+
+				// 同步更新总金额
+				this.total = parseFloat(this.currentInput);
+			},
+
+			/**
+			 * 处理小数点输入
+			 */
+			handleDecimal() {
+				if (!this.isDecimalAdded) {
+					this.currentInput += '.';
+					this.isDecimalAdded = true;
+				}
+			},
+
+			/**
+			 * 处理运算符输入
+			 * @param {String} op - 运算符 '+' 或 '-'
+			 */
+			handleOperator(op) {
+				// 存储当前值并记录运算符
+				this.storedValue = parseFloat(this.currentInput);
+				this.pendingOperator = op;
+				// 重置输入状态
+				this.currentInput = '0.00';
+				this.isDecimalAdded = true;
+			},
+
+			/**
+			 * 处理删除（退格）
+			 */
+			handleDelete() {
+				if (this.currentInput.length === 1) {
+					// 重置为初始状态
+					this.currentInput = '0.00';
+					this.isDecimalAdded = true;
+				} else {
+					// 移除最后一位
+					let newInput = this.currentInput.slice(0, -1);
+					
+					// 处理小数点删除
+					if (newInput.endsWith('.')) {
+						newInput = newInput.slice(0, -1);
+						this.isDecimalAdded = false;
+					}
+					
+					// 处理删除后为空的情况
+					if (newInput === '') {
+						newInput = '0';
+						this.isDecimalAdded = false;
+					}
+					
+					this.currentInput = newInput;
+					this.isDecimalAdded = this.currentInput.includes('.');
+				}
+
+				// 同步更新总金额
+				this.total = parseFloat(this.currentInput) || 0;
+			},
+
+			/**
+			 * 确认输入并计算最终结果
+			 */
+			confirmInput() {
+				// 处理未完成的运算
+				if (this.pendingOperator && this.storedValue !== null) {
+					const currentValue = parseFloat(this.currentInput);
+					let result;
+
+					switch (this.pendingOperator) {
+						case '+':
+							result = this.storedValue + currentValue;
+							break;
+						case '-':
+							result = this.storedValue - currentValue;
+							break;
+						default:
+							result = currentValue;
+					}
+
+					// 防止负数
+					if (result < 0) {
+						uni.showToast({ title: '金额不能为负数', icon: 'none' });
+						return;
+					}
+
+					// 格式化结果为两位小数
+					this.currentInput = result.toFixed(2);
+					this.storedValue = null;
+					this.pendingOperator = null;
+				}
+
+				// 确保最终格式正确
+				this.total = parseFloat(this.currentInput);
+				this.isDecimalAdded = this.currentInput.includes('.');
+				
+				// 提示用户
+				uni.showToast({
+					title: `已确认金额：${this.currentInput}元`,
+					icon: 'none'
+				});
+			},
+
+			/**
+			 * 打开日期选择器
+			 */
+			openDatePicker() {
+				uni.datePicker({
+					mode: 'date',
+					success: (res) => {
+						uni.showToast({
+							title: `选择日期：${res.value}`,
+							icon: 'none'
+						});
+					}
 				});
 			}
 		}
@@ -381,6 +521,8 @@
 </script>
 
 <style scoped lang="scss">
+	$bgcolor: #f5f5f5;
+	$icon-bgcolor: #e0e0e0;
 
 	.--my-icon {
 		background-color: $icon-bgcolor;

@@ -5,19 +5,21 @@
       <img src="/static/背景.png" alt="地球鹦鹉" class="banner-img" />
       <div class="user-info-stats">
         <div class="user-info">
-          <img src="https://picsum.photos/50/50" alt="用户头像" class="avatar" />
+          <img src="/static/头像.png" alt="用户头像" class="avatar" />
           <span class="nickname">HI！未登录</span>
-          <img src="https://picsum.photos/30/30" alt="二维码" class="qrcode" />
+          <img src="/static/二维码.png" alt="二维码" class="qrcode" />
         </div>
         <div class="stats-row">
           <div class="stat-item">
             <span class="stat-num">0</span>
             <span class="stat-label">积分商城</span>
           </div>
+		  <span class="stat-num">|</span>
           <div class="stat-item">
             <span class="stat-num">0</span>
             <span class="stat-label">采集行程</span>
           </div>
+		   <span class="stat-num">|</span>
           <div class="stat-item">
             <span class="stat-num">0</span>
             <span class="stat-label">收藏行程</span>
@@ -38,31 +40,31 @@
        <h3 class="func-title">我的功能</h3>
        <div class="func-grid">
          <div class="func-item">
-           <img src="https://picsum.photos/45/45?random=1" alt="开道有礼" class="func-icon" />
+           <img src="/static/T1.png" alt="开道有礼" class="func-icon" />
            <span class="func-label">开道有礼</span>
          </div>
          <div class="func-item">
-           <img src="https://picsum.photos/45/45?random=2" alt="会员中心" class="func-icon" />
+           <img src="/static/T2.png" alt="会员中心" class="func-icon" />
            <span class="func-label">会员中心</span>
          </div>
          <div class="func-item">
-           <img src="https://picsum.photos/45/45?random=3" alt="三方兑换" class="func-icon" />
+           <img src="/static/T3.png" alt="三方兑换" class="func-icon" />
            <span class="func-label">三方兑换</span>
          </div>
          <div class="func-item">
-           <img src="https://picsum.photos/45/45?random=4" alt="我的礼品" class="func-icon" />
+           <img src="/static/T4.png" alt="我的礼品" class="func-icon" />
            <span class="func-label">我的礼品</span>
          </div>
          <div class="func-item">
-           <img src="https://picsum.photos/45/45?random=5" alt="加入群聊" class="func-icon" />
+           <img src="/static/T6.png" alt="加入群聊" class="func-icon" />
            <span class="func-label">加入群聊</span>
          </div>
          <div class="func-item">
-           <img src="https://picsum.photos/45/45?random=6" alt="官方客服" class="func-icon" />
+           <img src="/static/T8.png" alt="官方客服" class="func-icon" />
            <span class="func-label">官方客服</span>
          </div>
          <div class="func-item">
-           <img src="https://picsum.photos/45/45?random=7" alt="更多" class="func-icon" />
+           <img src="/static/T9.png" alt="更多" class="func-icon" />
            <span class="func-label">更多</span>
          </div>
        </div>
@@ -74,7 +76,7 @@
 .user-page {
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background-color: #ffd700;
+  background-color: #ffffff;
 }
 
 
@@ -82,7 +84,7 @@
 .top-banner {
   position: relative;
   width: 100%;
-  background-color:  #2196F3;
+  background-color:  #00a8ff;
 }
 .banner-img {
   width: 100%;
@@ -93,8 +95,8 @@
   bottom: -30px;
   left: 10px;
   right: 10px;
-  background-color: #ffd700;
-  border-radius: 8px;
+  background-color: #f6cd48;
+  border-radius: 18px;
   padding: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
@@ -136,33 +138,61 @@
   margin-top: 5px;
 }
 
-/* 会员特权区 */
+/* 会员特权区整体布局：改为垂直排列，底部对齐内容 */
 .vip-section {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* 垂直方向排列 */
   padding: 12px 15px;
   background-color: #00a8ff; /* 蓝色背景 */
   margin: 10px;
-  border-radius: 8px;
+  border-radius: 10px;
 }
+
+/* 标签栏：保持水平分布，背景改为黄色，增加样式 */
+.tab {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fdd835; /* 黄色背景 */
+  padding: 8px 15px;
+  border-radius: 8px 8px 0 0; /* 顶部圆角 */
+  margin: -12px -15px 15px; /* 向外扩展覆盖父元素padding */
+}
+
+.tab span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.tab span:not(:last-child) {
+  border-right: 1px solid #000; /* 分隔线 */
+  padding-right: 20px;
+  margin-right: 20px;
+}
+
+/* 提示文字：底部左对齐 */
 .vip-tip {
   font-size: 14px;
-  color: #ffffff; /* 白色文字 */
-}
+  color: #ffffff;
+  position: relative;
+  top: 30px;
+  font-weight: 900;
+ }
+
+/* 开通按钮：右对齐 */
 .vip-btn {
-  background-color: #e63946;
+  background-color: #fe4a49;
   color: #fff;
   border: none;
-  padding: 4px 15px;
+  padding: 2px 15px;
   border-radius: 20px;
   font-size: 14px;
   cursor: pointer;
+  align-self: flex-end; /* 右对齐 */
 }
 
 /* 功能入口区 */
 .func-section {
-  background-color:  #2196F3;
+  background-color: #00a8ff;
   padding: 15px;
   border-radius: 8px;
   margin: 10px;
@@ -187,7 +217,7 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background-color: #ffd700;
+  background-color: #fe4a49;
   padding: 5px;
 }
 .func-label {
