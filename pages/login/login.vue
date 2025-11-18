@@ -2,7 +2,13 @@
 
 
 <template>
+  <view class="jump">
+	<router-link to="/pages/index/index">
+	    <span class="jump-span">跳过</span>
+	  </router-link>
+  </view>
   <view class="login-page">
+	 
     <!-- 顶部Logo区域 -->
     <view class="logo-container">
       <image src="/static/头像.png" mode="aspectFit" class="logo-img"></image>
@@ -33,6 +39,10 @@
 
       <!-- 验证码登录（修改后） -->
       <view v-else-if="currentView === 'code'">
+		  <view class="link-row">
+		    <!-- 替换 button 为 a 标签 -->
+		    <text @click="goBack" class="link-btn">想起密码了，返回登录</text>
+		  </view>
         <view class="input-group">
 		<button @click="goBack" class="back-button" aria-label="返回消息列表">
 			<i class="arrow-left"></i>
@@ -54,6 +64,11 @@
       <!-- 找回密码 -->
 	  
       <view v-else-if="currentView === 'findPwd'">
+		  <view class="link-row">
+		    <!-- 替换 button 为 a 标签 -->
+		    <text @click="goBack" class="link-btn">想起密码了，返回登录</text>
+		  
+		  </view>
 		  <button @click="goBack" class="back-button" aria-label="返回消息列表">
 		    <i class="arrow-left"></i>
 		  </button>
@@ -122,7 +137,7 @@ export default {
       this.currentView = 'findPwd';
     },
 	goBack() {
-	  this.currentPage = 'account';
+	  this.currentView = 'account';
 	},
 
     // 账号密码登录逻辑
@@ -192,6 +207,18 @@ export default {
 </script>
 
 <style scoped>
+.jump{
+	background-color: #40a9ff;
+	 display: flex; /* 开启Flex布局 */
+	  justify-content: flex-end; /* 子元素靠右对齐 */
+}
+.jump-span{
+	color: #ffffff;
+	border: 0em;
+	position: relative;
+	left: 330px;
+	
+}
 .login-page {
   width: 100%;
   height: 100vh;

@@ -110,7 +110,7 @@
 				"selectedIconPath": "/static/icon-trip-bird-active.png"
 			},
 			{
-				"pagePath": "pages/index/index",
+				"pagePath": "pages/add-name/add-name",
 				"text": "",
 				"iconPath": "/static/add-name.png",
 				"selectedIconPath": "/static/add-name.png"

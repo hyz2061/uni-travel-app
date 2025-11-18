@@ -3,11 +3,12 @@
 <template>
   <div class="journey-detail-page">
     <!-- 头部区域 -->
-
+	
+	<div><span>< 返回</span></div>
     <!-- 城市与时间信息 -->
     <div class="city-info">
       <h1 class="city">西安</h1>
-      <p class="time" style="color: black;">2025.12.22—2025.12.24 待出发</p>
+      <p class="time" style="color: white;">2025.12.22—2025.12.24 待出发</p>
       <div class="tag">3天2夜</div>
     </div>
 
@@ -155,10 +156,15 @@ export default {
   width: 24px;
   height: 24px;
 }
+span{
+	color: #000;
+	font-weight: 900;
+}
 
 /* 城市与时间信息 */
 .city-info {
-  margin-bottom: 20px;
+	position: relative;
+	top: 25px;
   color: #000;
 }
 .city {
@@ -174,7 +180,7 @@ export default {
 }
 .tag {
   display: inline-block;
-  background-color:transparent;
+  background-color:#ffd700;
   color: #000000;
   padding: 3px 10px;
   border-radius: 10px;
@@ -186,7 +192,10 @@ export default {
 /* 标签栏 */
 .tabs {
   display: flex;
+  position: relative;
+  top:30px;
   gap: 0; /* 标签之间无间距 */
+  width: 100%;
   margin-bottom: 0; /* 取消底部间距 */
 }
 .tab {
@@ -203,7 +212,7 @@ export default {
   border-right: none; /* 最后一个标签也去除右侧边框 */
 }
 .tab.active {
-  background-color: #ffd700;
+  background-color: #ffffff;
   color: #333;
 }
 
@@ -219,11 +228,14 @@ export default {
 .frame {
   border-radius: 8px;
   padding: 15px;
+  position: relative;
+  top:30px;
+  
 }
 
 /* 行程 - 第一个框架：黄色背景 */
 .frame.yellow {
-  background-color: #ffd700;
+  background-color: #ffffff;
   color: #333;
 }
 .day-tags {
@@ -244,12 +256,12 @@ export default {
   border-right: none; /* 最后一个标签也去除右侧边框 */
 }
 .day-tag.active {
-  background-color: #ffd700;
+  background-color: #ffffff;
   color: #333;
   border: #000;
 }
 .day-section {
-  background-color: #ffd700;
+  background-color: #ffffff;
   padding: 0;
   margin-bottom: 0;
   border: #000;

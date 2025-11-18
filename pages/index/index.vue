@@ -115,20 +115,37 @@
       </view>
       
       <!-- 关注内容区 -->
-      <view class="tab-content" v-if="activeTab === 'follow'">
-        <view class="empty-state">
-          <p>关注的内容将显示在这里</p>
-        </view>
-      </view>
+     <view class="tab-content" v-if="activeTab === 'follow'">
+         <view class="travel-cards">
+           <view v-for="(item, index) in recommendItems" :key="index" class="travel-card">
+             <img :src="item.imgUrl" :alt="item.title" class="card-img"  @click="handleImageClick" >
+             <view class="card-text">
+               <h4 class="card-title">{{ item.title }}</h4>
+               <view class="card-meta">
+                 <span class="meta-detail">查看详情</span>
+                 <span class="meta-count">{{ item.views }}</span>
+               </view>
+             </view>
+           </view>
+         </view>
+       </view>
       
       <!-- 团旅内容区 -->
-      <view class="tab-content" v-if="activeTab === 'group'">
-        <view class="empty-state">
-          <p>团旅的内容将显示在这里</p>
+    <view class="tab-content" v-if="activeTab === 'group'">
+        <view class="travel-cards">
+          <view v-for="(item, index) in recommendItems" :key="index" class="travel-card">
+            <img :src="item.imgUrl" :alt="item.title" class="card-img"  @click="handleImageClick" >
+            <view class="card-text">
+              <h4 class="card-title">{{ item.title }}</h4>
+              <view class="card-meta">
+                <span class="meta-detail">查看详情</span>
+                <span class="meta-count">{{ item.views }}</span>
+              </view>
+            </view>
+          </view>
         </view>
       </view>
-    </view>
-   
+   </view>
   </view>
 </template>
 
