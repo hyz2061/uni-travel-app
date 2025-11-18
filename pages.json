@@ -92,41 +92,10 @@
 	],
 
 	"tabBar": {
+		"custom": true,
 		"color": "#cfcfcf",
 		"selectedColor": "#ffffff",
-		"backgroundColor": "#ef2300",
-		"fontSize": "12px",
-		"height": "80px",
-		"list": [{
-				"pagePath": "pages/index/index",
-				"text": "主页",
-				"iconPath": "/static/icon-home-bird.png",
-				"selectedIconPath": "/static/icon-home-bird-active.png"
-			},
-			{
-				"pagePath": "pages/trip/trip",
-				"text": "旅程",
-				"iconPath": "/static/icon-trip-bird.png",
-				"selectedIconPath": "/static/icon-trip-bird-active.png"
-			},
-			{
-				"pagePath": "pages/add-name/add-name",
-				"text": "",
-				"iconPath": "/static/add-name.png",
-				"selectedIconPath": "/static/add-name.png"
-			},
-			{
-				"pagePath": "pages/message/message",
-				"text": "消息",
-				"iconPath": "/static/icon-message-bird.png",
-				"selectedIconPath": "/static/icon-message-bird-active.png"
-			},
-			{
-				"pagePath": "pages/profile/profile",
-				"text": "我的",
-				"iconPath": "/static/icon-profile-bird.png",
-				"selectedIconPath": "/static/icon-profile-bird-active.png"
-			}
-		]
+		"backgroundColor": "transparent",
+		"height": "0px"
 	}
 }

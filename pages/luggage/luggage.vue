@@ -521,8 +521,6 @@
 </script>
 
 <style scoped lang="scss">
-	$bgcolor: #f5f5f5;
-	$icon-bgcolor: #e0e0e0;
 
 	.--my-icon {
 		background-color: $icon-bgcolor;
