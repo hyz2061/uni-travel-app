@@ -2,11 +2,6 @@
 
 
 <template>
-  <view class="jump">
-	<router-link to="/pages/index/index">
-	    <span class="jump-span">跳过</span>
-	  </router-link>
-  </view>
   <view class="login-page">
 	 
     <!-- 顶部Logo区域 -->
