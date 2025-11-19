@@ -147,10 +147,12 @@
       </view>
    </view>
   </view>
+  <tabbar></tabbar>
 </template>
 
 <script>
 	import centerButton from '@/components/center-button/center-button.uvue'
+  import tabbar from '@/components/tabbar/tabbar.vue'
 export default {
   name: 'TravelApp',
   data() {

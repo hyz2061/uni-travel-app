@@ -144,11 +144,14 @@ export default {
         return uni.showToast({ title: '请输入密码', icon: 'none' });
       }
       // 实际项目中这里会调用登录接口
-      uni.switchTab({
-               url: '/pages/index/index', // 路径需在 pages.json 中配置为 tabBar
-               success: () => console.log("跳转成功"),
-               fail: (err) => console.log("跳转失败：", err) // 关键：打印错误信息
-             });
+      // uni.switchTab({
+      //          url: '/pages/index/index', // 路径需在 pages.json 中配置为 tabBar
+      //          success: () => console.log("跳转成功"),
+      //          fail: (err) => console.log("跳转失败：", err) // 关键：打印错误信息
+      //        });
+	  uni.navigateTo({
+	  	url: "/pages/index/index"
+	  })
 	},
 
     // 验证码登录逻辑
