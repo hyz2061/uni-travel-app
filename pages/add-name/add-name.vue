@@ -1,5 +1,9 @@
 <template>
   <div class="trip-name-page">
+
+	    <div class="back-area">
+	       <span class="back-icon" @click="goback">< 返回</span>
+	    </div>
     <div class="back-section">
     </div>
     <div class="content-section">
@@ -31,6 +35,11 @@ export default {
     };
   },
   methods: {
+	   goback() {
+	        uni.redirectTo({
+	          url: "/pages/index/index"
+	        })
+	        },
     countChars() {
       this.charLength = this.tripName.length;
     },
@@ -43,7 +52,8 @@ export default {
   },
   mounted() {
     this.countChars();
-  }
+  },
+
 };
 </script>
 
@@ -61,6 +71,9 @@ export default {
   color: #fff;
   font-size: 16px;
   cursor: pointer;
+}
+.back-icon{
+	color: #ffffff;
 }
 .content-section {
   display: flex;

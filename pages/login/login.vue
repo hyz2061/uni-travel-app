@@ -3,6 +3,14 @@
 
 <template>
   <view class="login-page">
+	   <view class="top-btn-container">
+	        <template v-if="currentView === 'account'">
+	          <button class="skip-btn" @click="handleSkip">跳过</button>
+	        </template>
+	        <template v-else>
+	          <button class="back-btn" @click="goBack">< 返回</button>
+	        </template>
+	      </view>
 	 
     <!-- 顶部Logo区域 -->
     <view class="logo-container">
@@ -34,10 +42,6 @@
 
       <!-- 验证码登录（修改后） -->
       <view v-else-if="currentView === 'code'">
-		  <view class="link-row">
-		    <!-- 替换 button 为 a 标签 -->
-		    <text @click="goBack" class="link-btn">想起密码了，返回登录</text>
-		  </view>
         <view class="input-group">
 		<button @click="goBack" class="back-button" aria-label="返回消息列表">
 			<i class="arrow-left"></i>
@@ -53,17 +57,12 @@
                <button class="get-code-btn" @click="getVerificationCode">获取验证码</button>
              </view>
         </view>
-        <button class="main-btn red-btn">确认</button>
+        <button class="main-btn red-btn" @click="goBack">确认</button>
       </view>
 
       <!-- 找回密码 -->
 	  
       <view v-else-if="currentView === 'findPwd'">
-		  <view class="link-row">
-		    <!-- 替换 button 为 a 标签 -->
-		    <text @click="goBack" class="link-btn">想起密码了，返回登录</text>
-		  
-		  </view>
 		  <button @click="goBack" class="back-button" aria-label="返回消息列表">
 		    <i class="arrow-left"></i>
 		  </button>
@@ -81,7 +80,7 @@
           <input type="password" placeholder="新密码" class="input-field" />
           <input type="password" placeholder="重新输入密码" class="input-field" />
         </view>
-        <button class="main-btn red-btn">确认</button>
+        <button class="main-btn red-btn" @click="goBack">确认</button>
       </view>
     </view>
 
@@ -119,6 +118,11 @@ export default {
     };
   },
   methods: {
+	  handleSkip() {
+	        uni.navigateTo({
+	          url: '/pages/index/index'
+	        });
+	      },
     // 切换视图
     switchView(viewType) {
       this.currentView = viewType;
@@ -205,6 +209,9 @@ export default {
 </script>
 
 <style scoped>
+text{
+	font-size: 14px;
+}
 .jump{
 	background-color: #40a9ff;
 	 display: flex; /* 开启Flex布局 */
@@ -446,7 +453,10 @@ export default {
    border-radius: 50rpx;   /* 圆角优化 */
    padding: 0 30rpx;
    height: 80rpx;
-   margin: 4px;
+   margin: 5px;
+   position: relative;
+   top: -5px;
+   
   
 }
 
@@ -473,6 +483,9 @@ export default {
 	  border: none;
 	  
   }
+  .get-code-btn::after {
+    border: none; /* 清除小程序按钮默认的伪元素边框 */
+  }
   .back-button {
     background: none;
     border: none;
@@ -487,5 +500,47 @@ export default {
   
   .back-button:hover {
     background-color: rgba(255, 255, 255, 0.1);
+  }
+  /* 顶部按钮容器 */
+  .top-btn-container {
+    position: absolute;
+    top: 20rpx;
+    left: 20rpx; /* 返回按钮靠左，跳过按钮可调整位置 */
+    z-index: 999;
+  }
+  
+  /* 跳过按钮样式 */
+  .skip-btn {
+    background-color: transparent;
+    color: #fff;
+    font-size: 28rpx;
+    padding: 10rpx 20rpx;
+    border: none;
+  }
+  
+  .skip-btn::after {
+    border: none;
+  }
+  
+  /* 返回按钮样式 */
+  .back-btn {
+    background-color: transparent;
+    color: #fff;
+    font-size: 28rpx;
+    padding: 10rpx 20rpx;
+    border: none;
+    display: flex;
+    align-items: center;
+  }
+  
+  .back-btn::after {
+    border: none;
+  }
+  
+  /* 可选：添加返回箭头图标（需先引入图标资源） */
+  .back-btn .arrow-icon {
+    margin-right: 8rpx;
+    width: 24rpx;
+    height: 24rpx;
   }
 </style>

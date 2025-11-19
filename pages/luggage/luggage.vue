@@ -1,9 +1,11 @@
 <template>
 	<div class="journey-page">
 		<!-- 页面头部 -->
+		<!-- 页面头部 -->
 		<div class="page-header">
-			<h1 class="page-title">默认旅程</h1>
-			<button class="add-btn" @click="showAddJourney = true">+ 添加旅程</button>
+		  <div class="back-btn" @click="goBack">< 返回</div>
+		  <h1 class="page-title">默认旅程</h1>
+		  <div class="black-square"></div>
 		</div>
 
 		<!-- 旅程类型标签栏 -->
@@ -42,6 +44,57 @@
 					<p class="item-name">{{ item.name }}</p>
 					<p class="item-desc">{{ item.desc }}</p>
 				</div>
+			</div>
+			<!-- 自定义键盘 -->
+			<div class="custom-keyboard">
+			  <div class="keyboard-row">
+			    <div class="key blue-key">"The"</div>
+			    <div class="key">the</div>
+			    <div class="key">to</div>
+			  </div>
+			  <div class="keyboard-row">
+			    <div class="key blue-key">q</div>
+			    <div class="key blue-key">w</div>
+			    <div class="key blue-key">e</div>
+			    <div class="key blue-key">r</div>
+			    <div class="key blue-key">t</div>
+			    <div class="key blue-key">y</div>
+			    <div class="key blue-key">u</div>
+			    <div class="key blue-key">i</div>
+			    <div class="key blue-key">o</div>
+			    <div class="key blue-key">p</div>
+			  </div>
+			  <div class="keyboard-row">
+			    <div class="key blue-key">a</div>
+			    <div class="key blue-key">s</div>
+			    <div class="key blue-key">d</div>
+			    <div class="key blue-key">f</div>
+			    <div class="key blue-key">g</div>
+			    <div class="key blue-key">h</div>
+			    <div class="key blue-key">j</div>
+			    <div class="key blue-key">k</div>
+			    <div class="key blue-key">l</div>
+			  </div>
+			  <div class="keyboard-row">
+			    <div class="key orange-key">↑</div>
+			    <div class="key blue-key">z</div>
+			    <div class="key blue-key">x</div>
+			    <div class="key blue-key">c</div>
+			    <div class="key blue-key">v</div>
+			    <div class="key blue-key">b</div>
+			    <div class="key blue-key">n</div>
+			    <div class="key blue-key">m</div>
+			    <div class="key red-key">×</div>
+			  </div>
+			  <div class="keyboard-row">
+			    <div class="key red-key">ABC</div>
+			    <div class="key space-key">space</div>
+			    <div class="key red-key">return</div>
+			  </div>
+			   <div class="icon-row">
+			      <img src="/static/笑脸.png" class="icon-item emoji-icon"/>
+			      <img  src="/static/话.png"class="icon-item mic-icon"/>
+			    </div>
 			</div>
 		</div>
 
@@ -136,11 +189,14 @@
 
 		<!-- 温馨提示弹窗 -->
 		<div v-if="showTipDialog" class="tip-dialog">
-			<div class="tip-content">
-				<h3 class="tip-title">温馨提示</h3>
-				<p class="tip-message">点击需要用品纲目进行选择，支持拍照上传物品图片。</p>
-				<button class="tip-confirm-btn" @click="showTipDialog = false">了解 进入旅程</button>
-			</div>
+		  <div class="tip-content">
+		    <h3 class="tip-title">温馨提示</h3>
+		    <p class="tip-message">点击需要用品纲目进行选择，支持拍照上传物品图片。</p>
+		    <button class="tip-confirm-btn" @click="showTipDialog = false">了解 进入旅程</button>
+		    <div class="tip-media">
+		      <img src="/static/记录.png" alt="温馨提示插图" class="tip-img" />
+		    </div>
+		  </div>
 		</div>
 
 		<!-- 添加旅程弹窗 -->
@@ -327,6 +383,11 @@
 				this.journeyList.push(this.newJourneyName);
 				this.showAddJourney = false;
 				this.newJourneyName = '';
+			},
+			goBack() {
+			  uni.reLaunch({
+			    url: '/pages/Detail/Detail'
+			  });
 			},
 			handleScheduleClick(index) {
 				const currentItem = this.scheduleList[index];
@@ -616,30 +677,6 @@
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 		box-sizing: border-box;
 	}
-
-	/* 页面头部样式 */
-	.page-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 38rpx;
-		color: #fff;
-	}
-
-	.page-title {
-		margin: 0;
-		font-size: 34rpx;
-	}
-
-	.add-btn {
-		background-color: transparent;
-		border: none;
-		color: #fff;
-		font-size: 30rpx;
-		cursor: pointer;
-		padding: 10rpx 19px;
-	}
-
 	/* 一级标签栏样式 */
 	.primary-tabs {
 		display: flex;
@@ -660,37 +697,51 @@
 	/* 通用标签样式 */
 	.tab-item {
 		padding: 11rpx 23rpx;
-		font-size: 30rpx;
+		font-size: 36rpx;
 		cursor: pointer;
-		color: #333;
+		color: #ffffff;
 		position: relative;
 		transition: all 0.3s;
 	}
 
-	.primary-tabs .tab-item {
-		padding: 8px 20px;
-		border-radius: 15px;
-		background: rgba(255, 255, 255, 0.8);
+	.primary-ta.tab-item {
 	}
 
 	.primary-tabs .tab-item.active {
-		background-color: #ff0000;
-		color: #fff;
+		color: #ff0000;
+		  /* 激活态下划线 */
+		  &::after {
+		    content: '';
+		    position: absolute;
+		    bottom: -5px;
+		    left: 0;
+		    width: 100%;
+		    height: 2px;
+		    background-color: #ff0000;
+			}
+	}
+	.secondary-tabs{
+		  display: flex;
+		  justify-content: flex-start; // 让子元素靠左排列
+		  gap: 19rpx;
+		  margin-bottom: 38rpx;
+		  // 若原有其他样式，保持不变
 	}
 
 	.secondary-tabs .tab-item {
 		padding: 4px 8px;
-		background-color: #fff;
-		color: $bgcolor;
+		background-color:transparent;
+		color: black;
 		font-size: 12px;
 		border-radius: 20px;
-		border: 1px solid #000;
+		border: 2px solid #000;
 		width: 60px;
 		text-align: center;
+		font-weight: 900;
 	}
 
 	.secondary-tabs .tab-item.active {
-		background-color: #ffd700;
+		background-color: #F6CD4B;
 		color: #333;
 		transform: scale(1.05);
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -711,20 +762,22 @@
 		cursor: pointer;
 	}
 	
-	.icon-image {
-		width: 42px;
-		height: 42px;
+	.item-icon img {
+	  width: 80%;
+	  height: 80%;
+	  object-fit: cover; // 确保图片在圆形内等比显示
 	}
 
 	.item-icon {
-		width: 60px;
-		height: 60px;
-		border-radius: 50%;
-		background-color: #ff0000;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		overflow: hidden;
+		width: 60px; // 调整图片宽度（根据需求设置，比如改为30px、40px等）
+		  height: 60px; // 高度与宽度保持一致，确保圆形
+		  border-radius: 50%; // 保持圆形
+		  background-color: #ff0000; // 可根据需要设置背景色
+		  border: 2px solid #000; // 添加黑色外边框
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		  overflow: hidden;
 	}
 
 	.item-icon::after {
@@ -795,7 +848,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		background-color: #ffd700;
+		background-color: #F6CD4B;
 		padding: 10px;
 		border-radius: 8px;
 		margin-bottom: 15px;
@@ -837,48 +890,6 @@
 	.confirm-btn {
 		background-color: #ff0000;
 		color: #fff;
-	}
-
-	/* 温馨提示弹窗 */
-	.tip-dialog {
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		background-color: #e63946;
-		color: #fff;
-		padding: 15px;
-		border-top-left-radius: 20px;
-		border-top-right-radius: 20px;
-		animation: fadeIn 0.3s ease;
-	}
-
-	.tip-content {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
-	.tip-title {
-		font-size: 16px;
-		margin-bottom: 10px;
-		margin-top: 0;
-	}
-
-	.tip-message {
-		font-size: 14px;
-		margin-bottom: 15px;
-		text-align: center;
-		margin-top: 0;
-	}
-
-	.tip-confirm-btn {
-		background-color: #ffd700;
-		color: #333;
-		border: 1px solid #000;
-		padding: 6px 12px;
-		border-radius: 4px;
-		cursor: pointer;
 	}
 
 	/* 添加旅程弹窗 */
@@ -959,4 +970,193 @@
 			font-size: 16px;
 		}
 	}
+	/* 页面头部样式 */
+	.page-header {
+	  display: flex;
+	  justify-content: space-between; // 让子元素分别居左、居右
+	  align-items: center;
+	  margin-bottom: 38rpx;
+	  background-color: #25B0F0; 
+	  padding: 20rpx 30rpx; 
+	  color: #fff; 
+	}
+	
+	.back-btn {
+	  font-size: 32rpx;
+	  cursor: pointer;
+	  position: relative;
+	  left: -20px;
+	}
+	
+	.page-title {
+	  margin: 0;
+	  font-size: 20rpx;
+	  position: relative;
+	  left: 70px;
+	}
+	
+	.black-square {
+	  width: 50rpx;
+	  height: 50rpx;
+	  background-color: #000;
+	}
+	.custom-keyboard {
+	  background-color: #F6CD4B; 
+	  padding: 10rpx;
+	  border-radius: 0;
+	  position: fixed;
+	  bottom: 0;
+	  left: 0;
+	  right: 0;
+	  width: 100vw;
+	  height: auto;
+	  box-sizing: border-box; /* 确保padding不影响整体宽度 */
+	}
+	
+	.keyboard-row {
+	  display: flex;
+	  justify-content: space-between;
+	  margin-bottom: 10rpx;
+	  gap: 10rpx; /* 按键间增加间距，避免拥挤 */
+	  padding: 0 10rpx; /* 左右留边，避免贴边 */
+	}
+	
+	/* 第一行按键（"The"、the、to）单独加宽 */
+	.keyboard-row:first-child .key {
+	  width: calc(100% / 3 - 10rpx); /* 平均分配宽度，占满一行 */
+	  height: 90rpx; /* 可适当加高，增强视觉权重 */
+	  font-size: 32rpx; /* 字体稍大，匹配宽度 */
+	}
+	
+	/* 第二、三行按键（字母q-p、a-l）保持原比例 */
+	.keyboard-row:nth-child(2) .key,
+	.keyboard-row:nth-child(3) .key {
+	  width: calc(100% / 10 - 10rpx);
+	  height: 80rpx;
+	}
+	
+	/* 第四行按键（↑、z-m、×） */
+	.keyboard-row:nth-child(4) .key {
+	  width: calc(100% / 9 - 10rpx);
+	  height: 80rpx;
+	}
+	
+	/* 第五行按键（ABC、空格、return） */
+	.keyboard-row:nth-child(5) .key {
+	  width: calc(100% / 3 - 10rpx);
+	  height: 80rpx;
+	}
+	
+	/* 按键基础样式 */
+	.key {
+	  border-radius: 8rpx;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  color: #000000;
+	  font-weight: 900;
+	}
+	
+	.blue-key {
+	  background-color: #25B0F0;
+	}
+	
+	.orange-key {
+	  background-color: #f39c12;
+	}
+	
+	.red-key {
+	  background-color: #ff0000;
+	}
+	
+	.space-key {
+	  background-color: #fff;
+	  color: #000;
+	}
+	.icon-row {
+	  display: flex;
+	  justify-content: space-between;
+	  padding: 10rpx 30rpx;
+	  background-color: #F6CD4B;
+	}
+	
+	.icon-item {
+	  width: 80rpx;
+	  height: 80rpx;
+	  border-radius: 50%;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  font-size: 40rpx;
+	}
+	
+	.emoji-icon {
+	  background-color: #F6CD4B;
+	  color: #000;
+	}
+	
+	.mic-icon {
+	  background-color: #F6CD4B;
+	  color: #000;
+	}
+.tip-dialog {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #e63946;
+  color: #fff;
+  padding: 20rpx;
+  box-sizing: border-box;
+  border-top-left-radius: 30rpx;
+  border-top-right-radius: 30rpx; // 增加弧形圆角
+}
+
+.tip-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative; // 用于定位图片
+}
+
+.tip-media {
+  position: absolute;
+  top: -160rpx; // 向上突出
+  right: 30rpx; // 定位到右上角
+  z-index: 1; // 确保图片在内容上层
+}
+
+.tip-img {
+  width: 200rpx;
+  height: auto;
+  border-radius: 10rpx; // 图片增加轻微弧形
+}
+
+.tip-title {
+  font-size: 32rpx;
+  margin: 0 0 15rpx;
+  position: relative;
+  z-index: 2; // 确保文字在图片上层
+}
+
+.tip-message {
+  font-size: 28rpx;
+  margin: 0 0 20rpx;
+  text-align: center;
+  padding: 0 20rpx;
+  position: relative;
+  z-index: 2;
+}
+
+.tip-confirm-btn {
+  background-color: #ffd700;
+  color: #333;
+  border: 1px solid #000;
+  padding: 8rpx 30rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
 </style>

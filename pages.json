@@ -88,7 +88,16 @@
 				"navigationBarBackgroundColor": "#0099ff",
 				"navigationBarTextStyle": "white"
 			}
+		},
+		{
+			"path": "pages/chat/chat",
+			"style": {
+				"navigationBarTitleText": "聊天",
+				"navigationBarBackgroundColor": "#0099ff",
+				"navigationBarTextStyle": "white"
+			}
 		}
+		
 	],
 
 	"tabBar": {

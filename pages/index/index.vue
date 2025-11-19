@@ -7,7 +7,7 @@
     <header class="top-bar">
       <!-- 用户头像 -->
       <view class="user-avatar">
-        <img src="/static/头像.png" alt="用户头像" class="avatar-img">
+        <img src="/static/头像.png" alt="用户头像" class="avatar-img" @click="gotome">
       </view>
       <!-- 搜索框 -->
       <view class="search-container">
@@ -189,6 +189,11 @@ export default {
   },
  
   methods: {
+	  gotome(){
+		  uni.reLaunch({
+		    url: '/pages/profile/profile'
+		  });  
+	  },
     navigate(page) {
       // 导航逻辑可以在这里实现
       console.log('导航到:', page);
@@ -209,7 +214,7 @@ export default {
 .app-container {
   max-width: 450px;
   margin: 0 auto;
-  background-color: #2196F3;
+  background-color: #ffffff;
   min-height: 100vh;
   position: relative;
   padding-bottom: 60px; /* 为底部导航留出空间 */
@@ -520,6 +525,9 @@ export default {
   border-bottom: 1px solid #eee;
    border: none;
 }
+.tab-btn::after {
+  border: none; /* 清除小程序按钮默认的伪元素边框 */
+}
 
 .tab-btn {
   flex: 1;
@@ -535,16 +543,15 @@ export default {
 }
 
 .tab-btn.active {
-  color: white;
-  background-color: #2196F3;
-  border-bottom: 2px solid #2196F3;
-  border: none;
+  color: red;
+  background-color: #ffffff;
+  border-bottom: 4px solid #ff0000;
 }
 
 
 .tab-content {
   padding: 12px;
-  background-color:  #2196F3;
+  background-color:  #ffffff;
 }
 
 .travel-cards {
@@ -644,6 +651,12 @@ export default {
 .tag-text {
   transform: rotate(-180deg);
   transform-origin: center;
+}
+.meta-detail{
+	color: #000;
+}
+.meta-count{
+	color: #000;
 }
 
 .mascot {

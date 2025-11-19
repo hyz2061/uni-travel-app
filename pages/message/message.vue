@@ -1,422 +1,261 @@
 <template>
-  <div class="message-app">
-    <!-- 消息中心页面 -->
-    <div v-if="currentPage === 'messageCenter'" class="message-center">
-      <div class="header">
-        <h1>消息中心</h1>
-        <div class="tabs">
-          <div class="tab friend" @click="switchTab('friend')">
-            <img src="/static/消息1.png" alt="好友消息" class="1" />
-            <span>好友消息</span>
-          </div>
-          <div class="tab follow" @click="switchTab('friend')">
-            <img src="/static/消息2.png" alt="关注消息" class="1"/>
-            <span>关注消息</span>
-          </div>
-          <div class="tab system" @click="switchTab('friend')">
-            <img src="/static/消息3.png" alt="系统消息" class="1"/>
-            <span>系统消息</span>
-          </div>
+  <div class="message-center">
+	  <div class="top"></div>
+    <!-- 顶部导航栏 -->
+   <div class="header">
+     <!-- 新增：带背景图的顶部容器 -->
+     <div class="header-bg">
+       <h1 class="title">消息中心</h1>
+       <div class="tabs">
+         <div 
+           class="tab-item friend" 
+           @click="switchTab('friend')"
+           :class="{ active: currentTab === 'friend' }"
+		   
+         >
+		   <span>好友消息</span>
+           <img src="/static/消息1.png" alt="好友消息" class="tab-icon" />
+         </div>
+         <div 
+           class="tab-item follow" 
+           @click="switchTab('follow')"
+           :class="{ active: currentTab === 'follow' }"
+         >
+		   <span>关注消息</span>
+           <img src="/static/消息2.png" alt="关注消息" class="tab-icon" />
+         </div>
+         <div 
+           class="tab-item system" 
+           @click="switchTab('system')"
+           :class="{ active: currentTab === 'system' }"
+         >
+		   <span>关注消息</span>
+           <img src="/static/消息3.png" alt="系统消息" class="tab-icon" />
+         </div>
+       </div>
+     </div>
+   </div>
+
+    <!-- 好友消息列表 -->
+    <div v-if="currentTab === 'friend'" class="message-list">
+      <div 
+        class="message-item" 
+        v-for="item in friendMessages" 
+        :key="item.id" 
+        @click="goToChat(item)"
+      >
+        <img :src="item.avatar" alt="头像" class="avatar" />
+        <div class="info">
+          <h3 class="name">{{ item.name }}</h3>
+          <p class="content">{{ item.content }}</p>
         </div>
+        <span class="time">{{ item.time }}</span>
       </div>
-      <div class="contact-list">
-        <div 
-          class="contact-item" 
-          v-for="item in filteredContacts" 
-          :key="item.name"
-          @click="goToChat(item)"
-          :class="{ 'contact-item--active': isContactActive(item) }"
-        >
-          <img :src="'/static/头像.png'" alt="用户头像'" class="avatar" />
-          <span class="contact-name">{{ item.name }}</span>
+    </div>
+
+    <!-- 关注消息列表 -->
+    <div v-if="currentTab === 'follow'" class="message-list">
+      <div class="message-item" v-for="item in followMessages" :key="item.id">
+        <img :src="item.avatar" alt="头像" class="avatar" />
+        <div class="info">
+          <h3 class="name">{{ item.name }} <span class="tag">关注</span></h3>
+          <p class="content">{{ item.content }}</p>
         </div>
       </div>
     </div>
 
-    <!-- 聊天页面 -->
-    <div v-if="currentPage === 'chat' && currentContact" class="chat-page">
-      <div class="chat-header">
-        <button @click="goBack" class="back-button" aria-label="返回消息列表">
-          <i class="arrow-left"></i>
-        </button>
-        <img :src="currentContact.avatar" alt="聊天对象头像" class="chat-avatar" />
-        <span class="chat-name">{{ currentContact.name }}</span>
-      </div>
-      <div class="chat-content" ref="chatContent">
-        <!-- 聊天内容区域 -->
-        <div v-for="(message, index) in messages" :key="index" class="message">
-          <div :class="['message-bubble', message.isMe ? 'message-bubble--me' : 'message-bubble--other']">
-            {{ message.text }}
-          </div>
+    <!-- 系统消息列表 -->
+    <div v-if="currentTab === 'system'" class="message-list">
+      <div class="message-item" v-for="item in systemMessages" :key="item.id">
+        <img :src="item.avatar" alt="头像" class="avatar" />
+        <div class="info">
+          <h3 class="name">{{ item.name }}</h3>
         </div>
       </div>
-     <div class="chat-input">
-       <!-- 新增语音按钮 -->
-       <button class="voice-btn" aria-label="语音">🎙️</button>
-       <input 
-         type="text" 
-         placeholder="发消息..." 
-         v-model="newMessage"
-         @keyup.enter="sendMessage"
-       />
-       <button class="emoji-btn" aria-label="表情">😃</button>
-       <button class="add-btn" aria-label="添加附件">+</button>
-     </div>
     </div>
   </div>
 </template>
 
 <script>
-// 定义类型接口，增强类型安全
-interface Contact {
-  name: string;
-  avatar: string;
-  type?: 'friend' | 'follow' | 'system';
-}
-
-interface Message {
-  text: string;
-  isMe: boolean;
-  timestamp: Date;
-}
-
 export default {
-  name: 'MessageApp',
-  
   data() {
     return {
-      currentPage: 'messageCenter',
-      currentContact: null as Contact | null,
-      newMessage: '',
-      activeTab: 'friend', // 新增：当前激活的标签页
-      contacts: [
-        { name: 'A学长', avatar: '/static/头像.png', type: 'friend' },
-        { name: 'B学长', avatar: '/static/头像.png', type: 'friend' },
-        { name: 'C学长', avatar: '/static/头像.png', type: 'friend' },
+      currentTab: 'friend', // 默认选中好友消息
+      friendMessages: [
+        { id: 1, avatar: '/static/头像.png', name: 'A学长', content: '你好', time: '11-13' },
+        { id: 2, avatar: '/static/头像.png', name: 'B学长', content: '你好', time: '11-13' },
+        { id: 3, avatar: '/static/头像.png', name: 'B学长', content: '你好', time: '11-13' }
       ],
-      messages: [] as Message[]
+      followMessages: [
+        { id: 1, avatar: '/static/头像.png', name: 'A学长', content: '您的关注更新了' },
+        { id: 2, avatar: '/static/头像.png', name: 'B学长', content: '您的关注更新了' },
+        { id: 3, avatar: '/static/头像.png', name: 'C学长', content: '您的关注更新了' },
+        { id: 4, avatar: '/static/头像.png', name: 'D学长', content: '您的关注更新了' }
+      ],
+      systemMessages: [
+        { id: 1, avatar: '/static/头像.png', name: '小迹' }
+      ]
     };
   },
-  
-  computed: {
-    // 新增：根据标签页过滤联系人
-    filteredContacts() {
-      if (this.activeTab === 'all') return this.contacts;
-      return this.contacts.filter(item => item.type === this.activeTab);
-    }
-  },
-  
   methods: {
-    goToChat(contact: Contact) {
-      this.currentContact = contact;
-      this.currentPage = 'chat';
-      this.loadMessages(contact.name);
+    switchTab(tab) {
+      this.currentTab = tab;
     },
-    
-    goBack() {
-      this.currentPage = 'messageCenter';
-    },
-    
-    isContactActive(contact: Contact) {
-      return this.currentContact && this.currentContact.name === contact.name;
-    },
-    
-    sendMessage() {
-      if (!this.newMessage.trim() || !this.currentContact) return;
-      
-      this.messages.push({
-        text: this.newMessage.trim(),
-        isMe: true,
-        timestamp: new Date()
+    goToChat(item) {
+      uni.navigateTo({
+        url: `/pages/chat/chat`
       });
-      
-      this.newMessage = '';
-      this.simulateReply();
-      this.scrollToBottom();
-    },
-    
-    simulateReply() {
-      setTimeout(() => {
-        this.messages.push({
-          text: '收到，我稍后回复你~',
-          isMe: false,
-          timestamp: new Date()
-        });
-        this.scrollToBottom();
-      }, 1000);
-    },
-    
-    loadMessages(contactName: string) {
-      // 模拟不同联系人的初始消息
-      if (contactName.includes('系统')) {
-        this.messages = [
-          { text: '您有一条新的系统通知', isMe: false, timestamp: new Date() },
-          { text: '请及时查看', isMe: true, timestamp: new Date() }
-        ];
-      } else {
-        this.messages = [
-          { text: `你好，我是${contactName}`, isMe: false, timestamp: new Date() },
-          { text: '你好，有什么事吗？', isMe: true, timestamp: new Date() }
-        ];
-      }
-      this.scrollToBottom();
-    },
-    
-    scrollToBottom() {
-      if (this.$refs.chatContent) {
-        (this.$refs.chatContent as HTMLElement).scrollTop = (this.$refs.chatContent as HTMLElement).scrollHeight;
-      }
-    },
-    
-    // 新增：切换标签页方法
-    switchTab(tab: 'friend' | 'follow' | 'system') {
-      this.activeTab = tab;
     }
   }
 };
 </script>
 
-<style scoped>
-/* 样式保持不变，若需进一步优化可调整动画和交互细节 */
-.message-app {
-  min-height: 100vh;
-  font-family: "微软雅黑", sans-serif;
-  background-color: #00a8ff;
+<style scoped lang="scss">
+.top{
+	height: 40px;
+	background-color: #25B0F0;
 }
-
 .message-center {
-  background-color:#00a8ff;
-  border-radius: 10px 10px 0px 0px;
   min-height: 100vh;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+span{
+	font-weight: 900;
 }
 
+/* 顶部导航栏样式 */
 .header {
-  background-color:#00a8ff;
-  padding: 15px;
+  background-color: #25B0F0;
+  padding: 10rpx 40rpx;
   color: #fff;
-}
-
-.header h1 {
-  margin: 0 0 10px 0;
-  font-size: 24px;
-}
-
-.tabs {
-  display: flex;
-  justify-content: space-around;
-}
-
-.tab {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.tab:hover {
-  transform: scale(1.05);
-  color: #fff;
-  font-weight: 900;
-}
-
-
-.tab img {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
-  object-fit: cover;
-}
-
-.tab span {
-  margin-top: 5px;
-  font-size: 14px;
-  color: #000000;
-  font-weight: 900;
-}
-
-.contact-list {
-  padding: 10px;
-  border-radius: 20px 20px 0px 0px;
-  background-color:#ffff;
-  height: 100%;
-display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* 确保父容器占满视口高度 */
+   margin-top: 0px; /* 新增：设置顶部外边距，数值可根据需求调整 */
   
 }
 
-.contact-item {
+.title {
+  font-size: 36rpx;
+  margin: 0 0 20rpx;
+}
+
+
+.friend {
+  background-color: #67bfff;
+  width: 92px;
+  height: 92px;
+  border: 3px solid #000000; 
+}
+.follow {
+  background-color: #fed976;
+   width: 92px;
+   height: 92px;
+   border: 3px solid #000000; 
+}
+
+.system {
+  background-color: #ff6b6b;
+   width: 92px;
+   height: 92px;
+   border: 3px solid #000000; 
+}
+
+/* 激活态样式 */
+.tab-item.active {
+  transform: scale(1.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #000;
+}
+
+/* 消息列表样式 */
+.message-list {
+  padding: 20rpx;
+}
+
+.message-item {
   display: flex;
   align-items: center;
-  padding: 10px;
-  margin-bottom: 15px;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: background-color 0.2s;
-  border-radius: 10px 10px 0px 0px;
-}
-
-.contact-item:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.contact-item--active {
-  background-color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 30rpx;
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 80rpx;
+  height: 80rpx;
   border-radius: 50%;
-  margin-right: 10px;
-  object-fit: cover;
+  margin-right: 20rpx;
 }
 
-.contact-name {
-  font-size: 18px;
-  color: #000000;
+.info {
+  flex: 1;
+}
+
+.name {
+  font-size: 32rpx;
+  margin: 0 0 10rpx;
   font-weight: 900;
 }
 
-.chat-page {
-  background-color: #00a8ff;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+.tag {
+  background-color: transparent;
+  color: #aaaaaa;
+   border: 1px solid #aaaaaa; /* 1px 黑色实线边框，可根据需要调整颜色、粗细、样式（如dashed虚线） */
+  font-size: 24rpx;
+  padding: 2rpx 10rpx;
+  border-radius: 16rpx;
+  margin-left: 10rpx;
 }
 
-.chat-header {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+.content {
+  font-size: 28rpx;
+  color: #666;
+  margin: 0;
 }
 
-.back-button {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-  margin-right: 10px;
-  padding: 5px;
-  border-radius: 50%;
-  transition: background-color 0.2s;
+.time {
+  font-size: 24rpx;
+  color: #999;
+}
+/* 顶部背景容器：设置背景图、高度、排版 */
+/* 顶部容器：设置背景图 + Flex 垂直布局 */
+/* 顶部背景容器：蓝色背景 + 内容分层 */
+.header-bg {
+  padding: 0px 15px;
+  color: #fff; /* 标题文字白色 */
 }
 
-.back-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+/* 标题样式：居左，字号加大 */
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 0 18px 0; /* 标题与下方选项卡的间距 */
 }
+.tab-icon{
+	vertical-align: bottom; /* 图片紧贴底部 */
+	 width: 90px; /* 图片大小，可调整 */
+	 height : 90px;
+	 object-fit: contain; /* 不拉伸图片 */
+	 position: relative;
+	 top: 6px;
+	
+}
+ /* 单个选项卡：文字左 + 图片右，水平排列 */
+    .tab-item {
+      display: flex; /* 文字与图片横向对齐 */
+      align-items: center;
+      cursor: pointer;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
+	   display: flex;
+	    align-items: center;
+	    cursor: pointer;
+    }
+	.tabs {
+	  display: flex;
+	  gap: 20px; /* 选项卡之间的间距，可根据需求调整 */
+	  align-items: center; /* 垂直居中对齐 */
+	}
 
-.arrow-left {
-  display: inline-block;
-  width: 0;
-  height: 0;
-  border-top: 8px solid transparent;
-  border-bottom: 8px solid transparent;
-  border-right: 8px solid #fff;
-}
 
-.chat-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 10px;
-  object-fit: cover;
-}
 
-.chat-name {
-  font-size: 16px;
-  color: #fff;
-  font-weight: 500;
-}
-
-.chat-content {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
-  background-color: #00a8ff;
-}
-
-.message {
-  margin-bottom: 15px;
-  max-width: 80%;
-}
-
-.message-bubble {
-  padding: 10px 15px;
-  border-radius: 18px;
-  position: relative;
-  word-wrap: break-word;
-}
-
-.message-bubble--me {
-  background-color: #95ec69;
-  margin-left: auto;
-}
-
-.message-bubble--other {
-  background-color: #fff;
-}
-
-.chat-input {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  background-color: #ffcc5c;
-}
-
-.chat-input input {
-  flex: 1;
-  padding: 10px 15px;
-  border-radius: 20px;
-  border: none;
-  margin-right: 10px;
-  font-size: 14px;
-  outline: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.chat-input {
-  display: flex;
-  align-items: center;
-  background-color: #ffcc33; /* 黄色背景，与图片一致 */
-  padding: 8px;
-  border-radius: 8px; /* 可选：增加圆角更美观 */
-}
-
-.voice-btn, .emoji-btn, .add-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  margin: 0 4px;
-}
-
-input[type="text"] {
-  flex: 1;
-  border: none;
-  outline: none;
-  background-color: transparent; /* 输入框背景透明，继承外层黄色 */
-  padding: 6px;
-}
-
-.emoji-btn, .add-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
-}
-
-.emoji-btn:hover, .add-btn:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-}
 </style>
