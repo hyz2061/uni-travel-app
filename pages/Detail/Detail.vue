@@ -2,7 +2,7 @@
   <div class="journey-detail-page">
     <!-- 头部区域 -->
 	
-	<div @click="uni.navigateTo({url: '/pages/trip/trip'})"><span>< 返回</span></div>
+	<div class="go" @click="uni.navigateTo({url: '/pages/trip/trip'})"><span >< 返回</span></div>
     <!-- 城市与时间信息 -->
     <div class="city-info">
       <h1 class="city">西安</h1>
@@ -255,6 +255,7 @@ export default {
   font-weight: bold;
   display: inline-block;
    border: 2px solid #000; /* 新增黑色边框 */
+   margin: 5px;
 }
 
 /* 导航栏 */
@@ -596,6 +597,14 @@ export default {
 .expense-category.yellow {
   background-color: #ffc107;
   color: #333;
+}
+.city-info{
+	background-color: #25B0F0;;
+}
+.go{
+	background-color: #25B0F0;
+	color: #ffffff;
+	padding: 10px;
 }
 
 </style>
