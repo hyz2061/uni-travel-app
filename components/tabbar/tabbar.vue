@@ -3,10 +3,12 @@
     <view class="tab-bar-bg"></view>
 
     <view class="tab-item" style="left: 15%;" @click="goTo('/pages/index/index', true)">
+            <img src="/static/components/tabbar/home.png" alt="主页" class="tab-icon"/> 
             <text class="text">主页</text>
     </view>
 
     <view class="tab-item" style="left: 35%;" @click="goTo('/pages/trip/trip', true)">
+            <img src="/static/components/tabbar/trip.png" alt="旅程" class="tab-icon"/> 
             <text class="text">旅程</text>
     </view>
 
@@ -15,10 +17,12 @@
     </view>
 
     <view class="tab-item" style="left: 65%;" @click="goTo('/pages/message/message', true)">
+            <img src="/static/components/tabbar/message.png" alt="消息" class="tab-icon"/>
             <text class="text">消息</text>
     </view>
 
     <view class="tab-item" style="left: 85%;" @click="goTo('/pages/profile/profile', true)">
+            <img src="/static/components/tabbar/profile.png" alt="我的" class="tab-icon"/>
             <text class="text">我的</text>
     </view>
   </view>
@@ -35,6 +39,12 @@ export default {
 </script>
 
 <style scope>
+
+.tab-icon {
+  width: 35px;
+  height: 35px;
+}
+
 .tab-bar-container {
   position: fixed;
   bottom: 0;
@@ -42,7 +52,7 @@ export default {
   right: 0;
   z-index: 9999;
   width: 100%;
-  height: 130rpx;
+  height: 150rpx;
 }
 
 .tab-bar-bg {
@@ -50,14 +60,14 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 95rpx;
+  height: 120rpx;
   background-color: #ff3b30;
   border-radius: 30rpx 30rpx 0 0;
 }
 
 .tab-item {
   position: absolute;
-  bottom: 0;
+  bottom: 10px;
   width: 150rpx;
   height: 95rpx; 
   transform: translateX(-50%);

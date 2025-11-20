@@ -102,6 +102,18 @@
 			"style": {
 				"navigationBarTitleText": ""
 			}
+		},
+		{
+			"path": "pages/add-friend/add-friend",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/session/session",
+			"style": {
+				"navigationBarTitleText": ""
+			}
 		}
 		
 	],
