@@ -96,6 +96,12 @@
 				"navigationBarBackgroundColor": "#0099ff",
 				"navigationBarTextStyle": "white"
 			}
+		},
+		{
+			"path": "pages/select-pattern/select-pattern",
+			"style": {
+				"navigationBarTitleText": ""
+			}
 		}
 		
 	],
