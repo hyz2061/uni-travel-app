@@ -2,7 +2,7 @@
   <div class="journey-detail-page">
     <!-- 头部区域 -->
 	
-	<div class="go" @click="uni.navigateTo({url: '/pages/trip/trip'})"><span >< 返回</span></div>
+	<div class="go" @click="goback()"><span >< 返回</span></div>
     <!-- 城市与时间信息 -->
     <div class="city-info">
       <h1 class="city">西安</h1>
