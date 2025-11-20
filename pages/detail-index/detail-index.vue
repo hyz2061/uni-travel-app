@@ -1,336 +1,1146 @@
 <template>
-  <div class="container">
-    <!-- 主页面 -->
-    <div class="main-page">
-      <div class="header">
-        <h1 class="title">【攻略】长安不夜城西安三天两夜寻宝之旅</h1>
-        <div class="tags">
-          <span class="tag">3天2夜</span>
-          <span class="tag">西安</span>
-          <span class="tag">约12.21KM</span>
-        </div>
-      </div>
+	<view class="page" @touchmove.stop.prevent>
+		<!-- 状态栏占位 -->
+		<!-- <view class="status-bar" :style="{ height: statusBarHeight + 'px' }"></view> -->
+		<!-- 顶部导航栏 -->
+		<view class="navbar">
+			<view class="navbar-left" @click="goBack">
+				<view class="left-img">
+					<image src="/static/pages/detail/left-arrow.svg" style="width: 50rpx;height: 50rpx;"
+						mode="aspectFit"></image>
+				</view>
+				<text class="back-text">返回</text>
+			</view>
+			<view class="navbar-right" @click="goShare">
+				<image src="../../static/pages/detail/share.svg" style="width: 50rpx;height:50rpx"></image>
+			</view>
+		</view>
 
-      <!-- 标签栏：行程、行李意见切换 -->
-      <div class="tab-bar">
-        <button 
-          class="tab-btn" 
-          :class="{ active: activeTab === 'schedule' }"
-          @click="activeTab = 'schedule'"
-        >
-          行程
-        </button>
-        <button 
-          class="tab-btn" 
-          :class="{ active: activeTab === 'luggage' }"
-          @click="activeTab = 'luggage'"
-        >
-          行李意见
-        </button>
-      </div>
+		<!-- 标题区域 -->
+		<view class="header">
+			<view class="title">【攻略】长安不夜城西安三天两夜寻宝之旅</view>
+			<view class="tags">
+				<view class="tag">3天2夜</view>
+				<view class="tag">西安</view>
+				<view class="tag">约12.21KM</view>
+			</view>
+		</view>
 
-      <!-- 行程内容 -->
-      <div class="tab-content" v-if="activeTab === 'schedule'">
-        <!-- 天数切换 -->
-        <div class="day-tabs">
-          <button class="day-btn active">第1天</button>
-          <button class="day-btn">第2天</button>
-          <button class="day-btn">第3天</button>
-        </div>
+		<!-- Tab切换 -->
+		<view class="tabs-wrapper">
+			<view :class="['tabs', activeTab === 0 ? 'tabs-journey' : 'tabs-luggage']">
+				<view :class="['tab-item', 'tab-item-journey', activeTab === 0 ? 'tab-active' : '']"
+					@click="switchTab(0)">
+					行程
+				</view>
+				<view :class="['tab-item', 'tab-item-luggage', activeTab === 1 ? 'tab-active' : '']"
+					@click="switchTab(1)">
+					行李意见
+				</view>
+			</view>
+		</view>
 
-        <!-- 第一天行程 -->
-        <div class="day-content">
-          <div class="time-tabs">
-            <button class="time-btn active">上午</button>
-            <button class="time-btn">下午</button>
-            <button class="time-btn">晚上</button>
-          </div>
 
-          <div class="schedule-list">
-            <div class="schedule-item">
-              <span class="time">09:00</span>
-              <div class="schedule-desc">
-                <span class="more">...</span>
-                <span class="tag-red">抢先看</span>
-              </div>
-            </div>
-            <div class="schedule-item">
-              <span class="time">11:00</span>
-              <div class="schedule-desc">
-                <span class="more">...</span>
-              </div>
-            </div>
-            <div class="schedule-item">
-              <span class="time">11:00</span>
-              <div class="schedule-desc">
-                <span class="more">...</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+		<!-- 天数选择 - 只在行程 Tab 显示 -->
+		<view v-if="activeTab === 0" class="day-tabs">
+			<view v-for="(day, index) in days" :key="index"
+				:class="['day-tab', activeDay === index ? 'day-active' : '']" @click="switchDay(index)">
+				第{{day}}天
+			</view>
+		</view>
 
-      <!-- 行李意见内容 -->
-      <div class="tab-content" v-else>
-        <div class="luggage-item">
-          <span class="luggage-label">证件</span>
-          <button class="add-btn">+</button>
-        </div>
-        <!-- 可继续添加其他行李意见项 -->
-      </div>
-    </div>
+		<!-- 行程内容区域 - 只在行程 Tab 显示 -->
+		<view v-if="activeTab === 0" class="content-area">
+			<!-- 第一天内容 -->
+			<view v-if="activeDay === 0">
+				<!-- 第一天标题 -->
+				<view class="day-header">
+					<text class="day-title">第一天</text>
+					<text class="collapse-icon">
+						<image src="/static/pages/detail/top-arrow.svg" mode="aspectFit"
+							style="width: 50rpx;height: 50rpx;"></image>
+					</text>
+				</view>
 
-    <!-- 底部红色温馨提示 -->
-    <div v-if="showTip" class="bottom-tip">
-      <div class="tip-content">
-        <img src="https://via.placeholder.com/60" alt="提示图标" class="tip-icon" />
-        <div class="tip-text-group">
-          <h3 class="tip-title">温馨提示</h3>
-          <p class="tip-text">本次旅行为西安三天两夜旅程，该旅程超级适合上午起不来的年轻人，不欢迎西安躺起来！！！</p>
-        </div>
-        <div class="tip-buttons">
-          <button class="tip-btn" @click="showTip = false">拜拜</button>
-          <button class="tip-btn" @click="showTip = false">再去找找</button>
-          <button class="tip-btn primary" @click="showTip = false">了解 进入流程</button>
-        </div>
-      </div>
-    </div>
-  </div>
+				<!-- 进度条 -->
+				<view class="progress-bar">
+					<view class="progress-fill" v-if="showProgress">
+						<text class="fill-text">
+							“ 西安这座城，游玩的是历史文化背景，体会的是千年来蕴藏的浓厚文化底蕴”，
+							这座承载了中国很多记忆的地方，是多少人自古以来的向往，踏入皇城，看尽长
+							安。
+							这次跟朋友一起去完回来，又玩了3天，其实去西安一般玩三至五天也够了，
+							下面我就分享一下我几次去西安的经验和攻略大家参考参考。
+						</text>
+					</view>
+				</view>
+
+				<!-- 时间段选择 -->
+				<view class="time-section">
+					<view class="time-tabs">
+						<view v-for="(period, index) in timePeriods" :key="index"
+							:class="['time-tab', activePeriod === index ? 'time-active' : '']">
+							{{period}}
+						</view>
+					</view>
+					<!-- 上午内容 -->
+					<view v-if="activePeriod === 0">
+						<view class="time-right-display">09:00</view>
+						<view class="schedule-left-card">
+							<view class="point" id="point-day1-1" @click="showPic">
+								<text>...</text>
+							</view>
+						</view>
+
+						<view class="time-display">11:00</view>
+						<view class="schedule-right-card">
+							<view class="point">
+								<text>...</text>
+							</view>
+						</view>
+						<view class="time-right-display">11:00</view>
+						<view class="schedule-left-card">
+							<view class="point" id="point-day1-2" @click="showPic">
+								<text>...</text>
+							</view>
+						</view>
+					</view>
+
+					<!-- 下午内容 -->
+
+				</view>
+			</view>
+
+			<!-- 第二天内容 -->
+			<view v-if="activeDay === 1">
+				<!-- 第二天标题 -->
+				<view class="day-header">
+					<text class="day-title">第二天</text>
+					<text class="collapse-icon">
+						<image src="/static/pages/detail/top-arrow.svg" mode="aspectFit"
+							style="width: 50rpx;height: 50rpx;"></image>
+					</text>
+				</view>
+
+				<!-- 进度条 -->
+				<view class="progress-bar">
+					<!-- 	<view class="progress-fill" style="width: 50%;"></view> -->
+				</view>
+
+				<!-- 时间段选择 -->
+				<view class="time-section">
+					<view class="time-tabs">
+						<view v-for="(period, index) in timePeriods" :key="index"
+							:class="['time-tab', activePeriod === index ? 'time-active' : '']">
+							{{period}}
+						</view>
+					</view>
+
+					<!-- 上午内容 -->
+					<view v-if="activePeriod === 0">
+						<view class="time-right-display">09:00</view>
+						<view class="schedule-left-card">
+							<view class="point" id="point-day2-1" @click="showPic">
+								<text>...</text>
+							</view>
+						</view>
+						<view class="time-display">11:00</view>
+						<view class="schedule-right-card">
+							<view class="point">
+								<text>...</text>
+							</view>
+						</view>
+						<view class="time-right-display">11:00</view>
+						<view class="schedule-left-card">
+							<view class="point" id="point-day2-2" @click="showPic">
+								<text>...</text>
+							</view>
+						</view>
+
+					</view>
+
+					<!-- 下午内容 -->
+					<view v-if="activePeriod === 1">
+						<view class="time-right-display">14:30</view>
+						<view class="schedule-left-card">
+							<view class="point" id="point-day2-3" @click="showPic">
+								<text>...</text>
+							</view>
+						</view>
+						<view class="time-display">15:30</view>
+						<view class="schedule-right-card">
+							<view class="point">
+								<text>...</text>
+							</view>
+						</view>
+						<view class="time-right-display">11:00</view>
+						<view class="schedule-left-card">
+							<view class="point" id="point-day2-4" @click="showPic">
+								<text>...</text>
+							</view>
+						</view>
+					</view>
+
+					<!-- 晚上内容 -->
+					<view v-if="activePeriod === 2">
+						<view class="time-right-display">19:30</view>
+						<view class="schedule-left-card">
+							<view class="point" id="point-day2-5" @click="showPic">
+								<text>...</text>
+							</view>
+						</view>
+						<view class="time-display">20:30</view>
+						<view class="schedule-right-card">
+							<view class="point">
+								<text>...</text>
+							</view>
+						</view>
+
+					</view>
+				</view>
+			</view>
+
+			<!-- 第三天内容 -->
+			<view v-if="activeDay === 2">
+				<!-- 第三天标题 -->
+				<view class="day-header">
+					<text class="day-title">第三天</text>
+					<text class="collapse-icon">
+						<image src="/static/pages/detail/top-arrow.svg" mode="aspectFit"
+							style="width: 50rpx;height: 50rpx;"></image>
+					</text>
+				</view>
+
+				<!-- 进度条 -->
+				<view class="progress-bar">
+					<!-- 	<view class="progress-fill" style="width: 30%;"></view> -->
+				</view>
+
+				<!-- 时间段选择 -->
+				<view class="time-section">
+					<view class="time-tabs">
+						<view v-for="(period, index) in timePeriods" :key="index"
+							:class="['time-tab', activePeriod === index ? 'time-active' : '']">
+							{{period}}
+						</view>
+					</view>
+
+					<!-- 上午内容 -->
+					<view v-if="activePeriod === 0">
+						<view class="time-right-display">09:00</view>
+						<view class="schedule-left-card">
+							<view class="point" id="point-day3-1" @click="showPic">
+								<text>...</text>
+							</view>
+						</view>
+						<view class="time-display">11:00</view>
+						<view class="schedule-right-card">
+							<view class="point">
+								<text>...</text>
+							</view>
+						</view>
+						<view class="time-right-display">11:00</view>
+						<view class="schedule-left-card">
+							<view class="point" id="point-day3-2" @click="showPic">
+								<text>...</text>
+							</view>
+
+						</view>
+					</view>
+
+					<!-- 下午内容 -->
+					<view v-if="activePeriod === 1">
+						<view class="time-right-display">15:00</view>
+						<view class="schedule-left-card">
+							<view class="point" id="point-day3-3" @click="showPic">
+								<text>...</text>
+							</view>
+						</view>
+						<view class="time-display">16:00</view>
+						<view class="schedule-right-card">
+							<view class="point">
+								<text>...</text>
+							</view>
+						</view>
+					</view>
+
+					<!-- 晚上内容 -->
+					<view v-if="activePeriod === 2">
+						<view class="time-right-display">20:00</view>
+						<view class="schedule-left-card">
+							<view class="point" id="point-day3-4" @click="showPic">
+								<text>...</text>
+							</view>
+						</view>
+						<view class="time-display">21:00</view>
+						<view class="schedule-right-card">
+							<view class="point">
+								<text>...</text>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+
+		<!-- 行李意见内容 - 只在行李意见 Tab 显示 -->
+		<view v-if="activeTab === 1" class="luggage-content">
+			<view class="luggage-category">
+				<view class="category-header">
+					<text class="category-title">证件</text>
+				</view>
+				<view class="category-content collapsed">
+					<text class="collapse-icon">
+						<image src="/static/pages/detail/white-arrow.svg" mode="aspectFit"
+							style="width: 50rpx;height: 50rpx;">
+						</image>
+					</text>
+				</view>
+			</view>
+		</view>
+		<!-- 温馨提示弹窗 -->
+		<view v-if="showTip" class="tip-modal" @click.self="closeTip">
+			<view class="tip-content">
+				<view class="tip-header">温馨提示</view>
+				<view class="tip-text">
+					本次旅行为西安三天两夜旅程，该旅程超级适合上午起不来的年轻人啦，不夜城西安玩起来！！！
+				</view>
+				<view class="tip-buttons">
+					<view class="btn-dismiss" @click="dismissTip">拜拜 再去找找</view>
+					<view class="btn-confirm" @click="confirmTip">了解 进入行程</view>
+				</view>
+				<image class="tip-mascot" src="/static/pages/detail/bird.svg" mode="aspectFit"></image>
+			</view>
+		</view>
+		<!-- 三个点弹层 -->
+		<view v-if="showPop" class="point-pop-overlay" @click="closePop">
+			<view class="point-pop" :style="popStyle" @click.stop>
+				<!-- <image class="tip-mascot" src="/static/pages/detail/pop-content.svg" mode="aspectFit"></image> -->
+				<!-- 三角形指示器 -->
+				<view class="triangle-indicator"></view>
+				<!-- 胶囊型内容区 -->
+				<view class="pop-content">
+					<!-- 添加到日程 -->
+					<view class="pop-item" @click="handleAction('add')">
+						<view>
+							<view class="pop-icon">
+								<image src="/static/pages/detail/add.svg" mode="aspectFit"
+									style="width: 44rpx;height: 30rpx;">
+								</image>
+							</view>
+						</view>
+						<!-- <text class="pop-text">添加到日程</text> -->
+					</view>
+					<!-- 评论 -->
+					<view class="pop-item" @click="handleAction('comment')">
+						<view>
+							<view class="pop-icon">
+								<image src="/static/pages/detail/2.svg" mode="aspectFit"
+									style="width: 44rpx;height: 30rpx;"></image>
+							</view>
+						</view>
+
+					</view>
+					<!-- 分享 -->
+					<view class="pop-item" @click="handleAction('share')">
+						<view>
+							<view class="pop-icon">
+								<image src="/static/pages/detail/3.svg" mode="aspectFit"
+									style="width: 44rpx;height: 30rpx;"></image>
+							</view>
+						</view>
+
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      showTip: true, // 控制温馨提示显示隐藏
-      activeTab: 'schedule' // 激活的标签页，schedule-行程，luggage-行李意见
-    };
-  },
-  mounted() {
-    // 3秒后自动隐藏温馨提示
-    setTimeout(() => {
-      this.showTip = false;
-    }, 3000);
-  }
-};
+	export default {
+		data() {
+			return {
+				activeTab: 0,
+				activeDay: 0,
+				statusBarHeight: 0,
+				navBarHeight: 50, // 默认导航栏高度
+				activePeriod: 0,
+				days: [1, 2, 3],
+				timePeriods: ['上午', '下午', '晚上'],
+				showTip: true,
+				showActionMenu: false,
+				showProgress: true,
+				showPop: false,
+				popStyle: {
+					top: '1320rpx',
+					left: '50%',
+					transform: 'translateX(-50%)'
+				}
+			}
+		},
+		onLoad(options) {
+			// console.log(options)
+			if (options && options.id) {
+				// this.detailId = options.id
+			} else {
+				// H5 场景兜底
+				// this.detailId = this.$route && this.$route.query ? this.$route.query.id || null : null
+			}
+			this.calculateBarHeight()
+		},
+
+		methods: {
+			goBack() {
+				uni.redirectTo({
+					url: '/pages/index/index'
+				});
+			},
+			switchTab(index) {
+				this.activeTab = index
+			},
+			switchDay(index) {
+				this.activeDay = index
+			},
+			switchPeriod(index) {
+				this.activePeriod = index
+			},
+			closeTip() {
+				this.showTip = true
+			},
+			dismissTip() {
+				// 添加返回 
+				uni.navigateBack()
+			},
+			confirmTip() {
+				this.showTip = false;
+				this.showProgress = false;
+			},
+			showPic(e) {
+				this.showPop = true
+				// 获取第一个三个点的位置，动态定位弹窗
+				this.$nextTick(() => {
+					const targetId = e && e.currentTarget && e.currentTarget.id ? e.currentTarget.id :
+						'point-day1-1'
+					const query = uni.createSelectorQuery().in(this)
+					query.select(`#${targetId}`).boundingClientRect((data) => {
+						if (data) {
+							// 计算弹窗位置：在三个点下方
+							// data.top 是元素距离页面顶部的距离
+							// data.left 是元素距离页面左侧的距离
+							// data.width 是元素宽度
+							const top = data.top + data.height + 0 // 三个点下方40rpx，增加间距
+							const left = data.left + data.width / 2 // 三个点的水平中心
+							this.popStyle = {
+								top: top + 'px',
+								left: left + 'px',
+								transform: 'translateX(-50%)'
+							}
+						}
+					}).exec()
+				})
+			},
+			closePop() {
+				this.showPop = false
+			},
+			handleAction(action) {
+				console.log('Action:', action)
+				this.closePop()
+			},
+			calculateBarHeight() {
+				const systemInfo = uni.getSystemInfoSync()
+				// 获取状态栏高度
+				this.statusBarHeight = systemInfo.statusBarHeight
+
+				// 在H5端，可以使用安全区域信息
+				if (systemInfo.safeArea) {
+					this.statusBarHeight = systemInfo.safeArea.top
+				}
+
+				// 对于不支持状态栏高度的设备，设置默认值
+				if (this.statusBarHeight === 0) {
+					this.statusBarHeight = this.isIOS() ? 50 : 0
+				}
+			},
+			isIOS() {
+				const systemInfo = uni.getSystemInfoSync()
+				return systemInfo.platform === 'ios'
+			},
+			goShare() {
+				// uni.navigateTo({
+				// 	// 配置实际路径
+				// 	// url: '/pages/share/share',
+
+				// });
+			}
+		}
+	}
 </script>
 
 <style scoped>
-.container {
-  font-family: Arial, sans-serif;
-  background-color: #00bfff;
-  min-height: 100vh;
-  position: relative;
-}
+	/* 弹层遮罩 */
+	/* .point-pop-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: transparent;
+		z-index: 3000;
+	} */
 
-/* 主页面样式 */
-.main-page {
-  background-color: #00bfff;
-  min-height: calc(100vh - 150px); /* 预留温馨提示高度 */
-  padding: 10px;
-}
-.header {
-  color: #fff;
-  margin-bottom: 10px;
-}
-.back-btn {
-  background-color: transparent;
-  border: 1px solid #fff;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-.title {
-  font-size: 16px;
-  margin-bottom: 8px;
-}
-.tags {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 15px;
-}
-.tag {
-  background-color: rgba(255, 255, 255, 0.3);
-  padding: 3px 8px;
-  border-radius: 10px;
-  font-size: 12px;
-}
+	/* 弹层容器 */
+	/* .point-pop {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		position: absolute;
+	} */
 
-/* 标签栏样式 */
-.tab-bar {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-.tab-btn {
-  flex: 1;
-  padding: 8px 0;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  background-color: #fff;
-  color: #333;
-}
-.tab-btn.active {
-  background-color: #ffcc00;
-  color: #333;
-  font-weight: bold;
-}
+	/* 三角形指示器 */
+	.triangle-indicator {
+		width: 0;
+		height: 0;
+		border-left: 20rpx solid transparent;
+		border-right: 16rpx solid transparent;
+		border-bottom: 13rpx solid #FE4A49;
+		margin-bottom: -1rpx;
+		z-index: 1;
+	}
 
-/* 行程内容样式 */
-.day-tabs {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
-}
-.day-btn {
-  padding: 6px 12px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  background-color: #fff;
-  color: #333;
-}
-.day-btn.active {
-  background-color: #ffcc00;
-  color: #333;
-}
+	/* 胶囊型内容区 */
+	.pop-content {
+		width: 138rpx;
+		height: 44rpx;
+		background: #FE4A49;
+		border-radius: 30rpx;
+		/* padding: 4rpx 6rpx; */
+		display: flex;
+		flex-direction: row;
+		/* gap: 4rpx; */
+		align-items: center;
+		justify-content: space-around;
+		box-sizing: border-box;
+	}
 
-.time-tabs {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
-}
-.time-btn {
-  padding: 6px 12px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  background-color: #fff;
-  color: #333;
-}
-.time-btn.active {
-  background-color: #ffcc00;
-  color: #333;
-}
+	/* 弹层项 */
+	/* .pop-item {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 2rpx;
+	} */
 
-.schedule-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.schedule-item {
-  background-color: #ffcc00;
-  border-radius: 15px;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.time {
-  font-weight: bold;
-}
-.schedule-desc {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.more {
-  margin-right: 5px;
-}
-.tag-red {
-  background-color: red;
-  color: #fff;
-  padding: 2px 5px;
-  border-radius: 5px;
-  font-size: 12px;
-}
+	/* 图标容器外层 */
+	/* .pop-icon-wrapper {
+		width: 12rpx;
+		height: 12rpx;
+		background: #fff;
+		border: 1rpx solid #000;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	} */
 
-/* 行李意见样式 */
-.luggage-item {
-  background-color: #ffcc00;
-  border-radius: 10px;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.luggage-label {
-  font-weight: bold;
-}
-.add-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #0099ff;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-}
+	/* 图标容器 */
+	.pop-icon {
+		color: #000;
+		font-size: 8rpx;
+		font-weight: bold;
+		line-height: 1;
+	}
 
-/* 底部红色温馨提示样式 */
-.bottom-tip {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: linear-gradient(to right, #ffa500, #ff6347);
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-  padding: 10px;
-  box-sizing: border-box;
-  color: #333;
-  z-index: 99;
-}
+	/* 文字 */
+	.pop-text {
+		font-size: 6rpx;
+		color: #fff;
+		text-align: center;
+		font-weight: bold;
+		white-space: nowrap;
+	}
 
-.tip-content {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+	.detail-page {
+		width: 100vw;
+		position: relative;
+		/* overflow-x: hidden; */
+	}
 
-.tip-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 8px;
-}
 
-.tip-text-group {
-  flex: 1;
-}
 
-.tip-title {
-  font-size: 16px;
-  margin-bottom: 5px;
-}
 
-.tip-text {
-  font-size: 14px;
-  line-height: 1.4;
-}
+	/* 状态栏 */
+	.status-bar {
+		background-color: #25B0F0;
+	}
 
-.tip-buttons {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-}
+	/* 顶部导航栏 */
+	.navbar {
+		display: flex;
+		padding: 24rpx 0;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		padding-right: 50rpx;
+		box-sizing: border-box;
+		background-color: #25B0F0;
+		/* padding: 80rpx 40rpx 30rpx; */
+	}
 
-.tip-btn {
-  padding: 6px 10px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  background-color: #fff;
-  color: #333;
-  font-size: 12px;
-}
+	.navbar-left {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
 
-.tip-btn.primary {
-  background-color: #0099ff;
-  color: #fff;
-}
+	.icon-back {
+		font-size: 50rpx;
+		color: #fff;
+		font-weight: 580;
+	}
+
+	.back-text {
+		font-size: 32rpx;
+		color: #fff;
+		font-weight: 590;
+
+	}
+
+	.navbar-right {
+		display: flex;
+		flex-direction: row;
+		gap: 30rpx;
+	}
+
+	.icon-btn {
+		font-size: 40rpx;
+		color: #fff;
+	}
+
+	/* 标题区域 */
+	.header {
+		width: 100%;
+		heigth: 130rpx;
+		padding: 0 50rpx 0 50rpx;
+		box-sizing: border-box;
+		background-color: #25B0F0;
+	}
+
+	.title {
+		font-size: 48rpx;
+		font-weight: bold;
+		color: #000;
+		line-height: 65rpx;
+		margin-bottom: 20rpx;
+		padding-top: 42rpx;
+		box-sizing: border-box;
+	}
+
+	.tags {
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		padding-bottom: 60rpx;
+		flex-wrap: wrap;
+	}
+
+	.tag {
+		width: 140rpx;
+		height: 40rpx;
+		border: 4rpx solid #000;
+		border-radius: 30rpx;
+		text-align: center;
+		padding-bottom: 60rpx;
+		line-height: 40rpx;
+		padding-bottom: 18rpx;
+		font-size: 32rpx;
+		box-sizing: border-box;
+		color: #000;
+		margin-right: 20rpx;
+
+	}
+
+	.tag:last-child {
+		width: 200rpx;
+		height: 40rpx;
+	}
+
+	/* Tab切换 */
+	.tabs-wrapper {
+		padding: 0;
+		position: relative;
+		margin-bottom: 0;
+		background-color: #25B0F0;
+	}
+
+	.tabs {
+		display: -ms-flexbox;
+		display: flex;
+		-ms-flex-direction: row;
+		-ms-flex-wrap: nowrap;
+		-ms-flex-align: center;
+		align-items: center;
+		position: relative;
+		height: 100rpx;
+		width: 100%;
+		background-repeat: no-repeat;
+		background-position: center top;
+		background-size: 100% auto;
+	}
+
+	.tabs-journey {
+		background-image: url(/static/pages/detail/Subtract.svg);
+	}
+
+	.tabs-luggage {
+		background-image: url(/static/pages/detail/Exclude.svg);
+	}
+
+	.tab-item {
+		/* flex: 1 1 0%;
+		min-width: 0; */
+		/* padding: 25rpx 36rpx; */
+		font-size: 36rpx;
+		color: #000;
+		font-weight: bold;
+		text-align: center;
+		position: relative;
+		box-sizing: border-box;
+		background: transparent;
+	}
+
+	/* 行程 Tab - 选中时显示在白色背景图上 */
+	.tab-item-journey.tab-active {
+		color: #000;
+		position: absolute;
+		left: 26rpx;
+		top: 20rpx;
+	}
+
+	/* 行程 Tab - 未选中时 */
+	.tab-item-journey:not(.tab-active) {
+		color: #FFFFFF;
+		position: absolute;
+		top: 0;
+		left: 26rpx;
+
+	}
+
+	/* 行李意见 Tab - 选中时 */
+	.tab-item-luggage.tab-active {
+		color: #000;
+		text-align: center;
+		position: absolute;
+		left: 83px;
+
+		/* top: -44rpx;
+		right: 30rpx; */
+	}
+
+	/* 行李意见 Tab - 未选中时 */
+	.tab-item-luggage:not(.tab-active) {
+		color: #FFFFFF;
+		position: absolute;
+		right: 14.25rem;
+	}
+
+	/* 天数选择 */
+	.day-tabs {
+		display: flex;
+		flex-direction: row;
+		padding-left: 20rpx;
+		padding-top: 34rpx;
+		background: #fff;
+		box-sizing: border-box;
+		/* 	margin-bottom: 38rpx; */
+		/* margin-top: 38rpx; */
+	}
+
+	.day-tab {
+		border: 2rpx solid #000;
+		border-radius: 30rpx;
+		width: 112rpx;
+		height: 40rpx;
+		font-size: 30rpx;
+		text-align: center;
+		line-height: 40rpx;
+		margin-right: 10rpx;
+		color: #000;
+		/* background: transparent; */
+		font-weight: bold;
+	}
+
+	.day-active {
+		border: 2rpx solid #000;
+		background: #E74C3C;
+		color: #fff;
+		border-color: #000;
+	}
+
+	/* 行程内容区域 */
+	.content-area {
+		background: #fff;
+		padding-left: 20rpx;
+		box-sizing: border-box;
+		padding-right: 22rpx;
+	}
+
+	.day-header {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 30rpx;
+	}
+
+	.day-title {
+		font-size: 56rpx;
+		font-weight: 700;
+		color: #000;
+	}
+
+	.collapse-icon {
+		font-size: 20rpx;
+		color: #000;
+		font-weight: bold;
+	}
+
+	/* 进度条 */
+	.progress-bar {
+		/* width: 744rpx; */
+		height: 140rpx;
+		background: #25B0F0;
+		padding: 10rpx 0 10rpx 40rpx;
+		border-radius: 40rpx;
+		box-sizing: border-box;
+		border: 4rpx solid #000;
+		margin-bottom: 19rpx;
+
+	}
+
+	.progress-fill {
+		/* background-color: #D9D9D9; */
+		/* height: 120rpx;
+		width: 120rpx; */
+		font-weight: 400;
+		font-size: 24rpx;
+
+	}
+
+	.fill-text {
+		font-weight: 400;
+		font-size: 24rpx;
+
+	}
+
+	/* 时间段选择 */
+	.time-section {
+		/* padding: 40rpx; */
+		min-height: calc(100vh - 600rpx);
+	}
+
+	.time-tabs {
+		display: flex;
+		flex-direction: row;
+		font-size: 20rpx;
+		margin-bottom: 22rpx;
+	}
+
+	.time-tab {
+		font-size: 40rpx;
+		color: #000;
+		margin-right: 20rpx;
+		font-weight: 700;
+	}
+
+	.time-active {
+		color: #FE4A49;
+		border-bottom: 4rpx solid #FE4A49;
+	}
+
+	.time-right-display {
+		font-size: 40rpx;
+		font-weight: 700;
+		color: #000;
+		margin-bottom: 8rpx;
+	}
+
+	.time-display {
+		font-size: 40rpx;
+		font-weight: 700;
+		color: #000;
+		position: relative;
+		right: -600rpx;
+	}
+
+	/* 行程卡片 */
+	.schedule-left-card,
+	.schedule-right-card {
+		width: 674rpx;
+		height: 184rpx;
+		background-color: #efce63;
+		border-radius: 40rpx;
+		position: relative;
+		left: 48rpx;
+		font-family: 'SFpro';
+
+
+	}
+
+	.schedule-left-card::after {
+		content: '';
+		position: absolute;
+		left: -30rpx;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 0;
+		height: 0;
+		border-top: 30rpx solid transparent;
+		border-bottom: 30rpx solid transparent;
+		border-right: 30rpx solid #F6CD4B;
+	}
+
+
+	.schedule-right-card {
+		right: 0;
+		left: 18rpx;
+		margin-bottom: 20rpx;
+	}
+
+	.schedule-left-card .point {
+		position: absolute;
+		right: 28rpx;
+		top: 20rpx;
+		font-weight: bold;
+		width: 60rpx;
+		height: 60rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		font-size: 32rpx;
+	}
+
+	.schedule-right-card .point {
+		position: absolute;
+		left: 20rpx;
+		top: 20rpx;
+		font-weight: bold;
+		width: 60rpx;
+		height: 60rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 32rpx;
+	}
+
+
+	.schedule-right-card::after {
+		content: '';
+		position: absolute;
+		right: -30rpx;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 0;
+		height: 0;
+		border-top: 30rpx solid transparent;
+		border-bottom: 30rpx solid transparent;
+		border-left: 30rpx solid #F6CD4B;
+	}
+
+
+
+	/* 行李意见内容 */
+	.luggage-content {
+		/* background: #F4D03F; */
+		padding: 80rpx 20rpx;
+		min-height: calc(100vh - 450rpx);
+	}
+
+	/* 分类卡片 */
+	.luggage-category {
+		margin-bottom: 30rpx;
+	}
+
+	/* 分类头部 */
+	.category-header {
+		background: #FE4A49;
+		border-radius: 40rpx 40rpx 0 0;
+		padding: 30rpx 40rpx;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		border-bottom: none;
+	}
+
+	.category-title {
+		font-size: 36rpx;
+		font-weight: bold;
+		color: #fff;
+	}
+
+
+	/* 分类内容 */
+	.category-content {
+		background-color: #25B0F0;
+		border-radius: 0 0 40rpx 40rpx;
+		min-height: 200rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-end;
+		border-top: none;
+		padding-right: 20rpx;
+	}
+
+	.category-content.collapsed {
+		min-height: 100rpx;
+	}
+
+	.category-content .collapse-icon {
+		font-size: 40rpx;
+		color: #000;
+		font-weight: bold;
+	}
+
+	/* 更多卡片 */
+	.more-card {
+		background: #F4D03F;
+		border: 4rpx solid #000;
+		border-radius: 20rpx;
+		height: 100rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding: 0 30rpx;
+	}
+
+	.more-menu {
+		font-size: 40rpx;
+		color: #000;
+		font-weight: bold;
+	}
+
+	/* 温馨提示弹窗 */
+	.tip-modal {
+		position: fixed;
+		bottom: 0;
+		display: flex;
+		/* align-items: flex-end; */
+		z-index: 1000;
+	}
+
+	.tip-content {
+		background-color: #FE4A49;
+		border-radius: 40rpx 40rpx 0 0;
+		padding: 24rpx 52rpx 0 40rpx;
+		width: 100%;
+		height: 352rpx;
+		position: relative;
+		box-sizing: border-box;
+	}
+
+	.tip-header {
+		font-size: 56rpx;
+		font-weight: 700;
+		color: #FFFFFF;
+		margin-bottom: 20rpx;
+	}
+
+	.tip-text {
+		font-size: 30rpx;
+		color: #fff;
+		line-height: 40rpx;
+		height: 120rpx;
+		margin-top: 20rpx;
+		text-indent: 1em;
+		margin-bottom: 20rpx;
+	}
+
+	.tip-buttons {
+		display: flex;
+		flex-direction: row;
+		gap: 15rpx;
+	}
+
+	.btn-dismiss,
+	.btn-confirm {
+		flex: 1;
+		border-radius: 40rpx;
+		text-align: center;
+		width: 220rpx;
+		height: 40rpx;
+		line-height: 40rpx;
+		font-size: 30rpx;
+		font-weight: bold;
+	}
+
+	.btn-dismiss {
+		background: #F6CD4B;
+		color: #000;
+	}
+
+	.btn-confirm {
+		background: #25B0F0;
+		color: #fff;
+	}
+
+	.tip-mascot {
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 200rpx;
+		height: 200rpx;
+	}
+
+	/* 操作菜单弹窗 */
+	.action-modal {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.5);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 2000;
+	}
+
+	.action-menu {
+		background: #E74C3C;
+		border-radius: 50rpx;
+		padding: 30rpx 60rpx;
+		display: flex;
+		gap: 50rpx;
+		align-items: center;
+		border: 5rpx solid #000;
+	}
+
+	.action-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 15rpx;
+	}
+
+	.action-icon {
+		width: 80rpx;
+		height: 80rpx;
+		background: #000;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.action-text {
+		font-size: 24rpx;
+		color: #fff;
+		text-align: center;
+		font-weight: bold;
+	}
 </style>
