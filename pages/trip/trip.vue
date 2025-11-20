@@ -32,7 +32,7 @@
        </div>
      </div>
    </div>
-
+  <tabbar></tabbar>
   </div>
 </template>
 

@@ -208,7 +208,6 @@
 				<button class="dialog-confirm" @click="addNewJourney">确认添加</button>
 			</div>
 		</div>
-
 	</div>
 </template>
 
