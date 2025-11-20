@@ -10,14 +10,23 @@
 
 		<!-- 旅程类型标签栏 -->
 		<div class="primary-tabs">
-			<div class="tab-item" :class="{ active: currentPrimaryTab === 'solo' }" @click="currentPrimaryTab = 'solo'">
+			<div 
+				class="tab-item" 
+				:class="{ active: currentPrimaryTab === 'solo' }"
+				@click="currentPrimaryTab = 'solo'"
+			>
 				独自旅程
 			</div>
-			<div class="tab-item" :class="{ active: currentPrimaryTab === 'group' }"
-				@click="uni.navigateTo({url: '/pages/select-pattern/select-pattern'})">
+		
+			<div 
+				class="tab-item" 
+				:class="{ active: currentPrimaryTab === 'group' }"
+				@click="goGroup"
+			>
 				同行旅程
 			</div>
 		</div>
+
 
 		<!-- 子标签栏 -->
 		<div class="secondary-tabs">
@@ -220,6 +229,8 @@
 				currentSecondaryTab: 'schedule',
 				total: 0.00,
 				
+				
+				
 				// 键盘逻辑变量
 				currentInput: '0.00',
 				isDecimalAdded: true,  // 是否已添加小数点
@@ -375,6 +386,7 @@
 				this.showTipDialog = false;
 			}, 3000);
 		},
+		
 		methods: {
 			// 原有方法保持不变
 			addNewJourney() {
@@ -382,6 +394,12 @@
 				this.journeyList.push(this.newJourneyName);
 				this.showAddJourney = false;
 				this.newJourneyName = '';
+			},
+			goGroup() {
+					uni.navigateTo({
+						url: '/pages/select-pattern/select-pattern'
+					})
+				}
 			},
 			goBack() {
 			  uni.reLaunch({
@@ -576,7 +594,7 @@
 					}
 				});
 			}
-		}
+		
 	};
 </script>
 
