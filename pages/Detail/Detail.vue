@@ -1,564 +1,605 @@
-<!--详情-->
-
 <template>
-  <div class="journey-detail-page">
-    <!-- 头部区域 -->
-	
-	<div><span>< 返回</span></div>
-    <!-- 城市与时间信息 -->
-    <div class="city-info">
-      <h1 class="city">西安</h1>
-      <p class="time" style="color: white;">2025.12.22—2025.12.24 待出发</p>
-      <div class="tag">3天2夜</div>
+  <div class="travel-page">
+    <div class="top"></div>
+    <header class="chat-header">
+      <div class="back-area">
+        <span class="back-icon" @click="goback">< 返回</span>
+      </div>
+    </header>
+
+    <!-- 顶部标题区 -->
+    <div class="header">
+      <h1>西安</h1>
+      <p class="date">● 2025.12.22—2025.12.24 待出发</p>
+      <span class="tag">3天2夜</span>
     </div>
 
-    <!-- 标签栏 -->
-    <div class="tabs">
-      <div class="tab" :class="{ active: currentTab === '行程' }" @click="currentTab = '行程'">行程</div>
-      <div class="tab" :class="{ active: currentTab === '行李' }" @click="currentTab = '行李'">行李</div>
-      <div class="tab" :class="{ active: currentTab === '经费' }" @click="currentTab = '经费'">经费</div>
+    <!-- 导航栏：行程/行李/经费切换 -->
+    <div class="nav">
+      <button 
+        class="nav-btn" 
+        :class="{ active: currentTab === 'trip' }"
+        @click="switchTab('trip')"
+      >
+        行程
+      </button>
+      <button 
+        class="nav-btn" 
+        :class="{ active: currentTab === 'luggage' }"
+        @click="switchTab('luggage')"
+      >
+        行李
+      </button>
+      <button 
+        class="nav-btn" 
+        :class="{ active: currentTab === 'budget' }"
+        @click="switchTab('budget')"
+      >
+        经费
+      </button>
     </div>
 
-    <!-- 行程标签页 -->
-    <div v-if="currentTab === '行程'" class="tab-content">
-      <!-- 第一个框架：黄色背景 -->
-      <div class="frame yellow">
-        <div class="day-tags">
-          <span class="day-tag active">第1天</span>
-          <span class="day-tag">第2天</span>
-          <span class="day-tag">第3天</span>
+    <!-- 行程模块（默认显示） -->
+    <div v-show="currentTab === 'trip'">
+      <!-- 天数标签：第1-3天切换 -->
+      <div class="day-tags">
+        <button 
+          class="day-tag" 
+          :class="{ red: currentDay === 1 }"
+          @click="switchDay(1)"
+        >
+          第1天
+        </button>
+        <button 
+          class="day-tag" 
+          :class="{ red: currentDay === 2 }"
+          @click="switchDay(2)"
+        >
+          第2天
+        </button>
+        <button 
+          class="day-tag" 
+          :class="{ red: currentDay === 3 }"
+          @click="switchDay(3)"
+        >
+          第3天
+        </button>
+      </div>
+
+      <!-- 第一天内容 -->
+      <div class="day-section" v-show="currentDay === 1">
+        <h2>第一天</h2>
+        <div class="blue-box"></div>
+        <div class="time-tabs">
+          <button class="time-tab active">上午</button>
+          <button class="time-tab">下午</button>
+          <button class="time-tab">晚上</button>
         </div>
-        <div class="day-section">
-          <h2 class="day-title">第一天</h2>
-          <div class="card blue"></div>
+        <div class="timeline">
+          <p class="time">09：00</p>
+          <div class="card yellow">
+            <p class="card-title">明城墙</p>
+            <p>出发时间：09:00</p>
+            <p>出行方式：地铁2号线</p>
+          </div>
+          <p class="time right">11：00</p>
+          <div class="card blue right">
+            <p class="card-title">回民街</p>
+            <p>用餐时间：11:30-13:00</p>
+            <p>推荐美食：肉夹馍、泡馍</p>
+          </div>
         </div>
       </div>
 
-      <!-- 第二个框架：蓝色背景 -->
-      <div class="frame blue">
+      <!-- 第二天内容 -->
+      <div class="day-section" v-show="currentDay === 2">
+        <h2>第二天</h2>
+        <div class="blue-box"></div>
         <div class="time-tabs">
-          <span class="time-tab active">上午</span>
-          <span class="time-tab">下午</span>
-          <span class="time-tab">晚上</span>
+          <button class="time-tab active">上午</button>
+          <button class="time-tab">下午</button>
+          <button class="time-tab">晚上</button>
         </div>
-        <div class="schedule">
-          <div class="time-slot">
-            <p class="time">09:00</p>
-            <div class="spot-card yellow">
-              <img src="/static/placeholder.png" alt="明城墙" class="spot-img" />
-              <div class="spot-info">
-                <p class="spot-name">明城墙</p>
-                <p class="spot-detail">出发时间：</p>
-                <p class="spot-detail">出行方式：</p>
+        <div class="timeline">
+          <p class="time">08：30</p>
+          <div class="card yellow">
+            <p class="card-title">兵马俑博物馆</p>
+            <p>出发时间：08:30</p>
+            <p>出行方式：旅游专线</p>
+          </div>
+          <p class="time right">14：00</p>
+          <div class="card blue right">
+            <p class="card-title">华清宫</p>
+            <p>游览时间：14:30-16:30</p>
+            <p>备注：提前预约门票</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第三天内容 -->
+      <div class="day-section" v-show="currentDay === 3">
+        <h2>第三天</h2>
+        <div class="blue-box"></div>
+        <div class="time-tabs">
+          <button class="time-tab active">上午</button>
+          <button class="time-tab">下午</button>
+          <button class="time-tab">晚上</button>
+        </div>
+        <div class="timeline">
+          <p class="time">09：00</p>
+          <div class="card yellow">
+            <p class="card-title">大雁塔</p>
+            <p>出发时间：09:00</p>
+            <p>出行方式：打车</p>
+          </div>
+          <p class="time right">15：00</p>
+          <div class="card blue right">
+            <p class="card-title">返程</p>
+            <p>返程时间：15:30</p>
+            <p>交通方式：高铁G876</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 行李模块 -->
+    <div v-show="currentTab === 'luggage'" class="tab-content">
+       <!-- 行李模块内容 -->
+           <div class="luggage-section">
+               <div class="luggage-status">
+                 <span class="text">已整理0/1件行李</span>
+                 <span class="sort">排序</span>
+               </div>
+               <div class="category-container">
+                 <div class="category-header">
+                   <span class="category-name">证件 (0)</span>
+                   <span class="add-btn" @click="gotoluggage">+</span>
+                 </div>
+                 <div class="category-body"></div>
+               </div>
+             </div>
+    </div>
+
+    <!-- 经费模块 -->
+    <div v-show="currentTab === 'budget'" class="tab-content">
+    <!-- 经费模块内容 -->
+        <div class="expense-section">
+          <div class="budget-card">
+            <div class="budget-header">
+              <span class="budget-title">预计旅游经费</span>
+              <button class="add-budget-btn">
+                添加旅游预算 <span class="plus-icon">+</span>
+              </button>
+            </div>
+            <div class="budget-amount">2,000.00</div>
+            <div class="budget-details">
+              <div class="detail-item">
+                <span class="detail-label">已预计旅游经费</span>
+                <span class="detail-value">1,000.00</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">可预计旅游经费</span>
+                <span class="detail-value">1,000.00</span>
               </div>
             </div>
           </div>
-          <div class="time-slot">
-            <p class="time">11:00</p>
-            <div class="spot-card red"></div>
+    
+          <div class="info-card">
+            地点：西安 出发日期：2025/11/23
           </div>
+    
+          <div class="expense-category">出行</div>
+          <div class="expense-category yellow">住宿</div>
+          <div class="expense-category">门票</div>
         </div>
-      </div>
-    </div>
-
-    <!-- 行李标签页 -->
-    <div v-if="currentTab === '行李'" class="tab-content">
-      <div class="frame yellow">
-        <span>已整理0/1件行李</span>
-        <span class="sort-btn">排序</span>
-       
-           <!-- 行李分类 -->
-           <div class="category-card" @click="goToluggage">
-                 <div class="card-header">
-                   <span>证件 (0)</span>
-                   <button class="add-btn" >+</button>
-                 </div>
-                 <div class="card-content">
-                   <i class="arrow-up"></i>
-                 </div>
-               </div>
-      </div>
-    </div>
-	
-    <!-- 经费标签页 -->
-    <div v-if="currentTab === '经费'" class="tab-content">
-      <div class="frame yellow">
-        <div class="fund-header">
-          <p>预计旅游经费</p>
-          <div class="add-fund">添加旅游经费 </div>
-        </div>
-        <div class="fund-stats">
-          <div class="fund-stat">
-            <p class="amount">2,000.00</p>
-            <p>已预计旅游经费</p>
-          </div>
-          <div class="fund-stat">
-            <p class="amount">2,000.00</p>
-            <p>可预计旅游经费</p>
-          </div>
-        </div>
-        <div class="fund-list">
-          <div class="fund-item blue"></div>
-          <div class="fund-item blue"></div>
-          <div class="fund-item red"></div>
-          <div class="fund-item blue"></div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  name: "SimpleChatPage",
   data() {
     return {
-      currentTab: '行程'
+      currentTab: "trip", // 当前激活的顶部标签：trip-行程、luggage-行李、budget-经费
+      currentDay: 1 // 当前激活的天数：1-3
     };
   },
-   name: 'LuggagePage',
-    methods: {
-      goToluggage() {
-         this.$router.push('/pages/luggage/luggage');
-    
-      }
+  methods: {
+    goback() {
+      uni.redirectTo({
+        url: "/pages/trip/trip"
+      });
+    },
+	 gotoluggage() {
+	       this.$router.push("/pages/luggage/luggage");
+	    },
+    // 切换顶部标签（行程/行李/经费）
+    switchTab(tabName) {
+      this.currentTab = tabName;
+    },
+    // 切换天数（第1-3天）
+    switchDay(day) {
+      this.currentDay = day;
     }
+  }
 };
 </script>
 
 <style scoped>
-.journey-detail-page {
-  min-height: 100vh;
-  background-color: #25B0F0;
-  padding: 15px;
-  color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-/* 头部区域 */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.header button {
-  background-color: transparent;
-  border: none;
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-}
-.right-icons {
-  display: flex;
-  gap: 15px;
-}
-.icon {
-  width: 24px;
-  height: 24px;
-}
-span{
-	color: #000;
-	font-weight: 900;
-}
-
-/* 城市与时间信息 */
-.city-info {
-	position: relative;
-	top: 25px;
-  color: #000;
-}
-.city {
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-.time {
-  font-size: 14px;
-  opacity: 0.8;
-  color: #000;
-  margin-bottom: 10px;
-}
-.tag {
-  display: inline-block;
-  background-color:#ffd700;
-  color: #000000;
-  padding: 3px 10px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 900;
-   border: 3px solid #000; /* 黑色边框 */
-}
-
-/* 标签栏 */
-.tabs {
-  display: flex;
-  position: relative;
-  top:30px;
-  gap: 0; /* 标签之间无间距 */
-  width: 100%;
-  margin-bottom: 0; /* 取消底部间距 */
-}
-.tab {
-  padding: 6px 12px;
-  background-color: #00a8ff;
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  border: none; /* 去除边框 */
-  border-radius: 10px 10px 8px 8px;
-  
-}
-.tab:last-child {
-  border-right: none; /* 最后一个标签也去除右侧边框 */
-}
-.tab.active {
-  background-color: #ffffff;
-  color: #333;
-}
-
-/* 标签页公共样式 */
-.tab-content {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* 框架通用样式 */
-.frame {
-  border-radius: 8px;
-  padding: 15px;
-  position: relative;
-  top:30px;
-  
-}
-
-/* 行程 - 第一个框架：黄色背景 */
-.frame.yellow {
-  background-color: #ffffff;
-  color: #333;
-}
-.day-tags {
-  display: flex;
-  gap: 0;
-  margin-bottom: 15px;
-  overflow: hidden;
-}
-.day-tag {
-  padding: 4px 10px;
-  background-color: #ff0000;
-  color: #fff;
-  border-radius: 0;
-  font-size: 12px;
-  border: #000;
-  }
-.day-tag:last-child {
-  border-right: none; /* 最后一个标签也去除右侧边框 */
-}
-.day-tag.active {
-  background-color: #ffffff;
-  color: #333;
-  border: #000;
-}
-.day-section {
-  background-color: #ffffff;
-  padding: 0;
-  margin-bottom: 0;
-  border: #000;
-}
-.day-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0;
-  padding: 10px 0;
-}
-.card.blue {
-  background-color: #00a8ff;
-  height: 60px;
-  border-radius: 8px;
-  border: 1px solid #000; /* 增加黑色边框 */
-}
-
-/* 行程 - 第二个框架：蓝色背景 */
-.frame.blue {
-  background-color: #00a8ff;
-  color: #fff;
-}
-.time-tabs {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 15px;
-}
-.time-tab {
-  padding: 4px 10px;
-  background-color: #00a8ff;
-  color: #fff;
-  border-radius: 4px;
-  font-size: 12px;
-  border: 1px solid #fff;
-}
-.time-tab.active {
+/* 页面整体 */
+.travel-page {
+  font-family: "Microsoft Yahei", sans-serif;
   background-color: #fff;
-  color: #00a8ff;
-}
-.schedule {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.time-slot {
-  display: flex;
-  flex-direction: column;
-}
-.time {
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 8px;
-  color: #fff; /* 时间文字颜色为白色 */
-}
-.spot-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  border-radius: 8px;
-  padding: 10px;
-  border: 1px solid #000; /* 增加黑色边框 */
-}
-.spot-img {
-  width: 60px;
-  height: 60px;
-  border-radius: 4px;
-  background-color: #eee;
-}
-.spot-info {
-  flex: 1;
-}
-.spot-name {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 5px;
-}
-.spot-detail {
-  font-size: 12px;
-  opacity: 0.8;
-}
-.spot-card.yellow {
-  background-color: #ffd700;
-  color: #333;
-}
-.spot-card.red {
-  background-color: #e63946;
-  height: 60px;
+ }
+
+/* 顶部标题区 */
+.header {
+  background-color: #25B0F0;
+  color: #fff;
+  padding: 20px;
 }
 
-/* 行李标签页 */
-.luggage-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-.sort {
-  color: #00a8ff;
-  font-size: 12px;
-}
-.luggage-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.luggage-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-radius: 8px;
-}
-.luggage-item.red {
-  background-color: #e63946;
-  color: #fff;
-}
-.add-icon {
-  width: 20px;
-  height: 20px;
-}
-
-/* 经费标签页 */
-.fund-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-.add-fund {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background-color: #e63946;
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 12px;
-}
-.fund-stats {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-.fund-stat {
-  flex: 1;
-  text-align: center;
-}
-.amount {
+.header h1 {
   font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 5px;
-}
-.fund-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.fund-item {
-  height: 60px;
-  border-radius: 8px;
-}
-.fund-item.blue {
-  background-color: #00a8ff;
-}
-.fund-item.red {
-  background-color: #e63946;
-}
-.add{
-  background-color: #00a8ff;
-  color: #fff;
-  border: none;
-  padding:  10px;
-  border-radius: 4px;
-  cursor: pointer;
-  border: 0em;
-}
-.trip-detail-page {
-  background-color: #ffcc5c;
-  min-height: 100vh;
-  font-family: "微软雅黑", sans-serif;
-}
-
-/* 顶部导航栏 */
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  background-color: #00a8ff;
-  color: #fff;
-}
-
-.back-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.right-icons {
-  display: flex;
-  gap: 15px;
-}
-
-.icon-user, .icon-share, .icon-edit {
-  font-size: 20px;
-  cursor: pointer;
-}
-
-/* 旅程基本信息 */
-.trip-info {
-  padding: 15px;
-  background-color: #00a8ff;
-  color: #fff;
-}
-
-.city {
-  font-size: 24px;
-  margin-bottom: 5px;
+  margin: 0;
 }
 
 .date {
   font-size: 14px;
-  margin-bottom: 10px;
+  margin: 5px 0;
 }
 
-.duration {
-  background-color: #ffcc5c;
-  color: #000;
-  padding: 3px 8px;
-  border-radius: 10px;
+.tag {
+  background-color: #F6CD4B;
+  color: #333;
   font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: bold;
+  display: inline-block;
+   border: 2px solid #000; /* 新增黑色边框 */
 }
 
-/* 标签栏 */
-.tab-bar {
-  display: flex;
-  background-color: #ffcc5c;
-  padding: 10px 0;
-  border-bottom: 1px solid #fff;
+/* 导航栏 */
+.nav {
+  background-color: #25B0F0;
+  display: flex; /* 新增：弹性布局，子元素横向排列 */
 }
 
-.tab {
-  flex: 1;
-  text-align: center;
-  font-size: 16px;
+.nav-btn {
+  background-color: transparent;
+  border: none;
+  padding: 0px 15px;
+  font-size: 20px;
+  font-weight: 900;
+  border-radius: 20px 20px 0px 0px;
   cursor: pointer;
+  margin-right: 5px; /* 可选：设置项之间的间距 */
+}
+/* 针对蓝色行程卡片的 ::after 伪元素（三角）强制消除 */
+.nav-btn::after {
+  content: none !important; /* 清空内容（伪元素核心，优先级最高） */
+  display: none !important; /* 强制隐藏 */
+  width: 0 !important; /* 宽度置0 */
+  height: 0 !important; /* 高度置0 */
+  border: 0 !important; /* 边框置0（消除三角的边框构成） */
 }
 
-.tab.active {
-  color: #ff5c5c;
+.nav-btn.active {
+  background-color: #fff;
   font-weight: bold;
 }
 
-/* 行李统计 */
-.luggage-stat {
-  padding: 10px 15px;
+/* 天数标签 */
+.day-tags {
+  display: flex;
+  gap: 5px; /* 按钮之间的间距 */
+   margin: 12px 10px;
+}
+
+.day-tag {
+  padding: 0px 11px;
+  border: 1px solid #000;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 8px;
+   border: 2px solid #000; /* 黑色边框 */
+  background-color: #fff;
+  font-weight: 900;
+ }
+
+.day-tag.red {
+  background-color: #f44336;
+  color: #fff;
+  border-color: #000000;
+}
+/* 第一天内容区 */
+.day-section h2 {
+  font-size: 25px;
+  margin: 10px 10px;
+}
+
+.blue-box {
+  background-color: #25B0F0;
+  height: 60px;
+  border-radius: 20px;
+  margin: 10px 10px;
+  border: 3px solid #000; /* 黑色边框 */
+}
+
+/* 时段标签 */
+/* 时段标签父容器：横向排列 + 外边距 */
+.time-tabs {
+  display: flex; /* 核心：启用弹性布局，子元素横向排列 */
+  margin: 10px 4px;
+}
+
+.time-tab {
+  background-color: #fff;
+  border: none;
+  padding: 5px 10px;
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+  /* 可选：添加按钮之间的间距 */
+  margin-right: 8px;
+}
+.time-tab::after {
+  content: none !important; /* 清空内容（伪元素核心，优先级最高） */
+  display: none !important; /* 强制隐藏 */
+  width: 0 !important; /* 宽度置0 */
+  height: 0 !important; /* 高度置0 */
+  border: 0 !important; /* 边框置0（消除三角的边框构成） */
+}
+
+
+.time-tab.active {
+  color: #e91e63;
+  font-weight: bold;
+  border-bottom: 3px solid #e91e63;
+}
+
+/* 时间轴与行程卡片 */
+.timeline {
+  position: relative;
+  margin: 10px 10px;
+}
+
+.time {
+  font-size: 18px;
+  font-weight: 900;
+  margin: 5px 0;
+}
+
+.time.right {
+  text-align: right;
+}
+
+.card {
+  border-radius: 10px;
+  padding: 18px;
+  margin: 5px 30px;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.card.yellow {
+  background-color: #F6CD4B;
+  width: fit-content;
+  border-radius: 14px 14px 14px 14px; /* 模拟聊天框三角 */
+  position: relative;
+  width: 300px;
+  height: 90px;
+}
+
+.card.yellow::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 10px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-right: 8px solid #F6CD4B;
+  border-bottom: 8px solid transparent;
+}
+
+.card.blue {
+  background-color: #25B0F0;
+  width: fit-content;
+ border-radius: 14px 14px 14px 14px; /* 模拟聊天框三角 */
+  position: relative;
+  float: right;
+  width: 300px;
+  height: 90px;
+}
+
+.card.blue::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  top: 10px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-left: 8px solid #25B0F0;
+  border-bottom: 8px solid transparent;
+}
+
+.card-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  
+}
+.top{
+	height: 20px;
+	background-color: #25B0F0;
+}
+
+/* 顶部导航栏 */
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 10px;
+  color:  #ffffff;
+  background-color: #25B0F0;
+}
+.luggage-section {
+  padding: 10px;
+}
+
+.luggage-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
   font-size: 14px;
   color: #666;
 }
 
-/* 行李分类 */
-.luggage-category {
-  margin: 0 15px;
+.sort {
+  color: #2196f3;
+  cursor: pointer;
+}
+
+.category-container {
+  border-radius: 8px;
+  overflow: hidden; /* 隐藏内部超出的圆角 */
 }
 
 .category-header {
+  background-color: #f44336;
+  color: #fff;
+  padding: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #ff5c5c;
-  color: #fff;
-  padding: 10px;
-  border-radius: 8px 8px 0 0;
 }
 
 .category-name {
   font-size: 16px;
+  font-weight: bold;
 }
 
 .add-btn {
-  background: none;
-  border: 2px solid #fff;
-  color: #fff;
+  background-color: #fff;
+  color: #f44336;
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
   cursor: pointer;
 }
 
-.category-content {
-  background-color: #00a8ff;
-  color: #fff;
+.category-body {
+  background-color: #25B0F0;
+  min-height: 40px; /* 保证蓝色区域高度 */
   padding: 10px;
-  border-radius: 0 0 8px 8px;
+}
+.expense-section {
+  padding: 15px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.budget-card {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.budget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #25B0F0;
+  color: #fff;
+}
+
+.budget-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.add-budget-btn {
+  background-color: #ff0000;
+  color: #ffffff;
+  border: none;
+  padding: 1px 8px;
+  border-radius: 0px 20px 20px 0px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.plus-icon {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.budget-amount {
+  font-size: 28px;
+  font-weight: bold;
+  padding: 10px;
+  color: #333;
+  background-color: #25B0F0;
+}
+
+.budget-details {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  border-top: 1px solid #eee;
+  background-color: #25B0F0;
+}
+
+.detail-item {
+  text-align: center;
+  background-color: #25B0F0;
+}
+
+.detail-label {
+  font-size: 12px;
+  color: #666;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.detail-value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.info-card {
+  background-color: #25B0F0;
+  color: #fff;
+  padding: 20px;
+  border-radius: 30px;
+  font-size: 16px;
+}
+
+.expense-category {
+  background-color: #25B0F0;
+  color: #fff;
+  padding: 40px;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.expense-category.yellow {
+  background-color: #ffc107;
+  color: #333;
 }
 
 </style>

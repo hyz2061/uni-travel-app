@@ -14,7 +14,7 @@
      <div class="section">
        <h2 class="section-title">待出发</h2>
        <div class="card-group">
-         <navigator url="/pages/Detail/Detail" class="card blue large"></navigator>
+         <navigator url="/pages/Detail/Detail" class="card blue large"><h3 class="card-title">[西安] 长安不夜城西安三天两夜寻宝之旅</h3><p class="card-desc">出发时间：2025/11/23</p></navigator>
          <div class="card red small"></div>
        </div>
      </div>
@@ -26,8 +26,13 @@
          <p class="ended-stats">3次旅程 3.6KM 总消费¥32000.00</p>
        </div>
        <div class="card-group">
-         <div class="card blue full"></div>
-         <div class="card red full"></div>
+         <div class="card blue full"><h3 class="card-title">贵州计划</h3>
+              <p class="card-desc">2024.07.10-2024.07.14 出发</p>
+              <p class="card-route">约129KM 总消费¥1,212.00 成员1</p>
+           </div>
+         <div class="card red full"><h3 class="card-title">青海计划</h3>
+              <p class="card-desc">2024.05.10-2024.05.03 出发</p>
+              <p class="card-route">约2425KM 总消费¥2,500.00 成员2</p></div>
          <div class="card blue full"></div>
        </div>
      </div>
@@ -39,7 +44,7 @@
 <style scoped>
 .journey-page {
   min-height: 100vh;
-  background-color:#00a8ff;
+  background-color:#25B0F0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -49,7 +54,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  background-color: #00a8ff;
+  background-color: #25B0F0;
 }
 .add-btn {
   width: 60px;
@@ -71,7 +76,7 @@
 
 /* 板块通用样式 */
 .section {
-  background-color: #ffd700;
+  background-color: #ffffff;
   margin: 10px;
   border-radius: 10px 10px 0px 0px;
   padding: 15px;
@@ -106,16 +111,16 @@
 
 /* 已结束区域头部 */
 .section {
-  background-color: #ffd700;
+  background-color: #ffffff;
   margin: 10px;
   border-radius: 8px;
   padding: 15px;
 }
 
 .section-title {
-  font-size: 18px;
+  font-size: 28px;
   font-weight: 600;
-  color: #ffffff;
+  color: #000000;
   margin: 0 0 15px 0;
 }
 
@@ -135,7 +140,7 @@
   min-width: calc(50% - 5px);
 }
 .red {
-  background-color: #e63946;
+  background-color: #F6CD4B;
   width: 100px;
 }
 
@@ -148,7 +153,7 @@
 }
 .ended-stats {
   font-size: 12px;
-  color: #ffffff;
+  color: #000000;
   margin: 0;
 }
 
@@ -161,7 +166,7 @@
   margin-bottom: 0;
 }
 .container {
-  background-color: #ffd700; 
+  background-color: #ffffff; 
   height: 100%;
   padding: 10px;
   border-radius: 20px 20px 0px 0px;
@@ -173,7 +178,7 @@
   background-color:#25bdfd;
 }
 .card.red.full {
-  background-color: #FE4A49;
+  background-color: #F6CD4B;
 }
 
 /* 已结束区域的统计信息 */
@@ -182,5 +187,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+}
+p{
+	margin: 4px
 }
 </style>
