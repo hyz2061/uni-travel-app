@@ -6,7 +6,7 @@
       <div class="user-info-stats">
         <div class="user-info">
           <img src="/static/头像.png" alt="用户头像" class="avatar" />
-          <span class="nickname">HI！未登录</span>
+          <span class="nickname" @click="uni.navigateTo({ url: '/pages/login/login' })">HI！未登录</span>
           <img src="/static/二维码.png" alt="二维码" class="qrcode" />
         </div>
         <div class="stats-row">
@@ -69,6 +69,7 @@
          </div>
        </div>
      </div>
+       <tabbar></tabbar>
   </div>
 </template>
 

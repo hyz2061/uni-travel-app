@@ -1,17 +1,13 @@
 <template>
-  <div class="travel-page">
-    <div class="top"></div>
-    <header class="chat-header">
-      <div class="back-area">
-        <span class="back-icon" @click="goback">< 返回</span>
-      </div>
-    </header>
-
-    <!-- 顶部标题区 -->
-    <div class="header">
-      <h1>西安</h1>
-      <p class="date">● 2025.12.22—2025.12.24 待出发</p>
-      <span class="tag">3天2夜</span>
+  <div class="journey-detail-page">
+    <!-- 头部区域 -->
+	
+	<div @click="uni.navigateTo({url: '/pages/trip/trip'})"><span>< 返回</span></div>
+    <!-- 城市与时间信息 -->
+    <div class="city-info">
+      <h1 class="city">西安</h1>
+      <p class="time" style="color: white;">2025.12.22—2025.12.24 待出发</p>
+      <div class="tag">3天2夜</div>
     </div>
 
     <!-- 导航栏：行程/行李/经费切换 -->

@@ -14,7 +14,7 @@
 				独自旅程
 			</div>
 			<div class="tab-item" :class="{ active: currentPrimaryTab === 'group' }"
-				@click="currentPrimaryTab = 'group'">
+				@click="uni.navigateTo({url: '/pages/select-pattern/select-pattern'})">
 				同行旅程
 			</div>
 		</div>
@@ -208,7 +208,6 @@
 				<button class="dialog-confirm" @click="addNewJourney">确认添加</button>
 			</div>
 		</div>
-
 	</div>
 </template>
 
