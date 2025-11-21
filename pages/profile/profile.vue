@@ -4,13 +4,22 @@
      <div class="top-banner">
      <img src="/static/背景.png" alt="地球鹦鹉" class="banner-img" />
      <div class="user-info-stats">
+       <!-- 修改后 -->
        <div class="user-info">
          <img src="/static/头像.png" alt="用户头像" class="avatar" />
          <span class="nickname" @click="goToLogin">
-            HI！{{ userInfo.nickname || '未登录' }}
-          </span>
+    HI！{{ userInfo.nickname || '未登录' }}
+  </span>
+         <button
+             v-if="userInfo.nickname"
+             class="logout-btn"
+             @click="logout"
+         >
+           退出登录
+         </button>
          <img src="/static/二维码.png" alt="二维码" class="qrcode" />
        </div>
+
        <div class="stats-row">
          <div class="stat-item">
            <span class="stat-num">0</span>
@@ -30,10 +39,6 @@
      </div>
    </div>
 
-  <!-- 退出登录按钮（移到此处） -->
-  <div class="logout-section" v-if="userInfo.nickname">
-    <button class="logout-btn" @click="logout">退出登录</button>
-  </div>
 
   <!-- 会员特权区 -->
   <div class="vip-section">
@@ -76,6 +81,7 @@
          </div>
        </div>
      </div>
+     <tabbar></tabbar>
   </div>
 </template>
 
@@ -197,25 +203,31 @@
   align-self: flex-end; /* 右对齐 */
 }
 
-.logout-section {
-  display: flex;
-  justify-content: center;
-  margin: 20px 10px 10px;
-}
-
-.logout-btn {
-  background-color: #ff4d4f;
-  color: #fff;
-  border: none;
-  padding: 10px 30px;
-  border-radius: 20px;
-  font-size: 14px;
-  cursor: pointer;
-}
+ .logout-btn {
+   background-color: #ff4d4f;
+   color: #fff;
+   border: none;
+   padding: 4px 10px;
+   border-radius: 12px;
+   font-size: 12px;
+   cursor: pointer;
+   margin-left: 10px;
+   white-space: nowrap;
+ }
 
 .logout-btn:active {
   background-color: #d9363e;
 }
+
+/* 调整用户信息区域的布局 */
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+
 
 /* 功能入口区 */
 .func-section {

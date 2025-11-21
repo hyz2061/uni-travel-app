@@ -13,7 +13,7 @@
 	      </view>
 	 
     <!-- 顶部Logo区域 -->
-    <view class="logo-container">
+    <view class="logo-container">WA
       <image src="/static/头像.png" mode="aspectFit" class="logo-img"></image>
     </view>
 
@@ -39,24 +39,27 @@
         </view>
       </view>
 
-      <!-- 验证码登录（修改后） -->
       <view v-else-if="currentView === 'code'">
         <view class="input-group">
-		<button @click="goBack" class="back-button" aria-label="返回消息列表">
-			<i class="arrow-left"></i>
-		</button>
-          <input type="text" placeholder="电话号码" class="input-field" style="background-color:#ffd700; color: #000;"/>
-         <!-- 页面的 WXML 文件 -->
-        <view class="verify-container">
-               <input 
-                 class="input-item verify-input" 
-                 placeholder="验证码" 
-                 v-model="code"
-               />
-               <button class="get-code-btn" @click="getVerificationCode">获取验证码</button>
-             </view>
+          <button @click="goBack" class="back-button" aria-label="返回消息列表">
+            <i class="arrow-left"></i>
+          </button>
+          <!-- 绑定电话号码输入框 -->
+          <input type="text" placeholder="电话号码" class="input-field" v-model="phone" style="background-color:#ffd700; color: #000;"/>
+
+          <view class="verify-container">
+            <!-- 绑定验证码输入框 -->
+            <input
+                class="input-item verify-input"
+                placeholder="验证码"
+                v-model="code"
+                maxlength="6"
+            />
+            <button class="get-code-btn" @click="getVerificationCode">获取验证码</button>
+          </view>
         </view>
-        <button class="main-btn red-btn" @click="goBack">确认</button>
+        <!-- 修改确认按钮的点击事件 -->
+        <button class="main-btn red-btn" @click="handleCodeLogin">确认</button>
       </view>
 
       <!-- 找回密码 -->
@@ -181,12 +184,40 @@ export default {
 
 
     // 获取验证码
-    getVerificationCode() {
+    handleCodeLogin() {
       if (!this.phone) {
         return uni.showToast({ title: '请输入手机号', icon: 'none' });
       }
-      // 模拟验证码发送
-      uni.showToast({ title: '验证码已发送', icon: 'none' });
+      if (!this.code) {
+        return uni.showToast({ title: '请输入验证码', icon: 'none' });
+      }
+      // 添加6位数验证码验证
+      if (this.code.length !== 6 || !/^\d{6}$/.test(this.code)) {
+        return uni.showToast({ title: '验证码必须为6位数字', icon: 'none' });
+      }
+
+      // 模拟登录成功
+      const userInfo = {
+        nickname: '验证码用户'
+      };
+
+      try {
+        uni.setStorageSync('userInfo', JSON.stringify(userInfo));
+        uni.showToast({
+          title: '登录成功',
+          icon: 'success',
+          success: () => {
+            setTimeout(() => {
+              uni.reLaunch({
+                url: '/pages/index/index'
+              });
+            }, 1000);
+          }
+        });
+      } catch (e) {
+        console.error('保存用户信息失败', e);
+        uni.showToast({ title: '登录失败', icon: 'none' });
+      }
     },
 
     // 重置密码
