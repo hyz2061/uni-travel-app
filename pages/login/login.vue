@@ -22,11 +22,10 @@
       <!-- 账号密码登录 -->
       <view v-if="currentView === 'account'">
         <view class="input-group">
-          <input type="text" placeholder="用户名/电话号码" class="input-field" v-model="username" style="background-color:#ffd700;
-  color: #000;;"/>
-          <input type="password" placeholder="密码" class="input-field" v-model="password" style="sybackground-color:#ffd700;
-  color: #000;;"/>
-        </view>
+            <input type="text" placeholder="用户名/电话号码" class="input-field" v-model="username" style="background-color:#ffd700; color: #000;;"/>
+            <!-- 修改密码输入框 -->
+            <input type="tel" placeholder="6位数字密码" class="input-field" v-model="password" maxlength="6" style="background-color:#ffd700; color: #000;;"/>
+          </view>
         <view class="link-row">
           <!-- 替换 button 为 a 标签 -->
           <text @click="switchToFindPwd" class="link-btn">忘记密码</text>
@@ -103,6 +102,7 @@
   </view>
 </template>
 
+<!-- 在 script 部分修改 handleAccountLogin 方法 -->
 <script>
 export default {
   data() {
@@ -118,11 +118,11 @@ export default {
     };
   },
   methods: {
-	  handleSkip() {
-	        uni.navigateTo({
-	          url: '/pages/index/index'
-	        });
-	      },
+    handleSkip() {
+      uni.navigateTo({
+        url: '/pages/index/index'
+      });
+    },
     // 切换视图
     switchView(viewType) {
       this.currentView = viewType;
@@ -135,42 +135,50 @@ export default {
     switchToFindPwd() {
       this.currentView = 'findPwd';
     },
-	goBack() {
-	  this.currentView = 'account';
-	},
+    goBack() {
+      this.currentView = 'account';
+    },
 
-    // 账号密码登录逻辑
-    handleAccountLogin() {
-      if (!this.username) {
-        return uni.showToast({ title: '请输入用户名', icon: 'none' });
-      }
-      if (!this.password) {
-        return uni.showToast({ title: '请输入密码', icon: 'none' });
-      }
-      // 实际项目中这里会调用登录接口
-      // uni.switchTab({
-      //          url: '/pages/index/index', // 路径需在 pages.json 中配置为 tabBar
-      //          success: () => console.log("跳转成功"),
-      //          fail: (err) => console.log("跳转失败：", err) // 关键：打印错误信息
-      //        });
-	  uni.navigateTo({
-	  	url: "/pages/index/index"
-	  })
-	},
+
 
     // 验证码登录逻辑
-    handleCodeLogin() {
-      if (!this.phone) {
-        return uni.showToast({ title: '请输入手机号', icon: 'none' });
-      }
-      if (!this.code) {
-        return uni.showToast({ title: '请输入验证码', icon: 'none' });
-      }
-      uni.showToast({ title: '验证码登录成功', icon: 'success' });
-      setTimeout(() => {
-        uni.navigateTo({ url: '/pages/index/index' });
-      }, 1000);
-    },
+   handleAccountLogin() {
+         if (!this.username) {
+           return uni.showToast({ title: '请输入用户名', icon: 'none' });
+         }
+         if (!this.password) {
+           return uni.showToast({ title: '请输入密码', icon: 'none' });
+         }
+         // 添加6位数密码验证
+         if (this.password.length !== 6 || !/^\d{6}$/.test(this.password)) {
+           return uni.showToast({ title: '密码必须为6位数字', icon: 'none' });
+         }
+   
+         // 模拟登录成功，实际项目中这里会调用登录接口
+         const userInfo = {
+           nickname: this.username
+         };
+   
+         try {
+           uni.setStorageSync('userInfo', JSON.stringify(userInfo));
+           uni.showToast({
+             title: '登录成功',
+             icon: 'success',
+             success: () => {
+               setTimeout(() => {
+                 // 修改为 reLaunch 方式跳转到首页
+                 uni.reLaunch({
+                   url: '/pages/index/index'
+                 });
+               }, 1000);
+             }
+           });
+         } catch (e) {
+           console.error('保存用户信息失败', e);
+           uni.showToast({ title: '登录失败', icon: 'none' });
+         }
+       },
+
 
     // 获取验证码
     getVerificationCode() {
@@ -191,22 +199,87 @@ export default {
         this.switchView('account'); // 重置成功后切回账号登录
       }, 1000);
     },
+	
 
     // 微信登录
     loginByWechat() {
-      uni.showToast({ title: '微信登录功能开发中', icon: 'none' });
+      // 模拟微信登录成功
+      const userInfo = {
+        nickname: '微信用户'
+      };
+
+      try {
+        uni.setStorageSync('userInfo', JSON.stringify(userInfo));
+        uni.showToast({
+          title: '登录成功',
+          icon: 'success',
+          success: () => {
+            setTimeout(() => {
+              uni.switchTab({
+                url: '/pages/index/index'
+              });
+            }, 1000);
+          }
+        });
+      } catch (e) {
+        console.error('保存用户信息失败', e);
+        uni.showToast({ title: '登录失败', icon: 'none' });
+      }
     },
     // QQ登录
     loginByQQ() {
-      uni.showToast({ title: 'QQ登录功能开发中', icon: 'none' });
+      // 模拟QQ登录成功
+      const userInfo = {
+        nickname: 'QQ用户'
+      };
+
+      try {
+        uni.setStorageSync('userInfo', JSON.stringify(userInfo));
+        uni.showToast({
+          title: '登录成功',
+          icon: 'success',
+          success: () => {
+            setTimeout(() => {
+              uni.switchTab({
+                url: 'pages/index/index'
+              });
+            }, 1000);
+          }
+        });
+      } catch (e) {
+        console.error('保存用户信息失败', e);
+        uni.showToast({ title: '登录失败', icon: 'none' });
+      }
     },
     // 支付宝登录
     loginByAlipay() {
-      uni.showToast({ title: '支付宝登录功能开发中', icon: 'none' });
+      // 模拟支付宝登录成功
+      const userInfo = {
+        nickname: '支付宝用户'
+      };
+
+      try {
+        uni.setStorageSync('userInfo', JSON.stringify(userInfo));
+        uni.showToast({
+          title: '登录成功',
+          icon: 'success',
+          success: () => {
+            setTimeout(() => {
+              uni.switchTab({
+                url: '/pages/profile/profile'
+              });
+            }, 1000);
+          }
+        });
+      } catch (e) {
+        console.error('保存用户信息失败', e);
+        uni.showToast({ title: '登录失败', icon: 'none' });
+      }
     }
   }
 };
 </script>
+
 
 <style scoped>
 text{

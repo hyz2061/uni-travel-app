@@ -1,41 +1,48 @@
 <template>
-  <div class="user-page">
+   <div class="user-page">
     <!-- 顶部装饰区 -->
-    <div class="top-banner">
-      <img src="/static/背景.png" alt="地球鹦鹉" class="banner-img" />
-      <div class="user-info-stats">
-        <div class="user-info">
-          <img src="/static/头像.png" alt="用户头像" class="avatar" />
-          <span class="nickname" @click="uni.navigateTo({ url: '/pages/login/login' })">HI！未登录</span>
-          <img src="/static/二维码.png" alt="二维码" class="qrcode" />
-        </div>
-        <div class="stats-row">
-          <div class="stat-item">
-            <span class="stat-num">0</span>
-            <span class="stat-label">积分商城</span>
-          </div>
-		  <span class="stat-num">|</span>
-          <div class="stat-item">
-            <span class="stat-num">0</span>
-            <span class="stat-label">采集行程</span>
-          </div>
-		   <span class="stat-num">|</span>
-          <div class="stat-item">
-            <span class="stat-num">0</span>
-            <span class="stat-label">收藏行程</span>
-          </div>
-        </div>
-      </div>
-    </div>
+     <div class="top-banner">
+     <img src="/static/背景.png" alt="地球鹦鹉" class="banner-img" />
+     <div class="user-info-stats">
+       <div class="user-info">
+         <img src="/static/头像.png" alt="用户头像" class="avatar" />
+         <span class="nickname" @click="goToLogin">
+            HI！{{ userInfo.nickname || '未登录' }}
+          </span>
+         <img src="/static/二维码.png" alt="二维码" class="qrcode" />
+       </div>
+       <div class="stats-row">
+         <div class="stat-item">
+           <span class="stat-num">0</span>
+           <span class="stat-label">积分商城</span>
+         </div>
+         <span class="stat-num">|</span>
+         <div class="stat-item">
+           <span class="stat-num">0</span>
+           <span class="stat-label">采集行程</span>
+         </div>
+         <span class="stat-num">|</span>
+         <div class="stat-item">
+           <span class="stat-num">0</span>
+           <span class="stat-label">收藏行程</span>
+         </div>
+       </div>
+     </div>
+   </div>
 
-    <!-- 会员特权区 -->
-    
-    <div class="vip-section">
-      <span class="vip-tip">暂未开通此VIP特权</span>
-      <button class="vip-btn">开通</button>
-    </div>
+  <!-- 退出登录按钮（移到此处） -->
+  <div class="logout-section" v-if="userInfo.nickname">
+    <button class="logout-btn" @click="logout">退出登录</button>
+  </div>
 
-    <!-- 功能入口区 -->
+  <!-- 会员特权区 -->
+  <div class="vip-section">
+    <span class="vip-tip">暂未开通此VIP特权</span>
+    <button class="vip-btn">开通</button>
+  </div>
+
+
+  <!-- 功能入口区 -->
      <div class="func-section">
        <h3 class="func-title">我的功能</h3>
        <div class="func-grid">
@@ -69,7 +76,6 @@
          </div>
        </div>
      </div>
-       <tabbar></tabbar>
   </div>
 </template>
 
@@ -191,6 +197,26 @@
   align-self: flex-end; /* 右对齐 */
 }
 
+.logout-section {
+  display: flex;
+  justify-content: center;
+  margin: 20px 10px 10px;
+}
+
+.logout-btn {
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.logout-btn:active {
+  background-color: #d9363e;
+}
+
 /* 功能入口区 */
 .func-section {
   background-color: #00a8ff;
@@ -266,3 +292,68 @@
   height: 28px;
 }
 </style>
+
+<script>
+export default {
+  data() {
+    return {
+      userInfo: {
+        nickname: ''
+      }
+    }
+  },
+  mounted() {
+    this.loadUserInfo();
+  },
+  methods: {
+    loadUserInfo() {
+      // 从本地存储加载用户信息
+      try {
+        const storedUser = uni.getStorageSync('userInfo');
+        if (storedUser) {
+          this.userInfo = JSON.parse(storedUser);
+        }
+      } catch (e) {
+        console.error('读取用户信息失败', e);
+      }
+    },
+
+    goToLogin() {
+      // 如果未登录则跳转到登录页
+      if (!this.userInfo.nickname) {
+        uni.navigateTo({
+          url: '/pages/login/login'
+        });
+      }
+    },
+
+    logout() {
+      uni.showModal({
+        title: '提示',
+        content: '确定要退出登录吗？',
+        success: (res) => {
+          if (res.confirm) {
+            try {
+              // 清除本地存储的用户信息
+              uni.removeStorageSync('userInfo');
+              // 清空当前组件中的用户信息
+              this.userInfo.nickname = '';
+              uni.showToast({
+                title: '已退出登录',
+                icon: 'success'
+              });
+            } catch (e) {
+              console.error('退出登录失败', e);
+              uni.showToast({
+                title: '退出失败',
+                icon: 'none'
+              });
+            }
+          }
+        }
+      });
+    }
+  }
+}
+</script>
+
