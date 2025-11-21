@@ -13,7 +13,6 @@
            :class="{ active: currentTab === 'friend' }"
 		   
          >
-		   <span>好友消息</span>
            <img src="/static/消息1.png" alt="好友消息" class="tab-icon" />
          </div>
          <div 
@@ -21,7 +20,7 @@
            @click="switchTab('follow')"
            :class="{ active: currentTab === 'follow' }"
          >
-		   <span>关注消息</span>
+
            <img src="/static/消息2.png" alt="关注消息" class="tab-icon" />
          </div>
          <div 
@@ -29,7 +28,7 @@
            @click="switchTab('system')"
            :class="{ active: currentTab === 'system' }"
          >
-		   <span>关注消息</span>
+		   
            <img src="/static/消息3.png" alt="系统消息" class="tab-icon" />
          </div>
        </div>
@@ -141,23 +140,21 @@ span{
 
 
 .friend {
-  background-color: #67bfff;
-  width: 92px;
-  height: 92px;
-  border: 3px solid #000000; 
+  width: 85px;
+  height: 80px;
+  margin-right: 5px;
+  
 }
 .follow {
-  background-color: #fed976;
-   width: 92px;
-   height: 92px;
-   border: 3px solid #000000; 
+   width: 85px;
+   height: 80px;
+   margin-right: 5rpx;
 }
 
 .system {
-  background-color: #ff6b6b;
-   width: 92px;
-   height: 92px;
-   border: 3px solid #000000; 
+   width: 85px;
+   height: 80px;
+   margin-right: 5rpx;
 }
 
 /* 激活态样式 */
@@ -231,12 +228,11 @@ span{
 }
 .tab-icon{
 	vertical-align: bottom; /* 图片紧贴底部 */
-	 width: 90px; /* 图片大小，可调整 */
+	 width: 145px; /* 图片大小，可调整 */
 	 height : 90px;
 	 object-fit: contain; /* 不拉伸图片 */
 	 position: relative;
-	 top: 6px;
-	
+	 top: 2px;
 }
  /* 单个选项卡：文字左 + 图片右，水平排列 */
     .tab-item {
@@ -250,6 +246,7 @@ span{
 	   display: flex;
 	    align-items: center;
 	    cursor: pointer;
+		
     }
 	.tabs {
 	  display: flex;
