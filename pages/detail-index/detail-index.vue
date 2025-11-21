@@ -57,8 +57,7 @@
 				<view class="day-header">
 					<text class="day-title">第一天</text>
 					<text class="collapse-icon">
-						<image src="/static/pages/detail/top-arrow.svg" mode="aspectFit"
-							style="width: 50rpx;height: 50rpx;"></image>
+						<image src="/static/pages/detail/top-arrow.svg" mode="aspectFit"></image>
 					</text>
 				</view>
 
@@ -117,13 +116,19 @@
 				<view class="day-header">
 					<text class="day-title">第二天</text>
 					<text class="collapse-icon">
-						<image src="/static/pages/detail/top-arrow.svg" mode="aspectFit"
-							style="width: 50rpx;height: 50rpx;"></image>
+						<image src="/static/pages/detail/top-arrow.svg" mode="aspectFit"></image>
 					</text>
 				</view>
 
 				<!-- 进度条 -->
 				<view class="progress-bar">
+					<text class="fill-text">
+						“ 西安这座城，游玩的是历史文化背景，体会的是千年来蕴藏的浓厚文化底蕴”，
+						这座承载了中国很多记忆的地方，是多少人自古以来的向往，踏入皇城，看尽长
+						安。
+						这次跟朋友一起去完回来，又玩了3天，其实去西安一般玩三至五天也够了，
+						下面我就分享一下我几次去西安的经验和攻略大家参考参考。
+					</text>
 					<!-- 	<view class="progress-fill" style="width: 50%;"></view> -->
 				</view>
 
@@ -206,14 +211,19 @@
 				<view class="day-header">
 					<text class="day-title">第三天</text>
 					<text class="collapse-icon">
-						<image src="/static/pages/detail/top-arrow.svg" mode="aspectFit"
-							style="width: 50rpx;height: 50rpx;"></image>
+						<image src="/static/pages/detail/top-arrow.svg" mode="aspectFit"></image>
 					</text>
 				</view>
 
 				<!-- 进度条 -->
 				<view class="progress-bar">
-					<!-- 	<view class="progress-fill" style="width: 30%;"></view> -->
+					<text class="fill-text">
+						“ 西安这座城，游玩的是历史文化背景，体会的是千年来蕴藏的浓厚文化底蕴”，
+						这座承载了中国很多记忆的地方，是多少人自古以来的向往，踏入皇城，看尽长
+						安。
+						这次跟朋友一起去完回来，又玩了3天，其实去西安一般玩三至五天也够了，
+						下面我就分享一下我几次去西安的经验和攻略大家参考参考。
+					</text>
 				</view>
 
 				<!-- 时间段选择 -->
@@ -286,15 +296,19 @@
 		<!-- 行李意见内容 - 只在行李意见 Tab 显示 -->
 		<view v-if="activeTab === 1" class="luggage-content">
 			<view class="luggage-category">
-				<view class="category-header">
+				<view class="category-header" @click="toggleCategory">
 					<text class="category-title">证件</text>
 				</view>
-				<view class="category-content collapsed">
+				<view :class="['category-content', categoryExpanded ? '' : 'collapsed']" @click="toggleCategory">
 					<text class="collapse-icon">
 						<image src="/static/pages/detail/white-arrow.svg" mode="aspectFit"
-							style="width: 50rpx;height: 50rpx;">
+							:style="{ transform: categoryExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }">
 						</image>
 					</text>
+					<!-- 这里可以添加具体的内容 -->
+					<view v-if="categoryExpanded" class="category-detail">
+						<text>证件内容详情...</text>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -309,8 +323,9 @@
 					<view class="btn-dismiss" @click="dismissTip">拜拜 再去找找</view>
 					<view class="btn-confirm" @click="confirmTip">了解 进入行程</view>
 				</view>
-				<image class="tip-mascot" src="/static/pages/detail/bird.svg" mode="aspectFit"></image>
+
 			</view>
+			<image class="tip-mascot" src="/static/pages/detail/bird.svg" mode="aspectFit"></image>
 		</view>
 		<!-- 三个点弹层 -->
 		<view v-if="showPop" class="point-pop-overlay" @click="closePop">
@@ -323,18 +338,19 @@
 					<!-- 添加到日程 -->
 					<view class="pop-item" @click="handleAction('add')">
 						<view>
-							<view class="pop-icon">
-								<image src="/static/pages/detail/add.svg" mode="aspectFit"
+							<view class="pop-icon add">
+								<image src="/static/pages/detail/add_icon.svg" mode="aspectFit"
 									style="width: 44rpx;height: 30rpx;">
 								</image>
+
 							</view>
 						</view>
-						<!-- <text class="pop-text">添加到日程</text> -->
+
 					</view>
 					<!-- 评论 -->
 					<view class="pop-item" @click="handleAction('comment')">
 						<view>
-							<view class="pop-icon">
+							<view class="pop-icon add">
 								<image src="/static/pages/detail/2.svg" mode="aspectFit"
 									style="width: 44rpx;height: 30rpx;"></image>
 							</view>
@@ -344,7 +360,7 @@
 					<!-- 分享 -->
 					<view class="pop-item" @click="handleAction('share')">
 						<view>
-							<view class="pop-icon">
+							<view class="pop-icon share">
 								<image src="/static/pages/detail/3.svg" mode="aspectFit"
 									style="width: 44rpx;height: 30rpx;"></image>
 							</view>
@@ -355,6 +371,7 @@
 			</view>
 		</view>
 	</view>
+
 </template>
 
 <script>
@@ -372,6 +389,7 @@
 				showActionMenu: false,
 				showProgress: true,
 				showPop: false,
+				categoryExpanded: false, // 控制分类内容展开/收缩
 				popStyle: {
 					top: '1320rpx',
 					left: '50%',
@@ -389,8 +407,34 @@
 			}
 			this.calculateBarHeight()
 		},
+		onReady() {
+
+			// #ifdef H5
+			// document.body.style.overflow = 'hidden'
+			// document.addEventListener('wheel', this.preventWheel, { passive: false })
+			// document.addEventListener('touchmove', this.preventTouchMove, { passive: false })
+			// // #endif
+		},
+		onUnload() {
+			// 页面卸载时恢复滚动
+			// #ifdef H5
+			document.body.style.overflow = ''
+			document.removeEventListener('wheel', this.preventWheel)
+			document.removeEventListener('touchmove', this.preventTouchMove)
+			// #endif
+		},
 
 		methods: {
+			// 禁止鼠标滚轮
+			preventWheel(e) {
+				e.preventDefault()
+				return false
+			},
+			// 禁止触摸滚动
+			preventTouchMove(e) {
+				e.preventDefault()
+				return false
+			},
 			goBack() {
 				uni.redirectTo({
 					url: '/pages/index/index'
@@ -414,7 +458,7 @@
 			},
 			confirmTip() {
 				this.showTip = false;
-				this.showProgress = false;
+				// this.showProgress = false;
 			},
 			showPic(e) {
 				this.showPop = true
@@ -443,8 +487,25 @@
 			closePop() {
 				this.showPop = false
 			},
+			toggleCategory() {
+				this.categoryExpanded = !this.categoryExpanded
+			},
 			handleAction(action) {
 				console.log('Action:', action)
+				if (action === 'add') {
+					// 跳转到添加到日程页面
+					uni.navigateTo({
+						url: '/pages/Detail/Detail'
+					})
+				}
+				if (action === 'share') {
+					// 跳转分享
+					// uni.navigateTo({
+					// 	// 配置实际路径
+					// 	// url: '/pages/share/share',
+
+					// });
+				}
 				this.closePop()
 			},
 			calculateBarHeight() {
@@ -466,6 +527,7 @@
 				const systemInfo = uni.getSystemInfoSync()
 				return systemInfo.platform === 'ios'
 			},
+			// 跳转分享
 			goShare() {
 				// uni.navigateTo({
 				// 	// 配置实际路径
@@ -478,24 +540,36 @@
 </script>
 
 <style scoped>
-	/* 弹层遮罩 */
-	/* .point-pop-overlay {
+	/* 禁止页面滚动 */
+	.page {
+		height: 100vh;
+		overflow: hidden;
 		position: fixed;
+		width: 100%;
+		top: 0;
+		left: 0;
+	}
+
+	/* 弹层遮罩 */
+	.point-pop-overlay {
+		position: fixed;
+		width: 100vw;
+		height: 100vh;
 		top: 0;
 		left: 0;
 		right: 0;
 		bottom: 0;
 		background: transparent;
 		z-index: 3000;
-	} */
+	}
 
 	/* 弹层容器 */
-	/* .point-pop {
+	.point-pop {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		position: absolute;
-	} */
+	}
 
 	/* 三角形指示器 */
 	.triangle-indicator {
@@ -524,17 +598,17 @@
 	}
 
 	/* 弹层项 */
-	/* .pop-item {
+	.pop-item {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		gap: 2rpx;
-	} */
+	}
 
 	/* 图标容器外层 */
-	/* .pop-icon-wrapper {
+	.pop-icon-wrapper {
 		width: 12rpx;
 		height: 12rpx;
 		background: #fff;
@@ -543,7 +617,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-	} */
+	}
 
 	/* 图标容器 */
 	.pop-icon {
@@ -634,7 +708,7 @@
 		color: #000;
 		line-height: 65rpx;
 		margin-bottom: 20rpx;
-		padding-top: 42rpx;
+		padding-top: 44rpx;
 		box-sizing: border-box;
 	}
 
@@ -648,15 +722,15 @@
 
 	.tag {
 		width: 140rpx;
-		height: 40rpx;
+		/* height: 40rpx; */
 		border: 4rpx solid #000;
 		border-radius: 30rpx;
 		text-align: center;
-		padding-bottom: 60rpx;
-		line-height: 40rpx;
-		padding-bottom: 18rpx;
-		font-size: 32rpx;
+		padding: 4rpx 12rpx 4rpx 14rpx;
 		box-sizing: border-box;
+		/* line-height: 40rpx; */
+		font-size: 32rpx;
+		/* box-sizing: border-box; */
 		color: #000;
 		margin-right: 20rpx;
 
@@ -664,7 +738,7 @@
 
 	.tag:last-child {
 		width: 200rpx;
-		height: 40rpx;
+		/* height: 40rpx; */
 	}
 
 	/* Tab切换 */
@@ -733,7 +807,8 @@
 		color: #000;
 		text-align: center;
 		position: absolute;
-		left: 83px;
+		left: 162rpx;
+		top: 10rpx;
 
 		/* top: -44rpx;
 		right: 30rpx; */
@@ -751,10 +826,9 @@
 		display: flex;
 		flex-direction: row;
 		padding-left: 20rpx;
-		padding-top: 34rpx;
 		background: #fff;
 		box-sizing: border-box;
-		/* 	margin-bottom: 38rpx; */
+		margin-bottom: 16rpx;
 		/* margin-top: 38rpx; */
 	}
 
@@ -762,10 +836,12 @@
 		border: 2rpx solid #000;
 		border-radius: 30rpx;
 		width: 112rpx;
-		height: 40rpx;
+		padding: 4rpx 12rpx 4rpx 14rpx;
+		/* height: 40rpx; */
+		box-sizing: border-box;
 		font-size: 30rpx;
 		text-align: center;
-		line-height: 40rpx;
+		/* line-height: 40rpx; */
 		margin-right: 10rpx;
 		color: #000;
 		/* background: transparent; */
@@ -785,6 +861,7 @@
 		padding-left: 20rpx;
 		box-sizing: border-box;
 		padding-right: 22rpx;
+		overflow: visible;
 	}
 
 	.day-header {
@@ -807,16 +884,21 @@
 		font-weight: bold;
 	}
 
+	.collapse-icon image {
+		width: 50rpx;
+		height: 50rpx;
+	}
+
 	/* 进度条 */
 	.progress-bar {
-		/* width: 744rpx; */
-		height: 140rpx;
+
+		line-height: 140rpx;
 		background: #25B0F0;
 		padding: 10rpx 0 10rpx 40rpx;
 		border-radius: 40rpx;
 		box-sizing: border-box;
 		border: 4rpx solid #000;
-		margin-bottom: 19rpx;
+		margin-bottom: 8rpx;
 
 	}
 
@@ -839,13 +921,15 @@
 	.time-section {
 		/* padding: 40rpx; */
 		min-height: calc(100vh - 600rpx);
+		overflow: visible;
+		position: relative;
 	}
 
 	.time-tabs {
 		display: flex;
 		flex-direction: row;
 		font-size: 20rpx;
-		margin-bottom: 22rpx;
+		margin-bottom: 8rpx;
 	}
 
 	.time-tab {
@@ -871,42 +955,44 @@
 		font-size: 40rpx;
 		font-weight: 700;
 		color: #000;
-		position: relative;
-		right: -600rpx;
+		text-align: right;
+		/* position: relative;
+		right: -600rpx; */
 	}
 
 	/* 行程卡片 */
 	.schedule-left-card,
 	.schedule-right-card {
-		width: 674rpx;
+		/* width: 660rpx; */
 		height: 184rpx;
-		background-color: #efce63;
+		background-color: #F6CD4B;
 		border-radius: 40rpx;
 		position: relative;
-		left: 48rpx;
-		font-family: 'SFpro';
-
-
+		margin-left: 20rpx;
+		margin-bottom: 20rpx;
+		overflow: visible;
 	}
 
 	.schedule-left-card::after {
 		content: '';
 		position: absolute;
-		left: -30rpx;
+		left: -20rpx;
 		top: 50%;
 		transform: translateY(-50%);
 		width: 0;
 		height: 0;
 		border-top: 30rpx solid transparent;
 		border-bottom: 30rpx solid transparent;
-		border-right: 30rpx solid #F6CD4B;
+		border-right: 30rpx solid #efce63;
+		z-index: 10;
+		display: block;
+		pointer-events: none;
 	}
 
 
 	.schedule-right-card {
-		right: 0;
-		left: 18rpx;
-		margin-bottom: 20rpx;
+		/* margin-left: -20rpx; */
+		margin-right: 18rpx;
 	}
 
 	.schedule-left-card .point {
@@ -940,14 +1026,17 @@
 	.schedule-right-card::after {
 		content: '';
 		position: absolute;
-		right: -30rpx;
+		right: -20rpx;
 		top: 50%;
 		transform: translateY(-50%);
 		width: 0;
 		height: 0;
 		border-top: 30rpx solid transparent;
 		border-bottom: 30rpx solid transparent;
-		border-left: 30rpx solid #F6CD4B;
+		border-left: 30rpx solid #efce63;
+		z-index: 10;
+		display: block;
+		pointer-events: none;
 	}
 
 
@@ -974,6 +1063,7 @@
 		justify-content: space-between;
 		align-items: center;
 		border-bottom: none;
+		cursor: pointer;
 	}
 
 	.category-title {
@@ -988,22 +1078,44 @@
 		background-color: #25B0F0;
 		border-radius: 0 0 40rpx 40rpx;
 		min-height: 200rpx;
+		max-height: 1000rpx;
 		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: flex-end;
+		flex-direction: column;
+		align-items: flex-end;
+		justify-content: flex-start;
 		border-top: none;
-		padding-right: 20rpx;
+		padding: 20rpx;
+		box-sizing: border-box;
+		transition: min-height 0.3s ease, max-height 0.3s ease;
+		overflow: hidden;
 	}
 
 	.category-content.collapsed {
 		min-height: 100rpx;
+		max-height: 100rpx;
 	}
 
 	.category-content .collapse-icon {
 		font-size: 40rpx;
 		color: #000;
 		font-weight: bold;
+		cursor: pointer;
+		margin-bottom: 10rpx;
+		transition: transform 0.3s ease;
+	}
+
+	.category-content .collapse-icon image {
+		width: 50rpx;
+		height: 50rpx;
+		transition: transform 0.3s ease;
+	}
+
+	.category-detail {
+		width: 100%;
+		padding: 20rpx;
+		color: #fff;
+		font-size: 28rpx;
+		line-height: 1.6;
 	}
 
 	/* 更多卡片 */
@@ -1027,20 +1139,29 @@
 	/* 温馨提示弹窗 */
 	.tip-modal {
 		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
 		bottom: 0;
+		width: 100vw;
+		height: 100vh;
 		display: flex;
-		/* align-items: flex-end; */
-		z-index: 1000;
+		flex-direction: column;
+		justify-content: flex-end;
+		align-items: center;
+		z-index: 9999;
 	}
 
 	.tip-content {
 		background-color: #FE4A49;
 		border-radius: 40rpx 40rpx 0 0;
-		padding: 24rpx 52rpx 0 40rpx;
+		padding: 22rpx 50rpx 10rpx 20rpx;
 		width: 100%;
-		height: 352rpx;
+		/* line-height: 340rpx; */
+		height: 340rpx;
 		position: relative;
 		box-sizing: border-box;
+
 	}
 
 	.tip-header {
@@ -1090,8 +1211,8 @@
 
 	.tip-mascot {
 		position: absolute;
-		right: 0;
-		top: 0;
+		right: 18rpx;
+		bottom: 234rpx;
 		width: 200rpx;
 		height: 200rpx;
 	}
