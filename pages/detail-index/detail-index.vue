@@ -1,5 +1,5 @@
 <template>
-	<view class="page" @touchmove.stop.prevent>
+	<view class="page">
 		<!-- 状态栏占位 -->
 		<!-- <view class="status-bar" :style="{ height: statusBarHeight + 'px' }"></view> -->
 		<!-- 顶部导航栏 -->
@@ -320,7 +320,7 @@
 					本次旅行为西安三天两夜旅程，该旅程超级适合上午起不来的年轻人啦，不夜城西安玩起来！！！
 				</view>
 				<view class="tip-buttons">
-					<view class="btn-dismiss" @click="dismissTip">拜拜 再去找找</view>
+					<view class="btn-dismiss" @click="goBack">拜拜 再去找找</view>
 					<view class="btn-confirm" @click="confirmTip">了解 进入行程</view>
 				</view>
 
@@ -398,6 +398,7 @@
 			}
 		},
 		onLoad(options) {
+
 			// console.log(options)
 			if (options && options.id) {
 				// this.detailId = options.id
@@ -407,38 +408,37 @@
 			}
 			this.calculateBarHeight()
 		},
-		onReady() {
+		onShow() {
+			this.resetStatus()
+		},
+		activated() {
+			this.resetStatus()
+		},
 
-			// #ifdef H5
-			// document.body.style.overflow = 'hidden'
-			// document.addEventListener('wheel', this.preventWheel, { passive: false })
-			// document.addEventListener('touchmove', this.preventTouchMove, { passive: false })
-			// // #endif
-		},
-		onUnload() {
-			// 页面卸载时恢复滚动
-			// #ifdef H5
-			document.body.style.overflow = ''
-			document.removeEventListener('wheel', this.preventWheel)
-			document.removeEventListener('touchmove', this.preventTouchMove)
-			// #endif
-		},
+
 
 		methods: {
-			// 禁止鼠标滚轮
-			preventWheel(e) {
-				e.preventDefault()
-				return false
+			// 重置状态
+			resetStatus() {
+				this.showTip = true
+				this.showProgress = true
+				this.categoryExpanded = false
+				this.showPop = false
 			},
-			// 禁止触摸滚动
-			preventTouchMove(e) {
-				e.preventDefault()
-				return false
-			},
+
 			goBack() {
-				uni.redirectTo({
+				// 不论从哪进入，统一回到首页
+				// #ifdef H5
+				if (this.$router) {
+					this.$router.push({
+						path: '/pages/index/index'
+					})
+					return
+				}
+				// #endif
+				uni.switchTab({
 					url: '/pages/index/index'
-				});
+				})
 			},
 			switchTab(index) {
 				this.activeTab = index
@@ -541,14 +541,14 @@
 
 <style scoped>
 	/* 禁止页面滚动 */
-	.page {
+	/* .page {
 		height: 100vh;
 		overflow: hidden;
 		position: fixed;
 		width: 100%;
 		top: 0;
 		left: 0;
-	}
+	} */
 
 	/* 弹层遮罩 */
 	.point-pop-overlay {
