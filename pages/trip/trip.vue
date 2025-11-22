@@ -131,7 +131,7 @@
   gap: 10px;
 }
 .card {
-  height: 80px;
+  height: 100px;
   border-radius: 8px;
 }
 .blue {

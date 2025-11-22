@@ -89,7 +89,7 @@
         <button class="tab-btn" 
                 :class="{ active: activeTab === 'follow' }"
                 @click="activeTab = 'follow'">
-          关注
+          同城
         </button>
         <button class="tab-btn" 
                 :class="{ active: activeTab === 'group' }"
@@ -569,7 +569,7 @@ export default {
 
 .card-img {
   width: 100%;
-  height: 128px;
+  height: 180px;
   object-fit: cover;
 }
 
