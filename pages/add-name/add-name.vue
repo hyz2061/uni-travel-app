@@ -21,7 +21,7 @@
         />
         <span class="char-count">{{ charLength }}/50</span>
       </div>
-      <button class="confirm-btn" @click="handleConfirm">确定</button>
+      <button class="confirm-btn" @click="$router.push('/pages/luggage/luggage')">确定</button>
     </div>
   </div>
 </template>

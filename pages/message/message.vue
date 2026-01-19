@@ -1,41 +1,35 @@
 <template>
   <div class="message-center">
-	  <div class="top"></div>
-    <!-- 顶部导航栏 -->
-   <div class="header">
-     <!-- 新增：带背景图的顶部容器 -->
-     <div class="header-bg">
-       <h1 class="title">消息中心</h1>
-       <div class="tabs">
-         <div 
-           class="tab-item friend" 
-           @click="switchTab('friend')"
-           :class="{ active: currentTab === 'friend' }"
-		   
-         >
-           <img src="/static/消息1.png" alt="好友消息" class="tab-icon" />
-         </div>
-         <div 
-           class="tab-item follow" 
-           @click="switchTab('follow')"
-           :class="{ active: currentTab === 'follow' }"
-         >
+    <div class="top"></div>
+    <div class="header">
+      <div class="header-bg">
+        <h1 class="title">消息中心</h1>
+        <div class="tabs">
+          <div 
+            class="tab-item friend" 
+            @click="switchTab('friend')"
+            :class="{ active: currentTab === 'friend' }"
+          >
+            <img src="/static/消息1.png" alt="好友消息" class="tab-icon" />
+          </div>
+          <div 
+            class="tab-item follow" 
+            @click="switchTab('follow')"
+            :class="{ active: currentTab === 'follow' }"
+          >
+            <img src="/static/消息2.png" alt="关注消息" class="tab-icon" />
+          </div>
+          <div 
+            class="tab-item system" 
+            @click="switchTab('system')"
+            :class="{ active: currentTab === 'system' }"
+          >
+            <img src="/static/消息3.png" alt="系统消息" class="tab-icon" />
+          </div>
+        </div>
+      </div>
+    </div>
 
-           <img src="/static/消息2.png" alt="关注消息" class="tab-icon" />
-         </div>
-         <div 
-           class="tab-item system" 
-           @click="switchTab('system')"
-           :class="{ active: currentTab === 'system' }"
-         >
-		   
-           <img src="/static/消息3.png" alt="系统消息" class="tab-icon" />
-         </div>
-       </div>
-     </div>
-   </div>
-
-    <!-- 好友消息列表 -->
     <div v-if="currentTab === 'friend'" class="message-list">
       <div 
         class="message-item" 
@@ -52,7 +46,6 @@
       </div>
     </div>
 
-    <!-- 关注消息列表 -->
     <div v-if="currentTab === 'follow'" class="message-list">
       <div class="message-item" v-for="item in followMessages" :key="item.id">
         <img :src="item.avatar" alt="头像" class="avatar" />
@@ -63,21 +56,26 @@
       </div>
     </div>
 
-    <!-- 系统消息列表 -->
     <div v-if="currentTab === 'system'" class="message-list">
-      <div class="message-item" v-for="item in systemMessages" :key="item.id">
+      <div class="message-item" v-for="item in systemMessages" :key="item.id" @click="goToChat(item)">
         <img :src="item.avatar" alt="头像" class="avatar" />
         <div class="info">
           <h3 class="name">{{ item.name }}</h3>
         </div>
       </div>
     </div>
-      <tabbar></tabbar>
+    
+    <tabbar></tabbar>
   </div>
 </template>
 
 <script>
+import tabbar from '@/components/tabbar/tabbar.vue' // 确保引入tabbar组件
+
 export default {
+  components: {
+    tabbar
+  },
   data() {
     return {
       currentTab: 'friend', // 默认选中好友消息
@@ -93,7 +91,7 @@ export default {
         { id: 4, avatar: '/static/头像.png', name: 'D学长', content: '您的关注更新了' }
       ],
       systemMessages: [
-        { id: 1, avatar: '/static/头像.png', name: '小迹' }
+        { id: 1, avatar: '/static/头像.png', name: '小迹' } // 这里的name必须是 '小迹' 才能触发跳转
       ]
     };
   },
@@ -101,10 +99,19 @@ export default {
     switchTab(tab) {
       this.currentTab = tab;
     },
+    // 修改点2：更新跳转逻辑
     goToChat(item) {
-      uni.navigateTo({
-        url: `/pages/chat/chat`
-      });
+      // 判断是否是 AI 助手小迹
+      if (item.name === '小迹') {
+        uni.navigateTo({
+          url: '/pages/message1/message1' // 跳转到 AI 对话页面
+        });
+      } else {
+        // 跳转到普通聊天页面
+        uni.navigateTo({
+          url: `/pages/chat/chat`
+        });
+      }
     }
   }
 };
@@ -112,8 +119,8 @@ export default {
 
 <style scoped lang="scss">
 .top{
-	height: 40px;
-	background-color: #25B0F0;
+  height: 40px;
+  background-color: #25B0F0;
 }
 .message-center {
   min-height: 100vh;
@@ -121,7 +128,7 @@ export default {
   box-sizing: border-box;
 }
 span{
-	font-weight: 900;
+  font-weight: 900;
 }
 
 /* 顶部导航栏样式 */
@@ -129,8 +136,7 @@ span{
   background-color: #25B0F0;
   padding: 10rpx 40rpx;
   color: #fff;
-   margin-top: 0px; /* 新增：设置顶部外边距，数值可根据需求调整 */
-  
+  margin-top: 0px; 
 }
 
 .title {
@@ -138,12 +144,10 @@ span{
   margin: 0 0 20rpx;
 }
 
-
 .friend {
   width: 85px;
   height: 80px;
   margin-right: 5px;
-  
 }
 .follow {
    width: 85px;
@@ -195,7 +199,7 @@ span{
 .tag {
   background-color: transparent;
   color: #aaaaaa;
-   border: 1px solid #aaaaaa; /* 1px 黑色实线边框，可根据需要调整颜色、粗细、样式（如dashed虚线） */
+  border: 1px solid #aaaaaa; 
   font-size: 24rpx;
   padding: 2rpx 10rpx;
   border-radius: 16rpx;
@@ -212,48 +216,42 @@ span{
   font-size: 24rpx;
   color: #999;
 }
-/* 顶部背景容器：设置背景图、高度、排版 */
-/* 顶部容器：设置背景图 + Flex 垂直布局 */
-/* 顶部背景容器：蓝色背景 + 内容分层 */
+
+/* 顶部背景容器 */
 .header-bg {
   padding: 0px 15px;
-  color: #fff; /* 标题文字白色 */
+  color: #fff; 
 }
 
-/* 标题样式：居左，字号加大 */
 .title {
   font-size: 28px;
   font-weight: bold;
-  margin: 0 0 18px 0; /* 标题与下方选项卡的间距 */
+  margin: 0 0 18px 0; 
 }
 .tab-icon{
-	vertical-align: bottom; /* 图片紧贴底部 */
-	 width: 145px; /* 图片大小，可调整 */
-	 height : 90px;
-	 object-fit: contain; /* 不拉伸图片 */
-	 position: relative;
-	 top: 2px;
+  vertical-align: bottom; 
+  width: 145px; 
+  height : 90px;
+  object-fit: contain; 
+  position: relative;
+  top: 2px;
 }
- /* 单个选项卡：文字左 + 图片右，水平排列 */
-    .tab-item {
-      display: flex; /* 文字与图片横向对齐 */
-      align-items: center;
-      cursor: pointer;
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 8px;
-      transition: all 0.2s;
-	   display: flex;
-	    align-items: center;
-	    cursor: pointer;
-		
-    }
-	.tabs {
-	  display: flex;
-	  gap: 20px; /* 选项卡之间的间距，可根据需求调整 */
-	  align-items: center; /* 垂直居中对齐 */
-	}
 
-
-
+.tab-item {
+  display: flex; 
+  align-items: center;
+  cursor: pointer;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.tabs {
+  display: flex;
+  gap: 20px; 
+  align-items: center; 
+}
 </style>

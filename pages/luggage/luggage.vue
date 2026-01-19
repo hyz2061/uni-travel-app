@@ -3,7 +3,7 @@
 		<!-- 页面头部 -->
 		<!-- 页面头部 -->
 		<div class="page-header">
-		  <div class="back-btn" @click="goBack">< 返回</div>
+		  <div class="back-btn" @click="$router.push('/pages/trip/trip')">返回</div>
 		  <h1 class="page-title">默认旅程</h1>
 		  <div class="black-square"></div>
 		</div>
@@ -54,57 +54,11 @@
 					<p class="item-desc">{{ item.desc }}</p>
 				</div>
 			</div>
-			<!-- 自定义键盘 -->
-			<div class="custom-keyboard">
-			  <div class="keyboard-row">
-			    <div class="key blue-key">"The"</div>
-			    <div class="key">the</div>
-			    <div class="key">to</div>
-			  </div>
-			  <div class="keyboard-row">
-			    <div class="key blue-key">q</div>
-			    <div class="key blue-key">w</div>
-			    <div class="key blue-key">e</div>
-			    <div class="key blue-key">r</div>
-			    <div class="key blue-key">t</div>
-			    <div class="key blue-key">y</div>
-			    <div class="key blue-key">u</div>
-			    <div class="key blue-key">i</div>
-			    <div class="key blue-key">o</div>
-			    <div class="key blue-key">p</div>
-			  </div>
-			  <div class="keyboard-row">
-			    <div class="key blue-key">a</div>
-			    <div class="key blue-key">s</div>
-			    <div class="key blue-key">d</div>
-			    <div class="key blue-key">f</div>
-			    <div class="key blue-key">g</div>
-			    <div class="key blue-key">h</div>
-			    <div class="key blue-key">j</div>
-			    <div class="key blue-key">k</div>
-			    <div class="key blue-key">l</div>
-			  </div>
-			  <div class="keyboard-row">
-			    <div class="key orange-key">↑</div>
-			    <div class="key blue-key">z</div>
-			    <div class="key blue-key">x</div>
-			    <div class="key blue-key">c</div>
-			    <div class="key blue-key">v</div>
-			    <div class="key blue-key">b</div>
-			    <div class="key blue-key">n</div>
-			    <div class="key blue-key">m</div>
-			    <div class="key red-key">×</div>
-			  </div>
-			  <div class="keyboard-row">
-			    <div class="key red-key">ABC</div>
-			    <div class="key space-key">space</div>
-			    <div class="key red-key">return</div>
-			  </div>
-			   <div class="icon-row">
-			      <img src="/static/笑脸.png" class="icon-item emoji-icon"/>
-			      <img  src="/static/话.png"class="icon-item mic-icon"/>
-			    </div>
-			</div>
+		
+			 
+			
+			 
+			
 		</div>
 
 		<!-- 账单内容区 -->

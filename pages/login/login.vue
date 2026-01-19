@@ -3,31 +3,27 @@
 
 <template>
   <view class="login-page">
-	   <view class="top-btn-container">
-	        <template v-if="currentView === 'account'">
-	          <button class="skip-btn" @click="handleSkip">跳过</button>
-	        </template>
-	        <template v-else>
-	          <button class="back-btn" @click="goBack">< 返回</button>
-	        </template>
-	      </view>
-	 
-    <!-- 顶部Logo区域 -->
-    <view class="logo-container">WA
+    <view class="top-btn-container">
+      <template v-if="currentView === 'account'">
+        <button class="skip-btn" @click="handleSkip">跳过</button>
+      </template>
+      <template v-else>
+        <button class="back-btn" @click="goBack">< 返回</button>
+      </template>
+    </view>
+   
+    <view class="logo-container">
       <image src="/static/头像.png" mode="aspectFit" class="logo-img"></image>
     </view>
 
-    <!-- 表单区域-根据状态切换 -->
     <view class="form-container">
-      <!-- 账号密码登录 -->
+      
       <view v-if="currentView === 'account'">
         <view class="input-group">
             <input type="text" placeholder="用户名/电话号码" class="input-field" v-model="username" style="background-color:#ffd700; color: #000;;"/>
-            <!-- 修改密码输入框 -->
-            <input type="tel" placeholder="6位数字密码" class="input-field" v-model="password" maxlength="6" style="background-color:#ffd700; color: #000;;"/>
+            <input type="password" placeholder="6位数字密码" class="input-field" v-model="password" maxlength="6" style="background-color:#ffd700; color: #000;;"/>
           </view>
         <view class="link-row">
-          <!-- 替换 button 为 a 标签 -->
           <text @click="switchToFindPwd" class="link-btn">忘记密码</text>
           <text @click="switchToCodeLogin" class="link-btn">验证码登录</text>
         </view>
@@ -41,14 +37,12 @@
 
       <view v-else-if="currentView === 'code'">
         <view class="input-group">
-          <button @click="goBack" class="back-button" aria-label="返回消息列表">
+          <button @click="goBack" class="back-button" aria-label="返回">
             <i class="arrow-left"></i>
           </button>
-          <!-- 绑定电话号码输入框 -->
           <input type="text" placeholder="电话号码" class="input-field" v-model="phone" style="background-color:#ffd700; color: #000;"/>
 
           <view class="verify-container">
-            <!-- 绑定验证码输入框 -->
             <input
                 class="input-item verify-input"
                 placeholder="验证码"
@@ -58,42 +52,66 @@
             <button class="get-code-btn" @click="getVerificationCode">获取验证码</button>
           </view>
         </view>
-        <!-- 修改确认按钮的点击事件 -->
         <button class="main-btn red-btn" @click="handleCodeLogin">确认</button>
       </view>
 
-      <!-- 找回密码 -->
-	  
-      <view v-else-if="currentView === 'findPwd'">
-		  <button @click="goBack" class="back-button" aria-label="返回消息列表">
-		    <i class="arrow-left"></i>
-		  </button>
+<view v-else-if="currentView === 'findPwd'">
+        <button @click="goBack" class="back-button" aria-label="返回">
+          <i class="arrow-left"></i>
+        </button>
         <view class="input-group">
-          <input type="text" placeholder="电话号码" class="input-field" />
-          <!-- 页面的 WXML 文件 -->
+          <input 
+            type="number" 
+            placeholder="电话号码" 
+            class="input-field" 
+            v-model="resetPhone" 
+            maxlength="11" 
+            style="background-color:#ffd700; color: #000;"
+          />
+          
           <view class="verify-container">
-                 <input 
-                   class="input-item verify-input" 
-                   placeholder="验证码" 
-                   v-model="code"
-                 />
-                 <button class="get-code-btn" @click="getVerificationCode">获取验证码</button>
-               </view>
-          <input type="password" placeholder="新密码" class="input-field" />
-          <input type="password" placeholder="重新输入密码" class="input-field" />
+             <input 
+               class="input-item verify-input" 
+               placeholder="验证码" 
+               v-model="resetCode"
+               maxlength="6"
+             />
+             <button 
+               class="get-code-btn" 
+               @click="getResetVerifyCode" 
+               :disabled="isCounting"
+               :class="{ 'disabled-btn': isCounting }"
+             >
+               {{ codeBtnText }}
+             </button>
+          </view>
+          
+          <input 
+            type="password" 
+            placeholder="新密码" 
+            class="input-field" 
+            v-model="newPassword" 
+            style="background-color:#ffd700; color: #000;"
+          />
+          <input 
+            type="password" 
+            placeholder="重新输入密码" 
+            class="input-field" 
+            v-model="confirmPassword" 
+            style="background-color:#ffd700; color: #000;"
+          />
         </view>
-        <button class="main-btn red-btn" @click="goBack">确认</button>
+        <button class="main-btn red-btn" @click="handleResetSubmit">确认</button>
       </view>
-    </view>
-
-    <!-- 其他登录方式 -->
+	   </view>
+	  
     <view class="other-login">
-		<button @click="goBack" class="back-button" aria-label="返回消息列表">
-		  <i class="arrow-left"></i>
-		</button>
+        <button @click="goBack" class="back-button" aria-label="返回">
+          <i class="arrow-left"></i>
+        </button>
       <view class="divider">
         <view class="line"></view>
-        <text>它登陆方式</text>
+        <text>其他登陆方式</text>
         <view class="line"></view>
       </view>
       <view class="icon-group">
@@ -104,213 +122,215 @@
     </view>
   </view>
 </template>
-
 <!-- 在 script 部分修改 handleAccountLogin 方法 -->
 <script>
 export default {
   data() {
     return {
-      currentView: 'account', // 初始显示账号密码登录：account/code/findPwd
-      // 账号密码登录
+      currentView: 'account', // 初始显示账号密码登录
+      
+      // 账号密码登录数据
       username: '',
       password: '',
-      // 验证码登录/找回密码共用
+      
+      // 验证码登录数据
       phone: '',
       code: '',
-      newPassword: '' // 新密码（找回密码用）
+      
+      // --- 找回密码专用数据 ---
+      resetPhone: '',      // 找回密码-手机号
+      resetCode: '',       // 找回密码-验证码
+      newPassword: '',     // 找回密码-新密码
+      confirmPassword: '', // 找回密码-确认密码
+      
+      // 倒计时相关
+      codeBtnText: '获取验证码',
+      isCounting: false,
+      timer: null,
+      countdown: 60
     };
   },
   methods: {
     handleSkip() {
-      uni.navigateTo({
-        url: '/pages/index/index'
-      });
+      uni.navigateTo({ url: '/pages/index/index' });
     },
-    // 切换视图
     switchView(viewType) {
       this.currentView = viewType;
+      // 切换视图时清理定时器
+      this.clearTimer();
     },
-    // 切换到验证码登录（快捷方法）
     switchToCodeLogin() {
       this.currentView = 'code';
     },
-    // 切换到找回密码
     switchToFindPwd() {
       this.currentView = 'findPwd';
+      // 清空找回密码的表单
+      this.resetPhone = '';
+      this.resetCode = '';
+      this.newPassword = '';
+      this.confirmPassword = '';
+      this.codeBtnText = '获取验证码';
     },
     goBack() {
       this.currentView = 'account';
+      this.clearTimer();
+    },
+    
+    // 清理倒计时
+    clearTimer() {
+      if (this.timer) {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+      this.isCounting = false;
+      this.codeBtnText = '获取验证码';
+      this.countdown = 60;
     },
 
-
-
-    // 验证码登录逻辑
-   handleAccountLogin() {
-         if (!this.username) {
-           return uni.showToast({ title: '请输入用户名', icon: 'none' });
-         }
-         if (!this.password) {
-           return uni.showToast({ title: '请输入密码', icon: 'none' });
-         }
-         // 添加6位数密码验证
-         if (this.password.length !== 6 || !/^\d{6}$/.test(this.password)) {
-           return uni.showToast({ title: '密码必须为6位数字', icon: 'none' });
-         }
-   
-         // 模拟登录成功，实际项目中这里会调用登录接口
-         const userInfo = {
-           nickname: this.username
-         };
-   
-         try {
-           uni.setStorageSync('userInfo', JSON.stringify(userInfo));
-           uni.showToast({
-             title: '登录成功',
-             icon: 'success',
-             success: () => {
-               setTimeout(() => {
-                 // 修改为 reLaunch 方式跳转到首页
-                 uni.reLaunch({
-                   url: '/pages/index/index'
-                 });
-               }, 1000);
-             }
-           });
-         } catch (e) {
-           console.error('保存用户信息失败', e);
-           uni.showToast({ title: '登录失败', icon: 'none' });
-         }
-       },
-
-
-    // 获取验证码
-    handleCodeLogin() {
-      if (!this.phone) {
+    // --- 找回密码：获取验证码 ---
+    getResetVerifyCode() {
+      // 1. 校验手机号位数
+      if (!this.resetPhone) {
         return uni.showToast({ title: '请输入手机号', icon: 'none' });
       }
-      if (!this.code) {
-        return uni.showToast({ title: '请输入验证码', icon: 'none' });
+      if (!/^1\d{10}$/.test(this.resetPhone)) {
+        return uni.showToast({ title: '手机号必须为11位数字', icon: 'none' });
       }
-      // 添加6位数验证码验证
+
+      // 2. 开始倒计时
+      if (this.isCounting) return;
+      
+      uni.showToast({ title: '验证码已发送', icon: 'none' });
+      this.isCounting = true;
+      this.codeBtnText = `重新发送(${this.countdown})`;
+      
+      this.timer = setInterval(() => {
+        this.countdown--;
+        this.codeBtnText = `重新发送(${this.countdown})`;
+        if (this.countdown <= 0) {
+          this.clearTimer();
+        }
+      }, 1000);
+    },
+
+    // --- 找回密码：确认提交 ---
+    handleResetSubmit() {
+      // 1. 校验内容是否为空及格式
+      if (!this.resetPhone) {
+        return uni.showToast({ title: '请输入手机号', icon: 'none' });
+      }
+      if (this.resetPhone.length !== 11) {
+        return uni.showToast({ title: '手机号必须为11位数字', icon: 'none' });
+      }
+      
+      // 需求：如果没有输入验证码，提示输入
+      if (!this.resetCode) {
+        return uni.showToast({ title: '请输入正确的验证码', icon: 'none' });
+      }
+      
+      if (!this.newPassword) {
+        return uni.showToast({ title: '请输入新密码', icon: 'none' });
+      }
+      if (!this.confirmPassword) {
+        return uni.showToast({ title: '请确认新密码', icon: 'none' });
+      }
+      if (this.newPassword !== this.confirmPassword) {
+        return uni.showToast({ title: '两次输入的密码不一致', icon: 'none' });
+      }
+
+      // 2. 模拟提交成功
+      uni.showLoading({ title: '提交中...' });
+      
+      setTimeout(() => {
+        uni.hideLoading();
+        uni.showToast({ title: '密码重置成功', icon: 'success' });
+        
+        // 3. 只有成功后才跳转
+        setTimeout(() => {
+          this.switchView('account'); // 跳转回登录页
+        }, 1500);
+      }, 1000);
+    },
+
+    // --- 账号登录逻辑 ---
+    handleAccountLogin() {
+      if (!this.username) {
+        return uni.showToast({ title: '请输入用户名', icon: 'none' });
+      }
+      const usernameRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      if (!usernameRegex.test(this.username)) {
+        return uni.showToast({ 
+          title: '用户名需包含英文和数字且不少于8位', 
+          icon: 'none',
+          duration: 2000 
+        });
+      }
+      if (!this.password) {
+        return uni.showToast({ title: '请输入密码', icon: 'none' });
+      }
+      if (this.password.length !== 6 || !/^\d{6}$/.test(this.password)) {
+        return uni.showToast({ title: '密码必须为6位数字', icon: 'none' });
+      }
+
+      const userInfo = { nickname: this.username };
+      try {
+        uni.setStorageSync('userInfo', JSON.stringify(userInfo));
+        uni.showToast({
+          title: '登录成功',
+          icon: 'success',
+          success: () => {
+            setTimeout(() => {
+              uni.reLaunch({ url: '/pages/index/index' });
+            }, 1000);
+          }
+        });
+      } catch (e) {
+        uni.showToast({ title: '登录失败', icon: 'none' });
+      }
+    },
+
+    // --- 验证码登录逻辑 (保持原有逻辑) ---
+    getVerificationCode() {
+         if (!this.phone) {
+             return uni.showToast({ title: '请输入手机号', icon: 'none' });
+         }
+         uni.showToast({ title: '验证码已发送', icon: 'none' });
+    },
+    handleCodeLogin() {
+      if (!this.phone) return uni.showToast({ title: '请输入手机号', icon: 'none' });
+      if (!this.code) return uni.showToast({ title: '请输入验证码', icon: 'none' });
       if (this.code.length !== 6 || !/^\d{6}$/.test(this.code)) {
         return uni.showToast({ title: '验证码必须为6位数字', icon: 'none' });
       }
-
-      // 模拟登录成功
-      const userInfo = {
-        nickname: '验证码用户'
-      };
-
-      try {
-        uni.setStorageSync('userInfo', JSON.stringify(userInfo));
-        uni.showToast({
-          title: '登录成功',
-          icon: 'success',
-          success: () => {
-            setTimeout(() => {
-              uni.reLaunch({
-                url: '/pages/index/index'
-              });
-            }, 1000);
-          }
-        });
-      } catch (e) {
-        console.error('保存用户信息失败', e);
-        uni.showToast({ title: '登录失败', icon: 'none' });
-      }
+      const userInfo = { nickname: '验证码用户' };
+      uni.setStorageSync('userInfo', JSON.stringify(userInfo));
+      uni.showToast({
+        title: '登录成功',
+        icon: 'success',
+        success: () => {
+          setTimeout(() => { uni.reLaunch({ url: '/pages/index/index' }); }, 1000);
+        }
+      });
     },
 
-    // 重置密码
-    resetPassword() {
-      if (!this.phone) return uni.showToast({ title: '请输入手机号', icon: 'none' });
-      if (!this.code) return uni.showToast({ title: '请输入验证码', icon: 'none' });
-      if (!this.newPassword) return uni.showToast({ title: '请输入新密码', icon: 'none' });
-      uni.showToast({ title: '密码重置成功', icon: 'success' });
-      setTimeout(() => {
-        this.switchView('account'); // 重置成功后切回账号登录
-      }, 1000);
-    },
-	
-
-    // 微信登录
-    loginByWechat() {
-      // 模拟微信登录成功
-      const userInfo = {
-        nickname: '微信用户'
-      };
-
-      try {
-        uni.setStorageSync('userInfo', JSON.stringify(userInfo));
-        uni.showToast({
-          title: '登录成功',
-          icon: 'success',
-          success: () => {
-            setTimeout(() => {
-              uni.switchTab({
-                url: '/pages/index/index'
-              });
-            }, 1000);
-          }
-        });
-      } catch (e) {
-        console.error('保存用户信息失败', e);
-        uni.showToast({ title: '登录失败', icon: 'none' });
-      }
-    },
-    // QQ登录
-    loginByQQ() {
-      // 模拟QQ登录成功
-      const userInfo = {
-        nickname: 'QQ用户'
-      };
-
-      try {
-        uni.setStorageSync('userInfo', JSON.stringify(userInfo));
-        uni.showToast({
-          title: '登录成功',
-          icon: 'success',
-          success: () => {
-            setTimeout(() => {
-              uni.switchTab({
-                url: 'pages/index/index'
-              });
-            }, 1000);
-          }
-        });
-      } catch (e) {
-        console.error('保存用户信息失败', e);
-        uni.showToast({ title: '登录失败', icon: 'none' });
-      }
-    },
-    // 支付宝登录
-    loginByAlipay() {
-      // 模拟支付宝登录成功
-      const userInfo = {
-        nickname: '支付宝用户'
-      };
-
-      try {
-        uni.setStorageSync('userInfo', JSON.stringify(userInfo));
-        uni.showToast({
-          title: '登录成功',
-          icon: 'success',
-          success: () => {
-            setTimeout(() => {
-              uni.switchTab({
-                url: '/pages/profile/profile'
-              });
-            }, 1000);
-          }
-        });
-      } catch (e) {
-        console.error('保存用户信息失败', e);
-        uni.showToast({ title: '登录失败', icon: 'none' });
-      }
+    // 第三方登录
+    loginByWechat() { this.mockThirdPartyLogin('微信用户'); },
+    loginByQQ() { this.mockThirdPartyLogin('QQ用户'); },
+    loginByAlipay() { this.mockThirdPartyLogin('支付宝用户'); },
+    
+    mockThirdPartyLogin(name) {
+      uni.setStorageSync('userInfo', JSON.stringify({ nickname: name }));
+      uni.showToast({
+        title: '登录成功',
+        icon: 'success',
+        success: () => {
+          setTimeout(() => { uni.reLaunch({ url: '/pages/index/index' }); }, 1000);
+        }
+      });
     }
   }
 };
 </script>
-
 
 <style scoped>
 text{

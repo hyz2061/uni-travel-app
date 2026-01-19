@@ -1,345 +1,699 @@
 <template>
-  <view class="container">
-    <!-- 顶部导航栏 -->
-    <view class="navbar">
+  <view class="container" @click="closeDropdown">
+    <view class="navbar" :style="{ paddingTop: statusBarHeight + 'px' }">
       <view class="back-btn" @click="onBack">
-        <text class="back-icon">←</text>
+        <text class="uni-icon">‹</text>
         <text class="back-text">返回</text>
       </view>
     </view>
 
-    <!-- 主内容区 -->
     <view class="main-content">
-      <!-- 卡通形象和标题 -->
       <view class="header-section">
         <image 
-          src="/static/travel-bird.png" 
+          src="/static/飞机.png" 
           mode="widthFix" 
           class="bird-image"
         ></image>
-        <view class="title-text">为这次旅程添加一起旅行的同伴吧</view>
+        <view class="header-text">
+          <text>为这次旅程</text>
+          <text>添加一起旅行的同伴吧</text>
+        </view>
       </view>
 
-      <!-- 团队名称输入框 -->
-      <view class="input-group">
+      <view class="team-input-box">
         <input 
           type="text" 
           v-model="teamName" 
           placeholder="团队旅游名称" 
+          placeholder-style="color: #665230; font-weight: normal;"
           maxlength="50"
           class="team-input"
+          @input="handleTeamNameInput"
+          @blur="handleTeamNameBlur"
         />
         <text class="char-count">{{ teamName.length }}/50</text>
       </view>
 
-      <!-- 同伴区域 -->
-      <view class="companion-section">
-        <view class="companion-header">
-          <text class="companion-title">伙伴 ({{ companions.length }})</text>
-          <view class="add-btn" @click="addCompanion">
-            <text class="add-icon">+</text>
+      <view class="companion-card" @click.stop>
+        <view class="card-header">
+          <text class="header-title">伙伴 ({{ companions.length }}/{{ maxCompanions }})</text>
+          <view class="add-icon-btn" @click="focusInput">
+            <text class="plus-sign">+</text>
           </view>
         </view>
-
-        <!-- 同伴列表 -->
-        <view class="companion-list">
-          <view class="companion-item" v-for="(item, index) in companions" :key="index">
-            <image 
-              src="/static/avatar-default.png" 
-              mode="widthFix" 
-              class="companion-avatar"
-            ></image>
-            <text class="companion-name">{{ item }}</text>
-            <view class="remove-btn" @click="removeCompanion(index)">
-              <text class="remove-icon">×</text>
-            </view>
+        
+        <view class="card-body">
+          <!-- 伙伴列表为空时的提示 -->
+          <view v-if="companions.length === 0" class="empty-companions">
+            <text class="empty-text">还没有添加伙伴哦～</text>
+            <text class="empty-hint">点击下方输入框添加同伴</text>
+          </view>
+          
+          <view v-for="(item, index) in companions" :key="index" class="list-item" :data-index="index">
+            
+             <view class="delete-btn" @click.stop="showDeleteConfirm(index)">×</view>
           </view>
 
-          <!-- 添加同伴输入框 -->
-          <view class="add-companion">
-            <image 
-              src="/static/avatar-default.png" 
-              mode="widthFix" 
-              class="add-avatar"
-            ></image>
-            <input 
-              type="text" 
-              v-model="newCompanion" 
-              placeholder="朋友账号" 
-              class="companion-input"
-            />
-            <button class="select-btn" @click="confirmAdd">选择</button>
+          <view class="input-area-wrapper">
+            <view class="input-row">
+             
+              
+              <view class="pill-input-wrapper">
+                <input 
+                  type="text" 
+                  v-model="inputValue" 
+                  placeholder="输入名字或从列表选择" 
+                  placeholder-style="color: #8B7E66"
+                  class="pill-input"
+                  confirm-type="done"
+                  @focus="onInputFocus"
+                  @input="onInput"
+                  @confirm="confirmAdd"
+                  :disabled="companions.length >= maxCompanions"
+                  :placeholder="companions.length >= maxCompanions ? '最多可添加10位伙伴' : '输入名字或从列表选择'"
+                />
+              </view>
+            </view>
+
+            <view class="dropdown-list" v-if="showDropdown && (filteredFriends.length > 0 || inputValue.trim())">
+              <scroll-view scroll-y class="dropdown-scroll">
+                <view class="dropdown-title">推荐好友</view>
+                
+                <view 
+                  v-for="(friend, index) in filteredFriends" 
+                  :key="friend.id" 
+                  class="dropdown-item"
+                  @click.stop="selectFriend(friend)"
+                >
+                  <image :src="friend.avatar" class="dropdown-avatar"></image>
+                  <text class="dropdown-name">{{ friend.name }}</text>
+                  <text class="dropdown-add-icon">+</text>
+                </view>
+                
+                <view v-if="filteredFriends.length === 0" class="dropdown-empty">
+                  没有匹配的好友，可直接点击添加
+                </view>
+              </scroll-view>
+            </view>
           </view>
         </view>
       </view>
 
-      <!-- 确定按钮 -->
-      <button class="confirm-btn" @click="onConfirm">确定</button>
+      <button class="confirm-btn" hover-class="btn-hover" @click="onConfirm" >
+        确定
+      </button>
+
     </view>
   </view>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 
+
+// 状态栏高度
+const statusBarHeight = ref(20);
+// #ifdef APP-PLUS || MP-WEIXIN
+const sysInfo = uni.getSystemInfoSync();
+statusBarHeight.value = sysInfo.statusBarHeight || 20;
+// #endif
 
 // 团队名称
 const teamName = ref('');
+const originalTeamName = ref(''); // 用于防抖处理
+const teamNameDebounceTimer = ref(null);
 
-// 同伴列表
+// 伙伴相关
 const companions = ref([]);
-const newCompanion = ref('');
+const inputValue = ref('');
+const showDropdown = ref(false);
+const maxCompanions = ref(10); // 最大伙伴数量限制
+
+// 模拟好友数据
+const mockFriends = [
+  { id: 1, name: '小明', avatar: '/static/avatar-1.png' },
+  { id: 2, name: 'Jessica', avatar: '/static/avatar-2.png' },
+  { id: 3, name: '大壮', avatar: '/static/avatar-3.png' },
+  { id: 4, name: 'TravelBuddy', avatar: '/static/avatar-4.png' },
+  { id: 5, name: 'Lisa', avatar: '/static/avatar-5.png' },
+  { id: 6, name: '王大力', avatar: '/static/avatar-1.png' },
+  { id: 7, name: '张三疯', avatar: '/static/avatar-2.png' }
+];
+
+// 过滤好友列表
+const filteredFriends = computed(() => {
+  if (!inputValue.value) return mockFriends.filter(friend => 
+    !companions.value.some(c => c.name.toLowerCase() === friend.name.toLowerCase())
+  );
+  
+  const inputLower = inputValue.value.toLowerCase();
+  return mockFriends.filter(f => 
+    f.name.toLowerCase().includes(inputLower) && 
+    !companions.value.some(c => c.name.toLowerCase() === f.name.toLowerCase())
+  );
+});
+
+// 是否可以提交
+const canSubmit = computed(() => {
+  return teamName.value.trim() !== '' && companions.length > 0;
+});
 
 // 返回上一页
 const onBack = () => {
-  uni.navigateBack();
+  uni.navigateBack({
+    delta: 1,
+    animationType: 'slide-out-right'
+  });
 };
 
-// 添加同伴
-const addCompanion = () => {
-  // 可以在这里打开选择好友的弹窗
-  console.log('准备添加同伴');
-};
-
-// 确认添加同伴
-const confirmAdd = () => {
-  if (newCompanion.value.trim() && !companions.value.includes(newCompanion.value.trim())) {
-    companions.value.push(newCompanion.value.trim());
-    newCompanion.value = '';
+// 输入框聚焦
+const onInputFocus = () => {
+  if (companions.length >= maxCompanions) {
+    uni.showToast({ title: '最多可添加10位伙伴', icon: 'none' });
+    return;
   }
+  showDropdown.value = true;
 };
 
-// 移除同伴
-const removeCompanion = (index) => {
-  companions.value.splice(index, 1);
+// 输入框输入
+const onInput = () => {
+  showDropdown.value = true;
 };
 
-// 确定按钮点击事件
-const onConfirm = () => {
-  if (!teamName.value.trim()) {
-    uni.showToast({
-      title: '请输入团队旅游名称',
-      icon: 'none'
-    });
+// 关闭下拉框
+const closeDropdown = () => {
+  nextTick(() => {
+    showDropdown.value = false;
+  });
+};
+
+const focusInput = () => {
+  if (companions.length >= maxCompanions) {
+    uni.showToast({ title: '最多可添加10位伙伴', icon: 'none' });
     return;
   }
   
-  // 在这里处理表单提交逻辑
-  console.log('团队名称:', teamName.value);
-  console.log('同伴列表:', companions.value);
+  // #ifdef H5
+  const input = document.querySelector('.pill-input');
+  input?.focus();
+  // #endif
   
-  uni.showToast({
-    title: '提交成功',
-    icon: 'success'
+  // #ifdef APP-PLUS || MP-WEIXIN
+  uni.createSelectorQuery().select('.pill-input').boundingClientRect(rect => {
+    if (rect) {
+      showDropdown.value = true;
+    }
+  }).exec();
+  // #endif
+};
+
+// 检查伙伴是否已存在
+const checkExists = (name) => {
+  return companions.value.some(c => c.name.toLowerCase() === name.toLowerCase());
+};
+
+// 添加伙伴
+const handleAddCompanion = (name, avatar = null) => {
+  const cleanName = name.trim();
+  
+  // 验证
+  if (!cleanName) {
+    uni.showToast({ title: '请输入伙伴名称', icon: 'none' });
+    return;
+  }
+  
+  if (cleanName.length > 10) {
+    uni.showToast({ title: '伙伴名称不能超过10个字', icon: 'none' });
+    return;
+  }
+  
+  if (checkExists(cleanName)) {
+    uni.showToast({ title: '这个伙伴已经添加啦', icon: 'none' });
+    return;
+  }
+  
+  if (companions.length >= maxCompanions) {
+    uni.showToast({ title: '最多可添加10位伙伴', icon: 'none' });
+    return;
+  }
+  
+  // 处理头像
+  let finalAvatar = avatar || '/static/avatar-default.png';
+  if (!avatar) {
+    const matchedFriend = mockFriends.find(f => f.name.toLowerCase() === cleanName.toLowerCase());
+    if (matchedFriend) finalAvatar = matchedFriend.avatar;
+  }
+  
+  // 添加到列表
+  companions.value.push({ 
+    name: cleanName, 
+    avatar: finalAvatar,
+    id: Date.now() + Math.floor(Math.random() * 1000) // 添加唯一ID
   });
   
-  // 提交成功后返回上一页
-  setTimeout(() => {
-    uni.navigateBack();
-  }, 1500);
+  // 重置输入
+  inputValue.value = '';
+  showDropdown.value = false;
+  
+  // 提示
+  uni.showToast({ title: '添加成功', icon: 'success', duration: 800 });
 };
+
+// 选择好友
+const selectFriend = (friend) => {
+  handleAddCompanion(friend.name, friend.avatar);
+};
+
+// 确认添加
+const confirmAdd = () => {
+  handleAddCompanion(inputValue.value);
+};
+
+// 显示删除确认
+const showDeleteConfirm = (index) => {
+  const companion = companions.value[index];
+  uni.showModal({
+    title: '删除伙伴',
+    content: `确定要删除 ${companion.name} 吗？`,
+    cancelText: '取消',
+    confirmText: '删除',
+    confirmColor: '#FF5C5C',
+    success: (res) => {
+      if (res.confirm) {
+        removeCompanion(index);
+      }
+    }
+  });
+};
+
+// 删除伙伴
+const removeCompanion = (index) => {
+  const deletedName = companions.value[index].name;
+  companions.value.splice(index, 1);
+  uni.showToast({ title: `已删除${deletedName}`, icon: 'none', duration: 800 });
+};
+
+// 团队名称输入处理（防抖）
+const handleTeamNameInput = () => {
+  // 清除之前的定时器
+  if (teamNameDebounceTimer.value) {
+    clearTimeout(teamNameDebounceTimer.value);
+  }
+  
+  // 设置新的定时器
+  teamNameDebounceTimer.value = setTimeout(() => {
+    originalTeamName.value = teamName.value;
+  }, 500);
+};
+
+// 团队名称失去焦点处理
+const handleTeamNameBlur = () => {
+  const trimmedName = teamName.value.trim();
+  if (trimmedName !== teamName.value) {
+    teamName.value = trimmedName;
+  }
+};
+
+// 确认创建
+const onConfirm = () => {
+  if (!teamName.value.trim()) {
+    uni.showToast({ title: '请输入团队名称', icon: 'none' });
+    return;
+  }
+  
+  if (companions.length === 0) {
+    uni.showToast({ title: '请至少添加一位伙伴', icon: 'none' });
+    return;
+  }
+  
+  // 模拟创建请求
+  uni.showLoading({ title: '创建中...', mask: true });
+  
+  // 这里可以替换为真实的接口请求
+  setTimeout(() => {
+    uni.hideLoading();
+    
+    // 存储团队信息（示例）
+    uni.setStorageSync('currentTeam', {
+      teamName: teamName.value.trim(),
+      companions: [...companions.value],
+      createTime: new Date().getTime()
+    });
+    
+    // 跳转页面并关闭当前页面
+    uni.redirectTo({
+      url: '/pages/trip/trip',
+      success: () => {
+        uni.showToast({ title: '团队创建成功', icon: 'success' });
+      }
+    });
+  }, 1200);
+};
+
+// 页面卸载时清除定时器
+onUnmounted(() => {
+  if (teamNameDebounceTimer.value) {
+    clearTimeout(teamNameDebounceTimer.value);
+  }
+});
+
 </script>
 
 <style scoped>
+/* 保持原有基础样式 */
 .container {
-  width: 100%;
   min-height: 100vh;
-  background-color: #40A9FF;
-  padding-top: 20rpx;
-  box-sizing: border-box;
+  background-color: #2CB8F9;
+  font-family: system-ui, -apple-system, sans-serif;
+  padding-bottom: 40rpx;
 }
-
 .navbar {
-  padding: 20rpx 30rpx;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 20rpx;
 }
-
 .back-btn {
   display: flex;
-  align-items: center;
-  color: #FFFFFF;
+  position: relative;
+  left: -150px;
+  padding: 10rpx;
 }
-
-.back-icon {
-  font-size: 36rpx;
-  margin-right: 10rpx;
+.uni-icon {
+  font-size: 50rpx;
+  color: #000;
+  margin-right: 4rpx;
+  margin-top: -6rpx;
 }
-
 .back-text {
   font-size: 32rpx;
+  color: #000;
+  font-weight: 500;
 }
-
-.main-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 30rpx;
-}
+.main-content { padding: 0 40rpx; }
 
 .header-section {
   display: flex;
   align-items: center;
-  margin: 40rpx 0 60rpx 0;
-}
-
-.bird-image {
-  width: 200rpx;
-  height: auto;
-  margin-right: 20rpx;
-}
-
-.title-text {
-  font-size: 34rpx;
-  color: #FFFFFF;
-  font-weight: 500;
-  line-height: 50rpx;
-}
-
-.input-group {
-  width: 100%;
-  background-color: #FFD666;
-  border-radius: 60rpx;
-  padding: 25rpx 30rpx;
+  margin-top: 20rpx;
   margin-bottom: 30rpx;
+}
+.bird-image {
+  width: 160rpx;
+  height: 160rpx;
+  margin-right: 20rpx;
   position: relative;
-  box-shadow: 0 4rpx 0 #E6B800;
+  left: -120px;
+  top: 40px;
 }
-
-.team-input {
-  width: 100%;
-  font-size: 30rpx;
-  color: #333333;
-  background-color: transparent;
-  padding-right: 100rpx;
-  box-sizing: border-box;
-}
-
-.char-count {
-  position: absolute;
-  right: 30rpx;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 26rpx;
-  color: #888888;
-}
-
-.companion-section {
-  width: 100%;
-  background-color: #FF5722;
-  border-radius: 30rpx;
-  overflow: hidden;
-  margin-bottom: 60rpx;
-}
-
-.companion-header {
+.header-text {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx 30rpx;
+  flex-direction: column;
 }
-
-.companion-title {
-  font-size: 30rpx;
-  color: #FFFFFF;
+.header-text text {
+  font-size: 32rpx;
+  color: #000;
+  line-height: 1.5;
   font-weight: 500;
 }
 
-.add-btn {
-  width: 50rpx;
-  height: 50rpx;
-  background-color: #FFFFFF;
-  border-radius: 50%;
+.team-input-box {
+  background-color: #FACC55;
+  border-radius: 50rpx;
+  border: 3rpx solid #000;
+  height: 90rpx;
   display: flex;
-  justify-content: center;
   align-items: center;
+  padding: 0 30rpx;
+  margin-bottom: 30rpx;
 }
-
-.add-icon {
-  color: #FF5722;
+.team-input {
+  flex: 1;
   font-size: 30rpx;
+  color: #000;
+}
+.char-count {
+  font-size: 26rpx;
+  color: #000;
   font-weight: bold;
 }
 
-.companion-list {
-  background-color: #FFE6CC;
-  padding: 20rpx 30rpx;
+/* --- 核心修复区域 START --- */
+
+/* 1. 提升卡片层级，并允许内容溢出 */
+.companion-card {
+  margin-bottom: 50rpx;
+  position: relative;
+  z-index: 100;  /* 确保卡片在底部按钮之上 */
+  overflow: visible !important; /* 强制允许溢出，解决截断问题 */
 }
 
-.companion-item {
+.card-header {
+  background-color: #FF5C5C;
+  border-top-left-radius: 30rpx;
+  border-top-right-radius: 30rpx;
+  height: 80rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30rpx;
+}
+.header-title {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+.add-icon-btn {
+  width: 44rpx;
+  height: 44rpx;
+  border: 3rpx solid #fff;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  background-color: #FFFFFF;
-  border-radius: 40rpx;
-  padding: 15rpx 20rpx;
+  justify-content: center;
+}
+.plus-sign {
+  color: #fff;
+  font-size: 34rpx;
+  font-weight: bold;
+  margin-top: -4rpx;
+}
+
+/* 2. 确保黄色主体也不隐藏溢出 */
+.card-body {
+  background-color: #FACC55;
+  border-bottom-left-radius: 30rpx;
+  border-bottom-right-radius: 30rpx;
+  padding: 30rpx;
+  min-height: 120rpx;
+  overflow: visible !important; /* 关键：允许下拉框显示在黄色区域外 */
+}
+
+.input-area-wrapper {
+  position: relative;
+  z-index: 200; /* 确保输入框区域层级更高 */
+}
+
+/* 3. 下拉列表样式优化 */
+.dropdown-list {
+  position: absolute;
+  top: 85rpx; /* 紧贴输入框下方 */
+  left: 90rpx; /* 对齐输入框 */
+  right: 0;    /* 宽度撑满右侧 */
+  background-color: #fff;
+  border: 2rpx solid #000;
+  border-radius: 20rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.2);
+  z-index: 999; /* 最高层级 */
+  overflow: hidden; /* 列表内部的圆角 */
+  animation: slideDown 0.2s ease-out;
+}
+
+/* --- 核心修复区域 END --- */
+.companion-card, .card-body, .input-area-wrapper {
+  overflow: visible !important;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
   margin-bottom: 20rpx;
+  background: rgba(255,255,255,0.4);
+  padding: 12rpx 20rpx;
+  border-radius: 40rpx;
+  transition: all 0.2s ease;
 }
-
-.companion-avatar {
-  width: 60rpx;
-  height: 60rpx;
-  border-radius: 50%;
-  margin-right: 20rpx;
+.list-item:active {
+  background: rgba(255,255,255,0.6);
+  transform: scale(0.98);
 }
-
-.companion-name {
+.list-name {
   flex: 1;
+  margin-left: 20rpx;
   font-size: 28rpx;
-  color: #333333;
+  color: #000;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-
-.remove-btn {
+.avatar {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  border: 1px solid #000;
+  object-fit: cover;
+}
+.delete-btn {
   width: 40rpx;
   height: 40rpx;
-  background-color: #FFEEEE;
+  line-height: 36rpx;
+  text-align: center;
+  background: #FF5C5C;
+  color: #fff;
   border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 32rpx;
+  transition: all 0.2s ease;
+}
+.delete-btn:active {
+  transform: scale(1.1);
+  background: #ff3333;
 }
 
-.remove-icon {
-  color: #FF5722;
+/* 伙伴为空时的提示 */
+.empty-companions {
+  text-align: center;
+  padding: 40rpx 20rpx;
+  color: #665230;
+}
+.empty-text {
+  font-size: 28rpx;
+  display: block;
+  margin-bottom: 10rpx;
+}
+.empty-hint {
   font-size: 24rpx;
+  opacity: 0.8;
 }
 
-.add-companion {
+.input-row {
   display: flex;
   align-items: center;
-  background-color: #FFFFFF;
-  border-radius: 40rpx;
-  padding: 15rpx 20rpx;
 }
-
-.add-avatar {
-  width: 60rpx;
-  height: 60rpx;
+.avatar-icon {
+  width: 70rpx;
+  height: 70rpx;
   border-radius: 50%;
+  border: 2rpx solid #000;
   margin-right: 20rpx;
+  background-color: #87CEEB;
+  object-fit: cover;
+}
+.pill-input-wrapper {
+  flex: 1;
+  height: 70rpx;
+  border: 2rpx solid #000;
+  border-radius: 35rpx;
+  display: flex;
+  align-items: center;
+  padding-left: 30rpx;
+  padding-right: 10rpx;
+  background-color: #fff;
+}
+.pill-input {
+  flex: 1;
+  padding: 10px;
+  font-size: 28rpx;
+  color: #000;
+}
+.action-btn {
+  background-color: #2CB8F9;
+  color: #fff;
+  font-size: 24rpx;
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+.action-btn:active {
+  background-color: #1aa7f9;
+  transform: scale(0.95);
 }
 
-.companion-input {
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-scroll {
+  max-height: 300rpx; /* 限制高度，超过可滚动 */
+}
+.dropdown-title {
+  font-size: 22rpx;
+  color: #999;
+  padding: 10rpx 20rpx;
+  background-color: #f5f5f5;
+}
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #fff;
+}
+.dropdown-item:active {
+  background-color: #E6F7FF;
+}
+.dropdown-avatar {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  margin-right: 16rpx;
+  background: #eee;
+  object-fit: cover;
+}
+.dropdown-name {
   flex: 1;
   font-size: 28rpx;
-  color: #333333;
-  background-color: transparent;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-
-.select-btn {
-  background-color: #FFD666;
-  color: #333333;
-  border-radius: 30rpx;
-  font-size: 26rpx;
-  padding: 10rpx 25rpx;
-  line-height: normal;
-}
-
-.confirm-btn {
-  width: 100%;
-  background-color: #FFD666;
-  color: #333333;
-  border-radius: 60rpx;
+.dropdown-add-icon {
   font-size: 32rpx;
-  padding: 25rpx 0;
-  font-weight: 500;
-  box-shadow: 0 4rpx 0 #E6B800;
+  color: #2CB8F9;
+  font-weight: bold;
 }
+.dropdown-empty {
+  padding: 20rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  background-color: #fff;
+}
+
+/* 确定按钮 */
+.confirm-btn {
+  background-color: #FACC55;
+  color: #000;
+  font-size: 34rpx;
+  font-weight: bold;
+  border-radius: 50rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  border: none;
+  box-shadow: 0 6rpx 0 #E6B800;
+  /* 调低层级，确保不遮挡下拉框 */
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+}
+.confirm-btn::after { border: none; }
+.confirm-btn:disabled {
+  opacity: 0.6;
+  box-shadow: none;
+  transform: none;
+}
+.btn-hover { opacity: 0.9; transform: translateY(4rpx); box-shadow: 0 2rpx 0 #E6B800; }
 </style>

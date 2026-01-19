@@ -1,85 +1,69 @@
-<!--首页基本完善-,无从图片跳转-->
-
 <template>
   <view class="app-container">
-	 
-    <!-- 顶部区域 -->
+    
     <header class="top-bar">
-      <!-- 用户头像 -->
       <view class="user-avatar">
         <img src="/static/头像.png" alt="用户头像" class="avatar-img" @click="gotome">
       </view>
-      <!-- 搜索框 -->
       <view class="search-container">
         <input type="text" v-model="searchQuery" placeholder="旅游推荐" class="search-input">
         <button class="search-btn">搜索</button>
       </view>
-	  <view class="tag-container">
-	  	        <view class="tag-item1" :style="{ transform: 'rotate(112deg)' }">
-	  	          <view class="tag-text">XUNLV APP XUNLV APP XUNLV APP</view>
-	  	        </view>
-	  	        <view class="tag-item2" :style="{ transform: 'rotate(90deg)' }">
-	  	          <view class="tag-text">XUNLV APP XUNLV APP XUNLV APP</view>
-	  	        </view>
-	  	    </view>
-	  
+      <view class="tag-container">
+        <view class="tag-item1" :style="{ transform: 'rotate(112deg)' }">
+          <view class="tag-text">XUNLV APP XUNLV APP XUNLV APP</view>
+        </view>
+        <view class="tag-item2" :style="{ transform: 'rotate(90deg)' }">
+          <view class="tag-text">XUNLV APP XUNLV APP XUNLV APP</view>
+        </view>
+      </view>
     </header>
     
-    <!-- 天气和广告横幅区域 -->
     <view class="weather-banner">
-      <!-- 装饰元素 (纯视觉效果) -->
       <view class="decor-circle top-right"></view>
       <view class="decor-circle bottom-left"></view>
       
-      <!-- 日期和天气信息 -->
       <view class="weather-info">
         <p class="date-text">{{ currentDate }}</p>
         <h2 class="weather-status">晴天多云</h2>
         <p class="weather-slogan">一起来旅游</p>
       </view>
-	   
       
-      <!-- 右侧吉祥物图片 -->
       <view class="mascot-img">
-        <img src="/static/logo1.png" 
-             alt="旅游吉祥物">
+        <img src="/static/logo1.png" alt="旅游吉祥物">
       </view>
     </view>
     
-    <!-- 黄色背景功能区 -->
-     <view class="function-area">
-		 <view class="ellipse-wrap">
-			 <view class="hollow-circle"></view>
-		 </view>
-        <view class="function-grid">
-          <!-- 同城推荐 -->
-          <view class="function-card city-recommend">
-            <h3 class="card-title">同城推荐</h3>
-            <p class="card-desc">向着世界发出城市的呐喊</p>
-			<view class="water-img">
-				<img src="/static/冲浪.png">
-			</view>
-            <view class="location-tag">
-               <i class="location-icon"></i>
-              <span>定位：</span>
-            </view>
+    <view class="function-area">
+      <view class="ellipse-wrap">
+        <view class="hollow-circle"></view>
+      </view>
+      <view class="function-grid">
+        <view class="function-card city-recommend" @click="switchToCityTab">
+          <h3 class="card-title">同城推荐</h3>
+          <p class="card-desc">向着世界发出城市的呐喊</p>
+          <view class="water-img">
+            <img src="/static/冲浪.png">
           </view>
-          <!-- AI助手 -->
-          <view class="function-card ai-assistant">
-            <h3 class="card-title">AI助手</h3>
-            <p class="card-desc">有问题来找我</p>
-          </view>
-          
-          <!-- 累计积分 -->
-          <view class="function-card points-card">
-            <h3 class="card-title">累计积分</h3>
-            <p class="points-desc">旅程积分赢大奖</p>
+          <view class="location-tag">
+            <i class="location-icon"></i>
+            <span>定位：</span>
           </view>
         </view>
-        <!-- 吉祥物元素 -->
+        
+        <view class="function-card ai-assistant" @click="goToAiMessage">
+          <h3 class="card-title">AI助手</h3>
+          <p class="card-desc">有问题来找我</p>
+        </view>
+        
+        <view class="function-card points-card">
+          <h3 class="card-title">累计积分</h3>
+          <p class="points-desc">旅程积分赢大奖</p>
+        </view>
       </view>
-    <!-- 标签切换区域 -->
-    <view class="tab-container">
+    </view>
+    
+    <view class="tab-container" id="tabContainer">
       <div class="tab-buttons">
         <button class="tab-btn" 
                 :class="{ active: activeTab === 'recommend' }"
@@ -98,11 +82,10 @@
         </button>
       </div>
       
-      <!-- 推荐内容区 -->
       <view class="tab-content" v-if="activeTab === 'recommend'">
         <view class="travel-cards">
           <view v-for="(item, index) in recommendItems" :key="index" class="travel-card">
-            <img :src="item.imgUrl" :alt="item.title" class="card-img"  @click="handleImageClick" >
+            <img :src="item.imgUrl" :alt="item.title" class="card-img"  @click="handleImageClick(item)" >
             <view class="card-text">
               <h4 class="card-title">{{ item.title }}</h4>
               <view class="card-meta">
@@ -114,11 +97,10 @@
         </view>
       </view>
       
-      <!-- 关注内容区 -->
-     <view class="tab-content" v-if="activeTab === 'follow'">
+      <view class="tab-content" v-if="activeTab === 'follow'">
          <view class="travel-cards">
            <view v-for="(item, index) in recommendItems" :key="index" class="travel-card">
-             <img :src="item.imgUrl" :alt="item.title" class="card-img"  @click="handleImageClick" >
+             <img :src="item.imgUrl" :alt="item.title" class="card-img"  @click="handleImageClick(item)" >
              <view class="card-text">
                <h4 class="card-title">{{ item.title }}</h4>
                <view class="card-meta">
@@ -130,11 +112,10 @@
          </view>
        </view>
       
-      <!-- 团旅内容区 -->
-    <view class="tab-content" v-if="activeTab === 'group'">
+      <view class="tab-content" v-if="activeTab === 'group'">
         <view class="travel-cards">
           <view v-for="(item, index) in recommendItems" :key="index" class="travel-card">
-            <img :src="item.imgUrl" :alt="item.title" class="card-img"  @click="handleImageClick" >
+            <img :src="item.imgUrl" :alt="item.title" class="card-img"  @click="handleImageClick(item)" >
             <view class="card-text">
               <h4 class="card-title">{{ item.title }}</h4>
               <view class="card-meta">
@@ -146,15 +127,20 @@
         </view>
       </view>
    </view>
-  </view>
-  <tabbar></tabbar>
+ </view>
+ <tabbar></tabbar>
 </template>
 
 <script>
-	import centerButton from '@/components/center-button/center-button.uvue'
-  import tabbar from '@/components/tabbar/tabbar.vue'
+import centerButton from '@/components/center-button/center-button.uvue'
+import tabbar from '@/components/tabbar/tabbar.vue'
+
 export default {
   name: 'TravelApp',
+  components: {
+    centerButton,
+    tabbar
+  },
   data() {
     return {
       searchQuery: '',
@@ -162,49 +148,71 @@ export default {
       activeTab: 'recommend',
       recommendItems: [
         {
+          id: 1,
           imgUrl: 'https://picsum.photos/id/1036/300/200',
           title: '南京两天一夜不费腿版保姆级逛吃攻略！！！',
           views: '2.2W'
         },
         {
+          id: 2,
           imgUrl: 'https://picsum.photos/id/1037/300/200',
           title: '武汉两天一夜不费腿版保姆级逛吃攻略！！！',
           views: '2.2W'
         },
         {
+          id: 3,
           imgUrl: 'https://picsum.photos/id/1038/300/200',
           title: '成都三日游精华路线，本地人推荐！',
           views: '1.8W'
         },
         {
+          id: 4,
           imgUrl: 'https://picsum.photos/id/1039/300/200',
           title: '西安历史文化之旅，不可错过的景点',
           views: '3.5W'
         }
       ]
     };
-	components: {
-		    centerButton
-		  };
   },
- 
   methods: {
-	  gotome(){
-		  uni.reLaunch({
-		    url: '/pages/profile/profile'
-		  });  
-	  },
-    navigate(page) {
-      // 导航逻辑可以在这里实现
-      console.log('导航到:', page);
-      // 实际项目中可以使用vue-router进行路由跳转
+    // 跳转到个人中心
+    gotome(){
+      uni.reLaunch({
+        url: '/pages/profile/profile'
+      });  
     },
-	 handleImageClick(item) {
-	    this.$router.push({
-	      path: '/pages/detail-index/detail-index',
-	      query: { id: item.id }  // 传递参数
-	    })
-	  }
+    // 跳转到详情页
+    handleImageClick(item) {
+      uni.navigateTo({
+        url: `/pages/detail-index/detail-index?id=${item.id}`
+      });
+    },
+    
+    // 点击“同城推荐”，切换Tab到“同城”
+    switchToCityTab() {
+      this.activeTab = 'follow'; // 切换到同城Tab
+      // 可选：滚动到 Tab 区域
+      uni.createSelectorQuery().select('#tabContainer').boundingClientRect(data => {
+        if (data) {
+          uni.pageScrollTo({
+            scrollTop: data.top,
+            duration: 300
+          });
+        }
+      }).exec();
+    },
+
+    // 点击“AI助手”，跳转到消息页面
+    goToAiMessage() {
+      uni.navigateTo({
+        url: '/pages/message/message',
+        fail: (err) => {
+          console.error("跳转失败，请检查路径是否正确或是否为tabbar页面", err);
+          // 如果 message 是 tabbar 页面，需要使用 switchTab
+          // uni.switchTab({ url: '/pages/message/message' });
+        }
+      });
+    }
   }
 };
 </script>
@@ -226,6 +234,7 @@ export default {
   padding: 12px 16px;
   display: flex;
   align-items: center;
+  position: relative; /* 确保层级上下文 */
 }
 
 .user-avatar {
@@ -234,6 +243,7 @@ export default {
   border-radius: 50%;
   background-color: black;
   padding: 2px;
+  z-index: 2;
 }
 
 .avatar-img {
@@ -246,28 +256,31 @@ export default {
 .search-container {
   flex: 1;
   margin: 0 9px;
-  z-index: 2;
+  z-index: 2; /* 提高层级，确保在装饰 Tag 之上 */
   position: relative;
 }
 
 .search-input {
   width: 100%;
-  padding: 16px 8px 4px 25px;
+  padding: 10px 15px; 
   border-radius: 10px;
-  border: none;
+  border: 1px solid #f4e64a; 
   font-size: 15px;
-  background-color: transparent;
+  background-color: transparent; /* 或者 rgba(255,255,255,0.2) 增加可读性 */
   box-sizing: border-box;
   display: flex;
   align-items: center; 
-  padding: 10px 15px; 
-    line-height: 1.5; 
-	border: 1px solid #f4e64a; 
+  line-height: 1.5; 
+  color: #fff; /* 输入文字颜色，根据背景调整 */
+}
+/* 增加 placeholder 颜色适配 */
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .search-input:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .search-btn {
@@ -283,11 +296,59 @@ export default {
   font-size: 14px;
   cursor: pointer;
   font-weight: 700;
+  z-index: 3;
+}
+
+/* 装饰 Tag 样式 */
+.tag-container {
+  position: absolute;
+  top: 30px;
+  left: 25px;
+  transform: translate(13%, -8%);
+  z-index: 1; /* 低于搜索框 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  pointer-events: none; /* 防止遮挡点击 */
+}
+
+.tag-item1 {
+  background-color: #000;
+  color: #ffd700;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 30px;
+  margin: 0 10px;
+  white-space: nowrap;
+  transform-origin: center;
+  position: relative;
+  top: 5px;
+  right: 20px;
+}
+.tag-item2 {
+  background-color: #000;
+  color: #ffd700;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 30px;
+  margin: 0 10px;
+  white-space: nowrap;
+  transform-origin: center;
+  position: relative;
+  right: 80px;
+  top: -35px;
+  border-radius: 12px; 
+}
+
+.tag-text {
+  transform: rotate(-180deg);
+  transform-origin: center;
 }
 
 /* 天气和广告横幅区域 */
 .weather-banner {
-  background:  #2196F3;
+  background: #2196F3;
   padding: 30px;
   color: black;
   position: relative;
@@ -325,7 +386,6 @@ export default {
   font-size: 14px;
   opacity: 0.9;
   margin: 0;
-  
 }
 
 .weather-status {
@@ -356,7 +416,7 @@ export default {
 
 /* 黄色背景功能区 */
 .function-area {
-  background-color:  #ffffff;
+  background-color: #ffffff;
   padding: 20px 12px;
   position: relative;
   border-radius: 20px 20px 0px 0px;
@@ -370,32 +430,42 @@ export default {
 
 .function-card {
   background-color: #2196F3;
-   border-radius: 20px 80px 20px 20px / 20px 80px 20px 20px;
+  border-radius: 20px 80px 20px 20px / 20px 80px 20px 20px;
   padding: 10px;
   color: white;
   position: relative;
-   z-index: 1;
+  z-index: 1;
 }
+
+/* 加上点击反馈效果 */
+.function-card:active {
+  opacity: 0.9;
+  transform: scale(0.98);
+}
+
 .water-img {
-  transform: scaleX(-1); /* 水平镜像（左右翻转） */
-  /* 其他样式（如宽度、圆角等）保持不变 */
+  transform: scaleX(-1);
   width: 130px;
   height: auto;
   border-radius: 8px;
+  position: relative;
   left: 70px;
-  top:-50px;
-   z-index: 999;
+  top: -50px;
+  z-index: 999;
+  pointer-events: none; /* 图片不阻挡点击 */
 }
+
 .city-recommend {
-  grid-row: span 2; /* 跨两行 */
+  grid-row: span 2;
   display: flex;
   height: 140px;
   width: 190px;
   flex-direction: column;
   justify-content: space-between;
+  cursor: pointer;
 }
+
 .location-icon {
-  /* 用伪元素绘制图标（也可使用字体图标或图片） */
   width: 18px;
   height: 18px;
   margin-right: 8px;
@@ -424,45 +494,46 @@ export default {
   background-color: #000;
   border-radius: 50%;
 }
-/* 椭圆容器 */
+
 .ellipse-wrap {
-  width: 70px; /* 椭圆宽度 */
-  height: 30px; /* 椭圆高度（宽度的一半左右，实现椭圆） */
-  border-radius: 60%; /* 50% 圆角实现椭圆（宽高比不为1时就是椭圆） */
-  background-color: #ff6347; /* 椭圆背景色，如红色 */
+  width: 70px;
+  height: 30px;
+  border-radius: 60%;
+  background-color: #ff6347;
   display: flex;
+  position: relative;
   top: -20px;
   left: 35%;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* 裁剪超出椭圆的内容 */
+  overflow: hidden;
 }
 .hollow-circle {
-  width: 60px;        /* 圆形宽度 */
-  height: 20px;       /* 圆形高度（与宽度一致，确保是正圆） */
-  background-color: #73bcff; /* 边框颜色（如红色）和宽度 */
-  border-radius: 60%; /* 50% 圆角实现圆形 */
+  width: 60px;
+  height: 20px;
+  background-color: #73bcff;
+  border-radius: 60%;
 }
 
 .ai-assistant, .points-card {
-     border-radius: 20px 80px 20px 20px / 20px 80px 20px 20px; /* 右下角直角，其他圆角 */
+  border-radius: 20px 80px 20px 20px / 20px 80px 20px 20px;
   background: linear-gradient(to bottom, #2196F3, #ffffff);
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    padding: 6px 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-	 z-index: 1;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  padding: 6px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1;
+  cursor: pointer;
 }
-
 
 .card-title {
   font-size: 18px;
   font-weight: bold;
-   color: #ffffff;
-    margin-bottom: 4px;
- }
+  color: #ffffff;
+  margin-bottom: 4px;
+}
 
 .card-desc {
   font-size: 10px;
@@ -473,38 +544,16 @@ export default {
 .location-tag {
   display: flex;
   align-items: center;
-  background-color:  #FFE05A;
+  background-color: #FFE05A;
   color: #333;
   width: fit-content;
   padding: 0px 15px;
   border-radius: 20px;
   font-size: 12px;
+  position: relative;
   top: -100px;
 }
 
-.location-tag i {
-  margin-right: 4px;
-}
-
-.points-desc {
-  font-size: 14px;
-  margin: 0;
-}
-
-/* 吉祥物元素 */
-.mascot-element {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-}
-
-.mascot-img {
-  width: 160px;
-  height: auto;
-  object-fit: contain;
-}
 .location-tag span {
   font-size: 14px;
   font-weight: 500;
@@ -513,9 +562,14 @@ export default {
   top: -10px;
 }
 
+.points-desc {
+  font-size: 14px;
+  margin: 0;
+}
+
 /* 标签切换区域 */
 .tab-container {
-  background-color:   #ffffff;
+  background-color: #ffffff;
   gap: 0;
   border: none;
 }
@@ -523,10 +577,7 @@ export default {
 .tab-buttons {
   display: flex;
   border-bottom: 1px solid #eee;
-   border: none;
-}
-.tab-btn::after {
-  border: none; /* 清除小程序按钮默认的伪元素边框 */
+  border: none;
 }
 
 .tab-btn {
@@ -534,12 +585,16 @@ export default {
   padding: 5px 0;
   background: none;
   border: none;
-   justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 20px;
   font-weight: bolder;
   color: #000000;
-  border-radius: 20px 20px 0px 0; 
+  border-radius: 20px 20px 0px 0;
+}
+.tab-btn::after {
+  border: none;
 }
 
 .tab-btn.active {
@@ -548,10 +603,9 @@ export default {
   border-bottom: 4px solid #ff0000;
 }
 
-
 .tab-content {
   padding: 12px;
-  background-color:  #ffffff;
+  background-color: #ffffff;
 }
 
 .travel-cards {
@@ -594,78 +648,7 @@ export default {
   color: #888;
 }
 
-.empty-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 160px;
-  color: #888;
+.meta-detail, .meta-count {
+  color: #000;
 }
-/* 导航栏容器样式 */
-.nav-container {
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  overflow: hidden;
-  /* 可结合背景色、阴影等样式增强视觉 */
-  background-color: #ff6b6b;
-}
-.tag-container {
-  position: absolute;
- top: 30px;
- left: 25px;
-  transform: translate(13%, -8%);
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: visible;
-}
-
-.tag-item1 {
-  background-color: #000;
-  color: #ffd700;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 10px 30px;
-  margin: 0 10px;
-  white-space: nowrap;
-  transform-origin: center;
-  top: 5px;
-  right: 20px;
-}
-.tag-item2 {
-  background-color: #000;
-  color: #ffd700;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 10px 30px;
-  margin: 0 10px;
-  white-space: nowrap;
-  transform-origin: center;
-  right: 80px;
-  top: -35px;
-  border-radius: 12px; 
- 
-}
-
-.tag-text {
-  transform: rotate(-180deg);
-  transform-origin: center;
-}
-.meta-detail{
-	color: #000;
-}
-.meta-count{
-	color: #000;
-}
-
-.mascot {
-  position: absolute;
-  right: 20px;
-  bottom: 40px;
-  width: 120px;
-  height: auto;
-}
-
-
 </style>
